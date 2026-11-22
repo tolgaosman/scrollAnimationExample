@@ -1,0 +1,212 @@
+@import "tailwindcss";
+
+/* ------------------------------------------------------------------
+ * SURLARİÇİ design tokens
+ * Studio grey  — sampled from the espresso-machine frames
+ * Sarı taş     — Nicosia's golden limestone
+ * Ink          — roasted espresso, never pure black
+ * Copper       — boiler highlights, the only saturated accent
+ * Steel        — brushed stainless panels
+ * ------------------------------------------------------------------ */
+@theme {
+  --color-studio: #c0c2c1;
+  --color-studio-deep: #a9acab;
+  --color-stone: #d6c29a;
+  --color-stone-deep: #b89a66;
+  --color-stone-light: #e7dcc4;
+  --color-paper: #efeae0;
+  --color-paper-deep: #e4ddcf;
+  --color-ink: #1c1814;
+  --color-ink-soft: #4a423a;
+  --color-copper: #b4643a;
+  --color-copper-light: #d08a5c;
+  --color-steel: #8d9298;
+  --color-steel-light: #c9cdd1;
+  --color-line: rgb(28 24 20 / 0.14);
+
+  --font-display: var(--font-newsreader), "Times New Roman", serif;
+  --font-sans: var(--font-schibsted), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-plex-mono), ui-monospace, monospace;
+
+  --text-mega: clamp(3.5rem, 13vw, 14rem);
+  --text-display: clamp(2.75rem, 7vw, 7rem);
+  --text-headline: clamp(2rem, 4.4vw, 4.25rem);
+
+  --ease-out-quint: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-drawer: cubic-bezier(0.76, 0, 0.24, 1);
+}
+
+@layer base {
+  html {
+    background: var(--color-paper);
+    color: var(--color-ink);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    scrollbar-gutter: stable;
+  }
+
+  body {
+    font-family: var(--font-sans);
+    font-feature-settings: "ss01", "kern";
+    min-height: 100dvh;
+  }
+
+  ::selection {
+    background: var(--color-copper);
+    color: var(--color-paper);
+  }
+
+  :focus-visible {
+    outline: 1.5px solid var(--color-copper);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  h1,
+  h2,
+  h3 {
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+}
+
+@layer components {
+  /* Small spec-sheet label: mono, tracked, uppercase. */
+  .eyebrow {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    line-height: 1.4;
+  }
+
+  .display {
+    font-family: var(--font-display);
+    font-weight: 300;
+    letter-spacing: -0.035em;
+    line-height: 0.92;
+  }
+
+  /* 12-column architectural grid with generous gutters. */
+  .grid-arch {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    column-gap: clamp(1rem, 2vw, 2rem);
+  }
+
+  .shell {
+    padding-inline: clamp(1.25rem, 4vw, 4rem);
+  }
+
+  /* Brushed stainless steel: fine horizontal grain over a cool gradient. */
+  .brushed-steel {
+    background-color: #b7bcc1;
+    background-image:
+      repeating-linear-gradient(
+        0deg,
+        rgb(255 255 255 / 0.07) 0px,
+        rgb(255 255 255 / 0.07) 1px,
+        rgb(0 0 0 / 0.035) 1px,
+        rgb(0 0 0 / 0.035) 2px,
+        transparent 2px,
+        transparent 4px
+      ),
+      linear-gradient(
+        100deg,
+        #8d9298 0%,
+        #d7dbde 22%,
+        #a3a8ad 38%,
+        #e8eaec 55%,
+        #9ba0a6 74%,
+        #c9cdd1 100%
+      );
+  }
+
+  .copper-sheen {
+    background-image: linear-gradient(115deg, #7c3f20 0%, #b4643a 35%, #e0a27a 52%, #a65a31 70%, #6e361b 100%);
+  }
+
+  /* Hairline rule that can be drawn on with scaleX. */
+  .hairline {
+    height: 1px;
+    background: currentColor;
+    opacity: 0.22;
+    transform-origin: left center;
+  }
+
+  .link-underline {
+    background-image: linear-gradient(currentColor, currentColor);
+    background-size: 0% 1px;
+    background-position: 0 100%;
+    background-repeat: no-repeat;
+    transition: background-size 0.5s var(--ease-out-quint);
+  }
+  .link-underline:hover,
+  .link-underline:focus-visible {
+    background-size: 100% 1px;
+  }
+}
+
+/* Brew calculator range slider: hairline track, copper fill, steel knob. */
+.brew-range {
+  --fill: 50%;
+}
+.brew-range::-webkit-slider-runnable-track {
+  height: 2px;
+  background: linear-gradient(to right, var(--color-copper-light) var(--fill), rgb(239 234 224 / 0.2) var(--fill));
+}
+.brew-range::-moz-range-track {
+  height: 2px;
+  background: rgb(239 234 224 / 0.2);
+}
+.brew-range::-moz-range-progress {
+  height: 2px;
+  background: var(--color-copper-light);
+}
+.brew-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 22px;
+  height: 22px;
+  margin-top: -10px;
+  border-radius: 9999px;
+  background: radial-gradient(circle at 35% 30%, #f4f5f6, #9ba0a6);
+  box-shadow: 0 2px 8px rgb(0 0 0 / 0.45);
+  transition: transform 0.2s var(--ease-out-quint);
+}
+.brew-range::-moz-range-thumb {
+  width: 22px;
+  height: 22px;
+  border: 0;
+  border-radius: 9999px;
+  background: radial-gradient(circle at 35% 30%, #f4f5f6, #9ba0a6);
+}
+.brew-range:active::-webkit-slider-thumb {
+  transform: scale(1.15);
+}
+
+/* Film grain over the whole document — breaks up flat digital fills. */
+.grain::after {
+  content: "";
+  position: fixed;
+  inset: -50%;
+  pointer-events: none;
+  z-index: 60;
+  opacity: 0.06;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

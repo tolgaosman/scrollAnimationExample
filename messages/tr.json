@@ -1,0 +1,376 @@
+{
+  "meta": {
+    "siteName": "SURLARİÇİ // Lefkon Roasters & Atelier",
+    "home": {
+      "title": "SURLARİÇİ Roasters — Lefkoşa'nın Kalbinde Mühendislik ve Zanaat",
+      "description": "Lefkoşa Surlariçi'nde, restore edilmiş bir taş atölyede küçük partilerle kavrulan nitelikli kahve. Kavurma atölyesi, demleme barı ve tadım odası."
+    },
+    "beans": {
+      "title": "Kahve Çekirdeklerimiz — SURLARİÇİ Roasters",
+      "description": "Etiyopya'dan Kolombiya'ya, doğrudan ticaretle getirdiğimiz tek kökenli çekirdekler, espresso harmanları ve mikro-lotlar."
+    },
+    "menu": {
+      "title": "Menü & Demleme Rehberi — SURLARİÇİ Roasters",
+      "description": "İmza soğuk demlemeler, keçiboynuzlu kortado, fıstıklı cremoso ve evde mükemmel fincan için interaktif demleme hesaplayıcısı."
+    },
+    "team": {
+      "title": "Ekibimiz — SURLARİÇİ Roasters",
+      "description": "Kavurma ustamız, baş baristamız, Q-Grader'ımız ve pasta şefimizle tanışın."
+    },
+    "about": {
+      "title": "Hakkımızda — SURLARİÇİ Roasters",
+      "description": "Surlariçi'nde unutulmuş bir taş atölyenin, üçüncü dalga bir mikro kavurma evine dönüşme hikâyesi."
+    },
+    "contact": {
+      "title": "İletişim — SURLARİÇİ Roasters",
+      "description": "Arasta, Surlariçi, Lefkoşa. Çalışma saatleri, rezervasyon ve toptan çekirdek talepleri."
+    }
+  },
+  "brand": {
+    "wordmark": "SURLARİÇİ",
+    "sub": "Lefkon Roasters & Atelier",
+    "est": "Kur. 2019 · Lefkoşa"
+  },
+  "nav": {
+    "home": "Ana Sayfa",
+    "beans": "Çekirdekler",
+    "menu": "Menü & Demleme",
+    "team": "Ekibimiz",
+    "about": "Hakkımızda",
+    "contact": "İletişim",
+    "open": "Menüyü aç",
+    "close": "Menüyü kapat",
+    "menuLabel": "Menü",
+    "skip": "İçeriğe geç",
+    "language": "Dil seçimi",
+    "reserve": "Masa ayırt",
+    "drawerNote": "Arasta, Surlariçi — her gün 07:30'dan itibaren kavurma kokusu.",
+    "primary": "Ana gezinme"
+  },
+  "preloader": {
+    "label": "Makine ısınıyor",
+    "frames": "kare",
+    "ready": "Hazır"
+  },
+  "hero": {
+    "eyebrow": "Lefkoşa · Surlariçi · 35.17°K 33.36°D",
+    "titleA": "SURLARİÇİ",
+    "titleB": "ROASTERS",
+    "subtitle": "Lefkoşa'nın Kalbinde Mühendislik ve Zanaat",
+    "lede": "Venedik surlarının içinde, sarı taştan bir atölyede; her fincanın arkasındaki makineyi parça parça açıyoruz.",
+    "scroll": "Kaydırın — makine açılsın",
+    "progress": "Sökülme",
+    "canvasLabel": "Üç gruplu espresso makinesi; kaydırdıkça parçalarına ayrılıyor."
+  },
+  "callouts": {
+    "boiler": {
+      "index": "01 / Isı",
+      "title": "Bakır Isı Eşanjörlü Kazan & PID Termal Kararlılık",
+      "body": "Kalın cidarlı bakır kazan, ısıyı bir taş duvar gibi tutar. PID kontrolcüsü saniyede onlarca kez ölçer; sıcaklık, fincandan fincana sapmadan kalır.",
+      "spec": "±0,1 °C · PID · 1,8 L bakır"
+    },
+    "groups": {
+      "index": "02 / Akış",
+      "title": "3 Gruplu E61 Pirinç Başlıklar & Ceviz Portafiltreler",
+      "body": "Termosifonla ısınan dört kilo pirinç, suyu ilk damladan itibaren dengeli taşır. Ceviz saplar ise Lefkoşa'lı bir ustanın torna tezgâhından, tek tek.",
+      "spec": "E61 · 3 grup · el tornası ceviz"
+    },
+    "pump": {
+      "index": "03 / Basınç",
+      "title": "Döner Kanatlı Pompa & Dijital Basınç Profilleme",
+      "body": "Sessiz döner kanatlı pompa, ön demlemeden doruğa ve geri çekilişe kadar basıncı bir nefes gibi yönetir. Her çekirdeğin kendi eğrisi vardır.",
+      "spec": "9 bar · ön demleme 3 bar · 25–30 sn"
+    },
+    "outro": "Parçaların toplamı değil; parçaların arasındaki özen."
+  },
+  "home": {
+    "manifesto": {
+      "eyebrow": "Manifesto",
+      "titleA": "Taş sabırla,",
+      "titleB": "çelik hassasiyetle.",
+      "p1": "Surlariçi'nin sarı taşı yüzyıllardır güneşi biriktirir; akşamüstü avuç içine sıcak düşer. Biz de kahveyi böyle severiz: acele etmeden, ısıyı içinde tutarak.",
+      "p2": "Atölyemizde 500 yıllık kemerlerin altında paslanmaz çelik çalışır. Bir yanda ölçü, termometre, profil eğrisi; öbür yanda koku, ses, sezgi. İkisi aynı tezgâhı paylaşır.",
+      "stoneLabel": "Sarı Taş · Lefkoşa kireçtaşı",
+      "steelLabel": "Fırçalanmış paslanmaz · 304",
+      "stat1": "12 kg",
+      "stat1Label": "parti başına en fazla",
+      "stat2": "72 saat",
+      "stat2Label": "kavurmadan fincana",
+      "stat3": "11",
+      "stat3Label": "burç, tek bir mahalle"
+    },
+    "roasts": {
+      "eyebrow": "İmza Kavrumlar",
+      "title": "Üç köken, üç mizaç.",
+      "lede": "Mevsimin en iyi lotlarından seçtiğimiz üç imza. Kaydırdıkça bir sonrakine geçin.",
+      "acidity": "Asidite",
+      "body": "Gövde",
+      "sweetness": "Tatlılık",
+      "explore": "Tüm çekirdekleri keşfedin",
+      "altitude": "Rakım",
+      "process": "İşleme"
+    },
+    "brewbar": {
+      "eyebrow": "Demleme Barı",
+      "title": "Duyular için dört istasyon.",
+      "hint": "Üzerine gelin ya da dokunun",
+      "items": {
+        "espresso": {
+          "name": "Espresso",
+          "tag": "Yoğun · 30 sn",
+          "body": "Dokuz bar, on sekiz gram, otuz saniye. Krema kızıl kahve, bitiş bitter çikolata."
+        },
+        "pourover": {
+          "name": "Pour-Over",
+          "tag": "Berrak · 3 dk",
+          "body": "V60 ve Kalita Wave ile yavaş döküm. Çiçeksi, çay gibi, katman katman açılan bir fincan."
+        },
+        "coldbrew": {
+          "name": "Soğuk Demleme",
+          "tag": "Sabırlı · 16 sa",
+          "body": "On altı saat soğuk suda bekleyen çekirdek; ağustos öğlesinde Lefkoşa'nın en serin gölgesi."
+        },
+        "cezve": {
+          "name": "Kıbrıs Kahvesi",
+          "tag": "Köklü · Kül ateşi",
+          "body": "Bakır cezvede, kum ocağında, köpüğü sabırla toplanmış. Atölyenin en eski tarifi."
+        }
+      }
+    },
+    "cta": {
+      "title": "Kavurma günü perşembe. Kokusu Arasta'ya kadar gelir.",
+      "button": "Bizi ziyaret edin",
+      "secondary": "Menüye göz atın"
+    }
+  },
+  "beans": {
+    "eyebrow": "Çekirdek Kütüphanesi",
+    "title": "Kullandığımız kahve çekirdekleri",
+    "lede": "Her çekirdeği yetiştiren elin adını biliyoruz. Kökene, rakıma ve işleme yöntemine göre süzün; bir kartı açıp kavurma eğrisini inceleyin.",
+    "filters": {
+      "label": "Çekirdekleri süz",
+      "all": "Tümü",
+      "espresso": "Espresso Harmanları",
+      "filter": "Filtre & Pour-Over",
+      "micro": "Mikro-Lot"
+    },
+    "count": "{count, plural, one {# çekirdek} other {# çekirdek}}",
+    "labels": {
+      "farm": "Çiftlik / İstasyon",
+      "region": "Bölge",
+      "altitude": "Rakım",
+      "process": "İşleme",
+      "variety": "Varyete",
+      "notes": "Tadım notları",
+      "roast": "Kavurma",
+      "roastCurve": "Kavurma eğrisi",
+      "curveCaption": "Çekirdek sıcaklığı (°C) / süre (dk)",
+      "turningPoint": "Dönüm noktası",
+      "firstCrack": "Birinci çatlama",
+      "drop": "Döküm",
+      "development": "Gelişim",
+      "acidity": "Asidite",
+      "body": "Gövde",
+      "sweetness": "Tatlılık",
+      "details": "Detayları gör",
+      "close": "Kapat",
+      "brewWith": "Önerilen demleme",
+      "harvest": "Hasat"
+    },
+    "roastLevels": {
+      "light": "Açık",
+      "medium": "Orta",
+      "mediumDark": "Orta-Koyu"
+    }
+  },
+  "menu": {
+    "eyebrow": "Menü & Demleme Rehberi",
+    "title": "Bardakta Lefkoşa",
+    "lede": "Adanın keçiboynuzu, Antep'in fıstığı, Etiyopya'nın çiçekleri. Aşağıda menümüz; altında ise evde aynı fincanı kurmanız için hesaplayıcımız.",
+    "calc": {
+      "eyebrow": "Demleme Hesaplayıcı",
+      "title": "Oranı bulun, fincanı kurun.",
+      "method": "Yöntem",
+      "methods": {
+        "pourover": "Pour-Over",
+        "espresso": "Espresso",
+        "coldbrew": "Soğuk Demleme"
+      },
+      "coffee": "Kahve",
+      "strength": "Yoğunluk",
+      "strengths": {
+        "light": "Hafif",
+        "balanced": "Dengeli",
+        "strong": "Güçlü"
+      },
+      "water": "Su",
+      "yield": "Fincandaki verim",
+      "ratio": "Oran",
+      "temperature": "Su sıcaklığı",
+      "time": "Hedef süre",
+      "grind": "Öğütme",
+      "grinds": {
+        "pourover": "Orta-ince · deniz tuzu",
+        "espresso": "İnce · pudra şekerine yakın",
+        "coldbrew": "Kalın · iri çakıl"
+      },
+      "cold": "Soğuk · 4–8 °C",
+      "hours": "sa",
+      "seconds": "sn",
+      "minutes": "dk",
+      "tip": "Usta notu",
+      "tips": {
+        "pourover": "İlk 50 g suyla 40 saniye çiçeklendirin; sonra merkezden dışa doğru yavaş, dairesel dökün.",
+        "espresso": "Akış 6–8. saniyede başlamalı. Erken geliyorsa bir tık incelterek öğütün.",
+        "coldbrew": "Buzdolabında demleyin, kâğıt filtreden süzün; 1:1 suyla seyreltip buz üzerine servis edin."
+      }
+    },
+    "sections": {
+      "signature": "İmza İçecekler",
+      "classics": "Klasikler",
+      "cold": "Soğuk Demlemeler",
+      "pastry": "Atölye Pastaneleri"
+    },
+    "currency": "₺",
+    "seasonal": "Mevsimlik",
+    "house": "Atölyeden"
+  },
+  "team": {
+    "eyebrow": "Ekibimiz",
+    "title": "Fincanın arkasındaki eller",
+    "lede": "Dört kişi, bir kavurma makinesi, bir taş tezgâh. Lefkoşa'nın en dar sokağında her gün aynı soruyu soruyoruz: Bu fincan daha iyi olabilir mi?",
+    "favorite": "Favori yöntem",
+    "philosophy": "Felsefe",
+    "since": "Atölyede",
+    "hint": "Tanışmak için üzerine gelin"
+  },
+  "about": {
+    "eyebrow": "Hakkımızda",
+    "title": "Bir taş atölyenin ikinci hayatı",
+    "lede": "Arasta'nın arka sokağında, kapısı yıllarca kilitli kalmış bir demirci atölyesi vardı. Kemerleri sağlam, duvarları sarı taş, tavanı kırlangıç yuvasıydı.",
+    "story": {
+      "p1": "2019 kışında anahtarı aldığımızda içeride örs, körük ve elli yıllık bir sessizlik bulduk. Duvarları sıvadan kurtarıp taşın kendi rengini ortaya çıkarmamız on bir ay sürdü.",
+      "p2": "Demircinin ocağı bugün kavurma makinemizin bacasına ev sahipliği yapıyor. Ateş aynı ateş; yalnızca demir yerine kahve dövüyoruz.",
+      "quote": "Surlar şehri korumak için yapıldı. Biz de içindeki küçük şeyleri korumak için buradayız: sabahın ilk kokusunu, komşunun selamını, iyi bir fincanın sessizliğini.",
+      "quoteBy": "Kurucu not defterinden"
+    },
+    "timeline": {
+      "eyebrow": "Kilometre Taşları",
+      "title": "Zaman çizelgesi",
+      "expand": "Ayrıntıyı aç",
+      "collapse": "Ayrıntıyı kapat"
+    },
+    "philosophy": {
+      "eyebrow": "Kavurma Felsefesi",
+      "title": "Küçük parti, büyük dikkat.",
+      "p1": "12 kilogramlık Loring benzeri, konveksiyon ağırlıklı kavurucumuzda her parti ayrı bir profil. Probat tambur makinemiz ise espresso harmanlarımızın yuvarlak, şuruplu gövdesini taşıyor.",
+      "p2": "Her partiyi kayıt altına alır, renk ölçümüyle doğrular ve ertesi sabah kör tadımla onaylarız. Beğenmediğimiz parti satışa çıkmaz.",
+      "points": {
+        "a": "Parti başına en fazla 12 kg",
+        "b": "Her parti için Agtron renk ölçümü",
+        "c": "Kavurmadan sonraki 72 saat içinde satış"
+      }
+    },
+    "sustain": {
+      "eyebrow": "Doğrudan Ticaret",
+      "title": "Kahveyi yetiştirenle aynı masada.",
+      "p1": "Çekirdeklerimizin %80'ini aracısız, doğrudan üreticilerden alıyoruz; borsanın değil, kalitenin fiyatını ödüyoruz. Her çuvalın izini çiftliğe kadar sürebilirsiniz.",
+      "p2": "Kahve posası Lefkoşa'daki iki topluluk bahçesine kompost olarak gidiyor; çuval bezleri ise yerel bir atölyede çantaya dönüşüyor.",
+      "stats": {
+        "direct": "doğrudan ticaret",
+        "premium": "Fair Trade tabanının üzerinde",
+        "waste": "kompostlanan posa"
+      }
+    }
+  },
+  "contact": {
+    "eyebrow": "İletişim",
+    "title": "Surların içinde, bir taş kapı.",
+    "lede": "Selimiye'nin gölgesinden Arasta'ya doğru yürüyün; kavurma kokusu sizi gerisine götürecektir.",
+    "address": {
+      "label": "Adres",
+      "line1": "Zahra Sokak No. 11",
+      "line2": "Arasta Bölgesi, Surlariçi",
+      "line3": "Lefkoşa, KKTC"
+    },
+    "hours": {
+      "label": "Çalışma saatleri",
+      "weekdays": "Pazartesi – Cuma",
+      "weekdaysTime": "07:30 – 19:00",
+      "saturday": "Cumartesi",
+      "saturdayTime": "08:30 – 20:00",
+      "sunday": "Pazar",
+      "sundayTime": "09:00 – 17:00",
+      "roastDay": "Kavurma günü: Perşembe"
+    },
+    "reach": {
+      "label": "Bize ulaşın",
+      "phone": "+90 392 000 00 00",
+      "email": "atolye@surlarici.coffee"
+    },
+    "map": {
+      "title": "Lefkoşa Surlariçi haritası",
+      "walls": "Venedik Surları · 1567",
+      "us": "SURLARİÇİ Atölye",
+      "selimiye": "Selimiye Camii",
+      "buyukhan": "Büyük Han",
+      "kyrenia": "Girne Kapısı",
+      "arasta": "Arasta",
+      "buffer": "Ara bölge"
+    },
+    "form": {
+      "title": "Bize yazın",
+      "intent": "Konu",
+      "intents": {
+        "reservation": "Rezervasyon",
+        "general": "Genel",
+        "wholesale": "Toptan Çekirdek"
+      },
+      "wholesaleToggle": "Kafe veya restoranım için toptan çekirdek talep ediyorum",
+      "wholesaleHint": "Kıbrıs genelindeki partner işletmelere haftalık taze kavrum gönderiyoruz.",
+      "name": "Ad Soyad",
+      "email": "E-posta",
+      "phone": "Telefon (isteğe bağlı)",
+      "business": "İşletme adı",
+      "volume": "Aylık tahmini tüketim (kg)",
+      "date": "Tarih",
+      "guests": "Kişi sayısı",
+      "message": "Mesajınız",
+      "submit": "Gönder",
+      "submitting": "Gönderiliyor…",
+      "successTitle": "Mesajınız ulaştı.",
+      "successBody": "Teşekkürler. Bir iş günü içinde, büyük ihtimalle elimizde bir fincanla size döneceğiz.",
+      "again": "Yeni mesaj yaz",
+      "errorTitle": "Bir şeyler ters gitti.",
+      "errorBody": "Lütfen işaretli alanları kontrol edin ve tekrar deneyin.",
+      "rateLimited": "Çok sık deneme yaptınız. Lütfen bir dakika sonra tekrar deneyin.",
+      "privacy": "Bilgileriniz yalnızca bu talebe yanıt vermek için kullanılır.",
+      "errors": {
+        "nameShort": "Lütfen adınızı yazın (en az 2 karakter).",
+        "nameLong": "Ad çok uzun.",
+        "email": "Geçerli bir e-posta adresi girin.",
+        "phone": "Geçerli bir telefon numarası girin.",
+        "messageShort": "Mesajınız en az 10 karakter olmalı.",
+        "messageLong": "Mesajınız en fazla 2000 karakter olabilir.",
+        "business": "İşletme adını yazın.",
+        "volume": "1 ile 2000 kg arasında bir değer girin.",
+        "guests": "1 ile 12 kişi arasında seçin.",
+        "date": "Geçerli bir tarih seçin."
+      }
+    }
+  },
+  "footer": {
+    "tagline": "Lefkoşa'nın kalbinde, sarı taşın arasında kavrulur.",
+    "visit": "Ziyaret",
+    "explore": "Keşfet",
+    "follow": "Takip",
+    "rights": "Tüm hakları saklıdır.",
+    "coords": "35°10′34″K · 33°21′49″D",
+    "credits": "Lefkoşa'da tasarlandı ve kavruldu."
+  },
+  "notFound": {
+    "title": "Bu sokak çıkmaz.",
+    "body": "Surlariçi'nin dar sokakları bazen insanı şaşırtır. Aradığınız sayfa burada değil.",
+    "back": "Ana sayfaya dönün"
+  }
+}
