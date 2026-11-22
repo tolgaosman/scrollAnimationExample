@@ -40,6 +40,16 @@ const PAD = 4;
 // block artefacts once scaled up on 3× phone screens.
 const QUALITY = process.env.FRAME_QUALITY ?? "4";
 
+// Temporal smoothing. The source is AI-generated: its slow "drift" passages
+// (the assembled machine at the start, the settled teardown at the end) move
+// in steps every 4th frame — ~6 updates per second inside a 24 fps file —
+// with near-identical frames between. Scrubbed slowly, that reads as the
+// machine twitching. atadenoise averages each pixel over ±7 frames when the
+// change is small (noise, sub-pixel drift) and leaves real motion alone, so
+// the drift becomes continuous while the fast teardown stays sharp.
+// Set FRAME_FILTER="" to disable, or pass any ffmpeg -vf chain.
+const FILTER = process.env.FRAME_FILTER ?? "atadenoise=s=15:0a=0.04:0b=0.08";
+
 function findSource() {
   if (process.argv[2]) return path.resolve(process.argv[2]);
   const dirs = [path.join(ROOT, "assets-source"), ROOT].filter((d) => fs.existsSync(d));
@@ -94,7 +104,7 @@ if (source.toLowerCase().endsWith(".mp4") && !ffmpeg) {
 const tmp = fs.mkdtempSync(path.join(os.tmpdir(), "frames-"));
 let frames;
 if (ffmpeg) {
-  console.log(`› decoding ${path.relative(ROOT, source)} with ffmpeg (q:v ${QUALITY}) → ${tmp}`);
+  console.log(`› decoding ${path.relative(ROOT, source)} with ffmpeg (q:v ${QUALITY}${FILTER ? `, ${FILTER}` : ""}) → ${tmp}`);
   execFileSync(
     ffmpeg,
     [
@@ -102,6 +112,7 @@ if (ffmpeg) {
       "-i", source,
       "-an",
       "-fps_mode", "passthrough", // every source frame exactly once, no dupes/drops
+      ...(FILTER ? ["-vf", FILTER] : []),
       "-q:v", QUALITY,
       path.join(tmp, `frame_%0${PAD}d.jpg`),
     ],

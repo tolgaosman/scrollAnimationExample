@@ -54,6 +54,7 @@ Everything lives in [`src/components/scroll-machine/`](src/components/scroll-mac
 
 - **`<img>` + `decode()`, re-warmed ahead of the scroll.** 240 decoded 1280×720 frames would take about 880 MB of RAM, so we keep `<img>` elements (compressed bytes) and let the browser manage the decoded cache — calling `decode()` on the frames just ahead of the scroll direction so they're hot when needed.
 - **Always paint the exact frame.** Holding the last frame until the right one is ready and then jumping ahead looks like jitter on a phone. A rare slow paint is far less visible than a stutter pattern.
+- **Check the footage for cadence before blaming the code.** This AI-generated source moves in steps every 4th frame during its slow passages (near-identical frames in between). Scrubbed slowly that looks like the machine twitching. `prepare-frames.mjs` runs a temporal `atadenoise` pass that turns those steps into continuous drift while leaving fast motion sharp.
 - **Don't paint finer than the footage.** A canvas at 3× DPR showing 1280-px frames costs fill-rate on every frame and shows no extra detail.
 - **Remap scroll to frames with keyframes, not a straight line.** The source footage spends half its length on slow drift. `FRAME_KEYS` spreads out the dramatic part.
 - **One source of truth for layout.** The canvas and the overlays both call `computeFit()`, so callouts can point at real pixels.
