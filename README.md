@@ -81,6 +81,19 @@ The verifier visits all 12 routes and fails on any console error, page error, fa
 
 Screenshots go to `verify-output/`.
 
+## Deploy (Docker)
+
+```bash
+docker compose up -d --build        # serves on http://<server-ip>:4010
+# or without compose:
+docker build -t surlarici-web --build-arg NEXT_PUBLIC_SITE_URL=http://5.75.128.196:4010 .
+docker run -d --name surlarici-web --restart unless-stopped -p 4010:4010 surlarici-web
+```
+
+- The image uses Next's `standalone` output and runs as a non-root user.
+- `NEXT_PUBLIC_SITE_URL` is baked in at build time (canonical URLs, sitemap, hreflang).
+- Over plain HTTP, leave `HTTPS_ONLY=0` (the default). Once a domain with TLS sits in front, rebuild with `--build-arg HTTPS_ONLY=1` to enable HSTS and `upgrade-insecure-requests`; otherwise the browser would rewrite asset URLs to https and break the page.
+
 ## Assets
 
 `assets-source/` holds the original render: the start and end frames, the mp4 and the frame zip. `public/frames/` is generated from it by `npm run frames`.

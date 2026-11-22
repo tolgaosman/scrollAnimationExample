@@ -1,0 +1,12 @@
+services:
+  web:
+    build:
+      context: .
+      args:
+        NEXT_PUBLIC_SITE_URL: http://5.75.128.196:4010
+        HTTPS_ONLY: "0"
+    image: surlarici-web
+    container_name: surlarici-web
+    restart: unless-stopped
+    ports:
+      - "4010:4010"
