@@ -19,7 +19,9 @@
  * The result: no visible frame border at any aspect ratio.
  */
 import type { Fit } from "./geometry";
-import type { Drawable } from "./frameDecoder";
+
+/** Anything with pixels we can paint: an <img> frame (or an ImageBitmap). */
+export type Drawable = HTMLImageElement | ImageBitmap;
 
 export interface EdgeTextures {
   top: HTMLCanvasElement;

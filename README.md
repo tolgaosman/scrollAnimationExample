@@ -40,21 +40,21 @@ Everything lives in [`src/components/scroll-machine/`](src/components/scroll-mac
 |---|---|
 | [`scripts/prepare-frames.mjs`](scripts/prepare-frames.mjs) | Decodes the master mp4 with ffmpeg (`ffmpeg-static`) at its native frame rate into `frame_0001.jpg…` in a single lossy step, and writes `manifest.json` (count and pixel size, read from the JPEG header). Falls back to a frame zip when there's no video. |
 | [`src/lib/frames.ts`](src/lib/frames.ts) | Reads the manifest at build time and hands the client a URL list, so no filename is hard-coded. |
-| `useFramePreloader.ts` | Fetches the frames as compressed Blobs with a concurrency pool. Phones unlock after every 2nd frame, then the rest stream in behind. Failed frames retry, then borrow a neighbour. |
-| `frameDecoder.ts` | Keeps a small window of frames around the scroll position decoded with `createImageBitmap` (off the main thread), biased toward the scroll direction, and releases the rest. |
+| `useFramePreloader.ts` | Loads and `decode()`s the frames with a concurrency pool. Phones unlock after every 2nd frame, then the rest stream in behind. Failed frames retry, then borrow a neighbour. |
 | `Preloader.tsx` | The 000 → 100 counter; it locks scroll until the frames are ready. |
 | `ScrollMachine.tsx` | A 500vh section with a sticky 100svh stage. Its `useScroll` → `useSpring` chain produces one `progress` value that drives everything else. |
 | `timeline.ts` | **The choreography, as data:** scroll→frame keyframes, phase windows, per-part anchor tracks, and fit/zoom per orientation. |
 | `geometry.ts` | Pure cover/contain fit math plus `imageToScreen()`, shared by the canvas and the HTML overlays. |
-| `FrameCanvas.tsx` | The render loop. It sizes the backing store for devicePixelRatio (up to 3×) and paints at most once per animation frame, cross-fading neighbouring frames by the fractional position. It never triggers a React render while scrolling. |
+| `FrameCanvas.tsx` | The render loop. It sizes the backing store for devicePixelRatio (capped at the footage's own resolution), always paints the exact frame for the scroll position at most once per animation frame, and keeps the frames ahead pre-decoded. On desktop it cross-fades neighbouring frames. It never triggers a React render while scrolling. Add `?debug` to the URL for a live fps / paint-cost readout. |
 | `drawFrame.ts` | Edge extension: the frame's own border pixels are stretched to fill any gap, so the studio background has no visible edge at any aspect ratio. |
 | `PhaseOverlays.tsx` | The four story phases. Callout leader lines follow their part frame by frame (see `anchorAt`). |
 | `Hud.tsx` | Frame counter and progress rail. |
 
 ### Ideas worth stealing
 
-- **Keep compressed bytes, decode a window.** 240 decoded 1280×720 frames take about 880 MB of RAM, so phones evict them, and then `drawImage()` re-decodes JPEGs on the main thread mid-scroll (jank). Holding Blobs (~11 MB) and decoding ~20 frames ahead with `createImageBitmap` keeps memory flat and the main thread free.
-- **Cross-fade between frames.** A few hundred frames over several screens of scroll is a step every 15–20 px. Drawing frame *n+1* over frame *n* at the fractional position makes the motion continuous.
+- **`<img>` + `decode()`, re-warmed ahead of the scroll.** 240 decoded 1280×720 frames would take about 880 MB of RAM, so we keep `<img>` elements (compressed bytes) and let the browser manage the decoded cache — calling `decode()` on the frames just ahead of the scroll direction so they're hot when needed.
+- **Always paint the exact frame.** Holding the last frame until the right one is ready and then jumping ahead looks like jitter on a phone. A rare slow paint is far less visible than a stutter pattern.
+- **Don't paint finer than the footage.** A canvas at 3× DPR showing 1280-px frames costs fill-rate on every frame and shows no extra detail.
 - **Remap scroll to frames with keyframes, not a straight line.** The source footage spends half its length on slow drift. `FRAME_KEYS` spreads out the dramatic part.
 - **One source of truth for layout.** The canvas and the overlays both call `computeFit()`, so callouts can point at real pixels.
 - **Observe the mask, not the masked element.** A line clipped by `overflow: hidden` never intersects the viewport, so put `whileInView` on its wrapper. The comment in `src/components/ui/Reveal.tsx` explains this.

@@ -1,42 +1,45 @@
 "use client";
 
 /**
- * useFramePreloader — fetch an image sequence before scrubbing.
+ * useFramePreloader — fetch + decode an image sequence before scrubbing.
  * ------------------------------------------------------------------
- * What we keep in memory: the *compressed* JPEG bytes as Blobs (~11 MB for
- * the whole sequence), not decoded pixels. 240 decoded 1280×720 RGBA frames
- * would be ~880 MB — phones evict those from the image cache, and then every
- * drawImage() re-decodes a JPEG synchronously on the main thread mid-scroll.
- * That was the source of the jank. Instead, FrameDecoder (frameDecoder.ts)
- * decodes a small sliding window of frames around the scroll position with
- * createImageBitmap(), which runs off the main thread.
+ * Each frame is kept as its compressed bytes (a Blob, ~48 KB) plus an <img>
+ * made from them — no second download. FrameCanvas decodes the frames around
+ * the scroll position from the Blobs into ImageBitmaps (off the main thread;
+ * note createImageBitmap(<img>) is NOT — it decodes on the main thread in
+ * Chrome) and paints those. If a bitmap isn't ready, it paints the <img>, so
+ * the exact frame is always on screen. Memory stays modest: 240 decoded
+ * 1280×720 frames would be ~880 MB, the bytes are ~11 MB.
  *
  * Loading strategy:
  *   - A small concurrency pool (6) — enough to saturate HTTP/1.1 per-host
- *     limits without flooding the network stack.
+ *     limits without starving the main thread with decode callbacks.
  *   - Narrow screens load every 2nd frame first; the hero unlocks as soon as
  *     that half is in, then the remaining frames stream in the background and
  *     slot into place. Until a frame arrives, its slot borrows the nearest
  *     loaded neighbour, so the animation is never missing a frame.
  *     Save-Data users only ever get the half set.
  *   - Failed frames retry twice, then keep borrowing their neighbour.
- *   - Frame 0 is decoded up front: it's the first paint and the source of
- *     the edge-extension textures.
  *   - Results are memoised per URL list at module level: navigating away and
  *     back to the homepage is instant, with no second preloader.
  */
 import { useEffect, useState } from "react";
-import { decodeFrame, type Drawable } from "./frameDecoder";
 
 const CONCURRENCY = 6;
 const BACKFILL_CONCURRENCY = 3;
 const RETRIES = 2;
 
+/** One loaded frame: its compressed bytes and an <img> made from them. */
+export interface Frame {
+  /** Decoded off the main thread into an ImageBitmap by FrameCanvas. */
+  blob: Blob;
+  /** Fallback that can always be painted (possibly with a synchronous decode). */
+  img: HTMLImageElement;
+}
+
 export interface FrameStore {
-  /** One entry per frame; a slot that hasn't loaded yet holds a neighbour's Blob. */
-  blobs: Blob[];
-  /** Decoded frame 0 — never released. */
-  poster: Drawable;
+  /** One entry per frame; a slot that hasn't loaded yet holds a neighbour's frame. */
+  frames: Frame[];
   /** Bumped whenever a background-loaded frame replaces a borrowed slot. */
   version: number;
 }
@@ -67,13 +70,19 @@ function firstPass(count: number, stride: number): number[] {
   return out;
 }
 
-async function loadBlob(src: string): Promise<Blob> {
+async function loadFrame(src: string): Promise<Frame> {
   let lastError: unknown;
   for (let attempt = 0; attempt <= RETRIES; attempt++) {
     try {
       const res = await fetch(src);
       if (!res.ok) throw new Error(`HTTP ${res.status} for ${src}`);
-      return await res.blob();
+      const blob = await res.blob();
+      const img = new Image();
+      img.decoding = "async";
+      // Lives as long as the cached store (i.e. the page session).
+      img.src = URL.createObjectURL(blob);
+      await img.decode(); // validates the file and warms the decode cache
+      return { blob, img };
     } catch (err) {
       lastError = err;
     }
@@ -82,11 +91,11 @@ async function loadBlob(src: string): Promise<Blob> {
 }
 
 /** Point every empty slot at the nearest loaded frame. */
-function fillHoles(loaded: (Blob | undefined)[]): Blob[] {
-  const have = loaded.map((b, i) => (b ? i : -1)).filter((i) => i >= 0);
+function fillHoles(loaded: (Frame | undefined)[]): Frame[] {
+  const have = loaded.map((frame, i) => (frame ? i : -1)).filter((i) => i >= 0);
   if (have.length === 0) return [];
-  return loaded.map((b, i) => {
-    if (b) return b;
+  return loaded.map((frame, i) => {
+    if (frame) return frame;
     const nearest = have.reduce((a, c) => (Math.abs(c - i) < Math.abs(a - i) ? c : a));
     return loaded[nearest]!;
   });
@@ -102,19 +111,18 @@ async function pool<T>(items: T[], limit: number, job: (item: T) => Promise<void
 }
 
 /** Stream the frames skipped by the first pass into an existing store. */
-function backfill(urls: string[], store: FrameStore, loaded: (Blob | undefined)[], indices: number[]) {
+function backfill(urls: string[], store: FrameStore, loaded: (Frame | undefined)[], indices: number[]) {
   void pool(
     indices,
     BACKFILL_CONCURRENCY,
     async (i) => {
       try {
-        loaded[i] = await loadBlob(urls[i]);
+        loaded[i] = await loadFrame(urls[i]);
       } catch {
         return; // keeps borrowing its neighbour
       }
-      // Re-point this slot and any neighbours that were borrowing a farther frame.
       const filled = fillHoles(loaded);
-      for (let k = 0; k < filled.length; k++) store.blobs[k] = filled[k];
+      for (let k = 0; k < filled.length; k++) store.frames[k] = filled[k];
       store.version++;
     },
     () => false, // keep going after unmount: the store is cached for next time
@@ -134,7 +142,7 @@ export function useFramePreloader(urls: string[]): PreloadState {
     let cancelled = false;
     const { stride, backfill: wantsBackfill } = pickStride();
     const first = firstPass(urls.length, stride);
-    const loaded: (Blob | undefined)[] = new Array(urls.length);
+    const loaded: (Frame | undefined)[] = new Array(urls.length);
     let done = 0;
     let lastReported = -1;
 
@@ -153,7 +161,7 @@ export function useFramePreloader(urls: string[]): PreloadState {
         CONCURRENCY,
         async (i) => {
           try {
-            loaded[i] = await loadBlob(urls[i]);
+            loaded[i] = await loadFrame(urls[i]);
           } catch {
             loaded[i] = undefined; // patched by fillHoles()
           }
@@ -164,21 +172,12 @@ export function useFramePreloader(urls: string[]): PreloadState {
       );
       if (cancelled) return;
 
-      const blobs = fillHoles(loaded);
-      if (blobs.length === 0) {
+      const frames = fillHoles(loaded);
+      if (frames.length === 0) {
         setState({ store: null, progress: 1, ready: true });
         return;
       }
-      let poster: Drawable;
-      try {
-        poster = await decodeFrame(blobs[0]);
-      } catch {
-        setState({ store: null, progress: 1, ready: true });
-        return;
-      }
-      if (cancelled) return;
-
-      const store: FrameStore = { blobs, poster, version: 0 };
+      const store: FrameStore = { frames, version: 0 };
       cache.set(key, store);
       setState({ store, progress: 1, ready: true });
 

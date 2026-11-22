@@ -4,16 +4,24 @@
  * FrameCanvas — the render loop.
  * ------------------------------------------------------------------
  * Responsibilities, in order:
- *   1. Size the backing store for devicePixelRatio (crisp on Retina).
+ *   1. Size the backing store for devicePixelRatio — capped at the footage's
+ *      own resolution, since a finer canvas adds fill cost but no detail.
  *   2. Work out the fit (cover/contain + zoom) and report it upward so the
  *      HTML overlays can align with the image.
  *   3. Subscribe to the (spring-smoothed) scroll progress MotionValue and
  *      paint the matching frame — at most once per animation frame, and
- *      only when what's on screen would actually change.
- *   4. Keep a window of frames around the scroll position decoded off the
- *      main thread (FrameDecoder), so painting never stalls on a JPEG decode.
- *   5. Cross-fade between neighbouring frames by the fractional position,
- *      so the machine moves continuously rather than in frame-sized steps.
+ *      only when what's on screen would actually change. It always paints
+ *      the exact frame for the current position: holding a stale frame and
+ *      catching up later reads as jitter.
+ *   4. Keep the frames around the scroll position (biased toward its
+ *      direction) pre-decoded as ImageBitmaps from their Blobs (off the main
+ *      thread), which are cheap to paint. If a bitmap isn't ready, the exact
+ *      frame is painted from its <img> instead.
+ *   5. On fine-pointer screens, cross-fade neighbouring frames by the
+ *      fractional position for continuous motion.
+ *
+ * Add `?debug` to the URL for an on-screen readout of frame rate and paint
+ * cost — the quickest way to see what a real phone is doing.
  *
  * Note what's *not* here: no React state per scroll tick. MotionValue
  * subscriptions run outside React's render cycle, so scrubbing never
@@ -23,9 +31,8 @@ import { type MotionValue } from "motion/react";
 import { useEffect, useRef } from "react";
 import { computeFit, type Fit, type Size } from "./geometry";
 import { buildEdgeTextures, drawFrame, type EdgeTextures } from "./drawFrame";
-import { FrameDecoder, type Drawable } from "./frameDecoder";
 import { FIT, framePositionAt } from "./timeline";
-import type { FrameStore } from "./useFramePreloader";
+import type { Frame, FrameStore } from "./useFramePreloader";
 
 interface FrameCanvasProps {
   store: FrameStore;
@@ -33,24 +40,24 @@ interface FrameCanvasProps {
   progress: MotionValue<number>;
   /** Accessible description of the animation. */
   label: string;
-  /** Cross-fade between frames (off for prefers-reduced-motion). */
+  /** Cross-fade between frames. */
   blend: boolean;
   onLayout?: (fit: Fit) => void;
   /** Called once with the sampled studio colour (for CSS fallbacks). */
   onBackground?: (color: string) => void;
 }
 
-/**
- * Match the screen up to 3× — but never finer than the footage itself.
- * Painting 1280-px frames onto a 1600-px-wide backing store adds no detail,
- * only fill-rate, and on a phone that's what turns into dropped frames
- * (visible as jitter). See the per-fit cap in resize().
- */
+/** Never finer than 3× — and see the per-fit cap at the footage's resolution in resize(). */
 const MAX_DPR = 3;
 /** …and never allocate more than a 4K backing store (big desktop monitors). */
 const MAX_BACKING_PIXELS = 3840 * 2160;
 /** Cross-fade resolution: 1/32 steps are invisible and skip redundant paints. */
 const BLEND_STEPS = 32;
+/** How many frames ahead of the scroll direction to keep decoded. */
+const WARM_AHEAD = 16;
+const WARM_BEHIND = 4;
+/** Concurrent bitmap decodes. */
+const MAX_IN_FLIGHT = 4;
 
 export function FrameCanvas({
   store,
@@ -73,30 +80,95 @@ export function FrameCanvas({
 
   useEffect(() => {
     const canvas = canvasRef.current;
-    if (!canvas || store.blobs.length === 0) return;
+    if (!canvas || store.frames.length === 0) return;
     const ctx = canvas.getContext("2d", { alpha: false });
     if (!ctx) return;
 
-    const edges: EdgeTextures = buildEdgeTextures(store.poster);
+    const edges: EdgeTextures = buildEdgeTextures(store.frames[0].img);
     onBackgroundRef.current?.(edges.average);
 
     let fit: Fit | null = null;
     let drawnKey = -1;
     let dirty = true; // layout changed → must repaint even if the frame didn't
-    let painted = false;
     let raf = 0;
-    let focused = -1;
-    let focusedVersion = -1;
     let direction: 1 | -1 = 1;
     let lastPos = 0;
+    let warmedAt = -1;
+    let warmedVersion = -1;
     let shownFrame = -1;
+    const debug = debugPanel(canvas);
 
     /** Coalesce any number of change events into one paint per frame. */
     const schedule = () => {
       if (!raf) raf = requestAnimationFrame(render);
     };
 
-    const decoder = new FrameDecoder(() => store.blobs, schedule);
+    // Pre-decoded ImageBitmaps for the frames around the scroll position,
+    // decoded from the compressed Blobs (off the main thread). Painting a
+    // bitmap is cheap; painting an <img> can mean a synchronous decode. When a
+    // bitmap isn't ready yet we still paint the exact frame from its <img> —
+    // never hold a stale frame and jump later (that reads as jitter).
+    const bitmaps = new Map<Blob, ImageBitmap>();
+    const inFlight = new Set<Blob>();
+    let wanted = new Set<Blob>();
+    let queue: Blob[] = [];
+    let disposed = false;
+    const canBitmap = typeof createImageBitmap === "function";
+
+    const pump = () => {
+      while (inFlight.size < MAX_IN_FLIGHT && queue.length > 0) {
+        const blob = queue.shift()!;
+        inFlight.add(blob);
+        createImageBitmap(blob).then(
+          (bmp) => {
+            inFlight.delete(blob);
+            if (disposed || !wanted.has(blob)) bmp.close();
+            else bitmaps.set(blob, bmp);
+            pump();
+          },
+          () => {
+            inFlight.delete(blob);
+            pump();
+          },
+        );
+      }
+    };
+
+    /** Re-centre the decode window on `index`, biased toward the scroll direction. */
+    const warm = (index: number) => {
+      const frames = store.frames;
+      const order: Frame[] = [];
+      const seen = new Set<Blob>();
+      const add = (i: number) => {
+        const f = frames[i];
+        if (f && !seen.has(f.blob)) {
+          seen.add(f.blob);
+          order.push(f);
+        }
+      };
+      add(index);
+      add(index + 1);
+      for (let k = 1; k <= WARM_AHEAD; k++) {
+        add(index + k * direction);
+        if (k <= WARM_BEHIND) add(index - k * direction);
+      }
+      if (!canBitmap) {
+        // No ImageBitmap support: at least keep the browser's decode cache hot.
+        for (const f of order) f.img.decode().catch(() => {});
+        return;
+      }
+      wanted = seen;
+      for (const [blob, bmp] of bitmaps) {
+        if (!seen.has(blob)) {
+          bmp.close();
+          bitmaps.delete(blob);
+        }
+      }
+      queue = order.map((f) => f.blob).filter((b) => !bitmaps.has(b) && !inFlight.has(b));
+      pump();
+    };
+
+    const drawable = (f: Frame | undefined) => (f ? (bitmaps.get(f.blob) ?? f.img) : undefined);
 
     /** (Re)size the backing store to match CSS size × DPR. */
     const resize = () => {
@@ -118,8 +190,9 @@ export function FrameCanvas({
       // Draw in CSS pixels from here on; the transform handles DPR.
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       ctx.imageSmoothingEnabled = true;
-      // "medium" is plenty for ≤2× scaling; "high" is several times slower per frame.
+      // "medium" is plenty for ≤2.5× scaling; "high" is several times slower per frame.
       ctx.imageSmoothingQuality = "medium";
+
       onLayoutRef.current?.(fit);
       dirty = true;
     };
@@ -127,11 +200,12 @@ export function FrameCanvas({
     function render() {
       raf = 0;
       if (!fit) return;
-      const count = store.blobs.length;
+      const frames = store.frames;
+      const count = frames.length;
       const pos = framePositionAt(progress.get(), count);
       // Only flip direction on real movement, so the spring's tiny settling
-      // wobble doesn't keep re-centring the decode window.
-      if (Math.abs(pos - lastPos) > 0.25) {
+      // wobble doesn't keep flipping which side we pre-decode.
+      if (Math.abs(pos - lastPos) > 0.5) {
         direction = pos > lastPos ? 1 : -1;
         lastPos = pos;
       }
@@ -147,34 +221,25 @@ export function FrameCanvas({
         frac = 0;
       }
 
-      // Move the decode window when the frame changes (or new frames streamed in).
-      if (index !== focused || store.version !== focusedVersion) {
-        decoder.focus(index, direction);
-        focused = index;
-        focusedVersion = store.version;
+      if (index !== warmedAt || store.version !== warmedVersion) {
+        warm(index);
+        warmedAt = index;
+        warmedVersion = store.version;
       }
 
-      const shown = index;
-      let base: Drawable | undefined = decoder.get(index);
-      if (!base) {
-        // A fast fling outran the decoder. Keep what's on screen (never jump to
-        // some other frame — that reads as flicker); onDecoded() repaints the
-        // moment this frame is ready.
-        if (painted) return;
-        base = store.poster;
-        frac = 0;
-      }
-      const next = frac > 0 ? decoder.get(index + 1) : undefined;
-      const key = shown * (BLEND_STEPS + 1) + (next ? frac * BLEND_STEPS : 0);
+      const next = frac > 0 ? drawable(frames[index + 1]) : undefined;
+      const key = index * (BLEND_STEPS + 1) + (next ? frac * BLEND_STEPS : 0);
       if (key === drawnKey && !dirty) return; // nothing new to paint
 
-      drawFrame(ctx!, base!, fit, edges, next ? { img: next, alpha: frac } : undefined);
+      const base = drawable(frames[index])!;
+      const t0 = performance.now();
+      drawFrame(ctx!, base, fit, edges, next ? { img: next, alpha: frac } : undefined);
+      debug?.paint(performance.now() - t0, index, base instanceof HTMLImageElement);
       drawnKey = key;
       dirty = false;
-      painted = true;
-      if (shown !== shownFrame) {
-        shownFrame = shown;
-        canvas!.dataset.frame = String(shown); // hook for tests / debugging
+      if (index !== shownFrame) {
+        shownFrame = index;
+        canvas!.dataset.frame = String(index); // hook for tests / debugging
       }
     }
 
@@ -192,7 +257,10 @@ export function FrameCanvas({
       unsubscribe();
       observer.disconnect();
       if (raf) cancelAnimationFrame(raf);
-      decoder.dispose();
+      disposed = true;
+      for (const bmp of bitmaps.values()) bmp.close();
+      bitmaps.clear();
+      debug?.dispose();
     };
   }, [store, imageSize, progress, blend]);
 
@@ -204,4 +272,57 @@ export function FrameCanvas({
       aria-label={label}
     />
   );
+}
+
+/**
+ * `?debug` readout: real frame rate, frames slower than 33 ms, and the
+ * slowest canvas paint (a slow paint = a synchronous JPEG decode).
+ */
+function debugPanel(canvas: HTMLCanvasElement) {
+  if (!new URLSearchParams(window.location.search).has("debug")) return null;
+  const el = document.createElement("pre");
+  el.style.cssText =
+    "position:fixed;left:8px;bottom:8px;z-index:100;margin:0;padding:6px 8px;font:11px/1.35 ui-monospace,monospace;background:rgb(0 0 0/.75);color:#0f0;pointer-events:none;white-space:pre";
+  document.body.appendChild(el);
+
+  let frames = 0;
+  let slow = 0;
+  let worstFrame = 0;
+  let worstPaint = 0;
+  let paints = 0;
+  let fallbacks = 0;
+  let index = 0;
+  let last = performance.now();
+  let raf = 0;
+  const tick = (t: number) => {
+    const dt = t - last;
+    last = t;
+    frames++;
+    if (dt > 33.4) slow++;
+    worstFrame = Math.max(worstFrame, dt);
+    raf = requestAnimationFrame(tick);
+  };
+  raf = requestAnimationFrame(tick);
+  const timer = window.setInterval(() => {
+    el.textContent =
+      `fps ${frames * 2}  slow ${slow}  worst ${worstFrame.toFixed(0)}ms\n` +
+      `paints ${paints * 2}/s  from <img> ${fallbacks}  worst paint ${worstPaint.toFixed(1)}ms\n` +
+      `frame ${index}  canvas ${canvas.width}×${canvas.height} @${devicePixelRatio}x`;
+    frames = slow = paints = fallbacks = 0;
+    worstFrame = worstPaint = 0;
+  }, 500);
+
+  return {
+    paint(ms: number, i: number, fromImg: boolean) {
+      paints++;
+      if (fromImg) fallbacks++;
+      index = i;
+      worstPaint = Math.max(worstPaint, ms);
+    },
+    dispose() {
+      cancelAnimationFrame(raf);
+      window.clearInterval(timer);
+      el.remove();
+    },
+  };
 }
