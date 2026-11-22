@@ -12,6 +12,8 @@ import path from "node:path";
  * nothing in the app needs to change.
  */
 export interface FrameManifest {
+  /** Content hash of the sequence; busts caches whenever the frames change. */
+  version?: string;
   count: number;
   width: number;
   height: number;
@@ -19,6 +21,7 @@ export interface FrameManifest {
   prefix: string;
   extension: string;
   basePath: string;
+  generatedAt?: string;
 }
 
 export interface FrameSequence {
@@ -35,9 +38,13 @@ export async function getFrameSequence(): Promise<FrameSequence> {
     throw new Error("frames/manifest.json: invalid frame count — run `npm run frames`.");
   }
 
+  // Frame file names are stable across regenerations and the files are cached
+  // long-term, so every URL carries the sequence's content version. Without
+  // it, browsers that cached an older sequence mix old and new frames.
+  const version = manifest.version ?? manifest.generatedAt ?? "0";
   const urls = Array.from({ length: manifest.count }, (_, i) => {
     const n = String(i + 1).padStart(manifest.padding, "0");
-    return `${manifest.basePath}${manifest.prefix}${n}${manifest.extension}`;
+    return `${manifest.basePath}${manifest.prefix}${n}${manifest.extension}?v=${encodeURIComponent(version)}`;
   });
 
   return { urls, width: manifest.width, height: manifest.height };

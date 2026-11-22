@@ -27,6 +27,7 @@
  *         FRAME_QUALITY=3 npm run frames         (ffmpeg -q:v, 2 = best … 31; default 4)
  */
 import { execFileSync } from "node:child_process";
+import crypto from "node:crypto";
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
@@ -131,14 +132,24 @@ fs.rmSync(OUT_DIR, { recursive: true, force: true });
 fs.mkdirSync(OUT_DIR, { recursive: true });
 
 let bytes = 0;
+// Content hash of the whole sequence → `version`, appended to every frame URL
+// as ?v=… The file names never change between regenerations, and frames are
+// cached for a long time — without this, a returning visitor gets a mix of
+// old cached frames and new ones (two different timelines interleaved: the
+// machine jumps back and forth).
+const hash = crypto.createHash("sha256");
 frames.forEach((src, idx) => {
   const name = `frame_${String(idx + 1).padStart(PAD, "0")}.jpg`;
-  fs.copyFileSync(src, path.join(OUT_DIR, name));
-  bytes += fs.statSync(src).size;
+  const buf = fs.readFileSync(src);
+  fs.writeFileSync(path.join(OUT_DIR, name), buf);
+  hash.update(buf);
+  bytes += buf.length;
 });
+const version = hash.digest("hex").slice(0, 12);
 
 const { width, height } = jpegSize(fs.readFileSync(frames[0]));
 const manifest = {
+  version,
   count: frames.length,
   width,
   height,

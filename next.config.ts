@@ -62,11 +62,10 @@ const nextConfig: NextConfig = {
     return [
       { source: "/:path*", headers: securityHeaders },
       {
-        // Frames rarely change; cache for a week and revalidate in the background.
+        // Frame URLs carry ?v=<content hash> (see src/lib/frames.ts), so a
+        // changed sequence always gets new URLs and can be cached forever.
         source: "/frames/:file*",
-        headers: [
-          { key: "Cache-Control", value: "public, max-age=604800, stale-while-revalidate=86400" },
-        ],
+        headers: [{ key: "Cache-Control", value: "public, max-age=31536000, immutable" }],
       },
     ];
   },
