@@ -122,8 +122,12 @@ export function FrameCanvas({
       if (!fit) return;
       const count = store.blobs.length;
       const pos = framePositionAt(progress.get(), count);
-      if (pos !== lastPos) direction = pos > lastPos ? 1 : -1;
-      lastPos = pos;
+      // Only flip direction on real movement, so the spring's tiny settling
+      // wobble doesn't keep re-centring the decode window.
+      if (Math.abs(pos - lastPos) > 0.25) {
+        direction = pos > lastPos ? 1 : -1;
+        lastPos = pos;
+      }
 
       let index = blend ? Math.floor(pos) : Math.round(pos);
       let frac = blend ? Math.round((pos - index) * BLEND_STEPS) / BLEND_STEPS : 0;
@@ -143,19 +147,14 @@ export function FrameCanvas({
         focusedVersion = store.version;
       }
 
-      let shown = index;
+      const shown = index;
       let base: Drawable | undefined = decoder.get(index);
       if (!base) {
-        // A fast fling outran the decoder: hold the nearest decoded frame for
-        // a moment rather than block. onDecoded() repaints once it's ready.
-        const near = decoder.nearestReady(index);
-        if (near >= 0) {
-          base = decoder.get(near);
-          shown = near;
-        } else if (!painted || index === 0) {
-          base = store.poster;
-          shown = 0;
-        } else return;
+        // A fast fling outran the decoder. Keep what's on screen (never jump to
+        // some other frame — that reads as flicker); onDecoded() repaints the
+        // moment this frame is ready.
+        if (painted) return;
+        base = store.poster;
         frac = 0;
       }
       const next = frac > 0 ? decoder.get(index + 1) : undefined;
