@@ -14,7 +14,9 @@
  *                 → useSpring()  → progress (weighted, mechanical feel)
  *                 → canvas + overlays + HUD all read `progress`
  *
- * With prefers-reduced-motion we skip the spring entirely and scrub 1:1.
+ * With prefers-reduced-motion we skip the spring entirely and scrub 1:1
+ * (and the canvas shows whole frames, no cross-fade). Touch devices get a
+ * stiffer spring, since native momentum already smooths the gesture.
  */
 import { useReducedMotion, useScroll, useSpring } from "motion/react";
 import { useTranslations } from "next-intl";
@@ -25,7 +27,8 @@ import { Hud } from "./Hud";
 import { PhaseOverlays } from "./PhaseOverlays";
 import { Preloader } from "./Preloader";
 import { useFramePreloader } from "./useFramePreloader";
-import { scrubSpring } from "@/lib/motion";
+import { scrubSpring, scrubSpringTouch } from "@/lib/motion";
+import { useMediaQuery } from "@/lib/useMediaQuery";
 
 export interface FrameSequenceProps {
   urls: string[];
@@ -36,11 +39,12 @@ export interface FrameSequenceProps {
 export function ScrollMachine({ sequence }: { sequence: FrameSequenceProps }) {
   const t = useTranslations("hero");
   const sectionRef = useRef<HTMLElement>(null);
-  const { images, progress: loadProgress, ready } = useFramePreloader(sequence.urls);
+  const { store, progress: loadProgress, ready } = useFramePreloader(sequence.urls);
 
   const reduceMotion = useReducedMotion();
+  const coarse = useMediaQuery("(pointer: coarse)");
   const { scrollYProgress } = useScroll({ target: sectionRef, offset: ["start start", "end end"] });
-  const smoothed = useSpring(scrollYProgress, scrubSpring);
+  const smoothed = useSpring(scrollYProgress, coarse ? scrubSpringTouch : scrubSpring);
   const progress = reduceMotion ? scrollYProgress : smoothed;
 
   const [layout, setLayout] = useState<Fit | null>(null);
@@ -63,12 +67,13 @@ export function ScrollMachine({ sequence }: { sequence: FrameSequenceProps }) {
         aria-label={t("subtitle")}
       >
         <div className="sticky top-0 h-svh w-full overflow-hidden">
-          {ready && (
+          {store && (
             <FrameCanvas
-              images={images}
+              store={store}
               imageSize={imageSize}
               progress={progress}
               label={t("canvasLabel")}
+              blend={!reduceMotion}
               onLayout={onLayout}
               onBackground={setStudio}
             />

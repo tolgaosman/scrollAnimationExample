@@ -9,7 +9,11 @@
  *      HTML overlays can align with the image.
  *   3. Subscribe to the (spring-smoothed) scroll progress MotionValue and
  *      paint the matching frame — at most once per animation frame, and
- *      only when the frame index or the layout actually changed.
+ *      only when what's on screen would actually change.
+ *   4. Keep a window of frames around the scroll position decoded off the
+ *      main thread (FrameDecoder), so painting never stalls on a JPEG decode.
+ *   5. Cross-fade between neighbouring frames by the fractional position,
+ *      so the machine moves continuously rather than in frame-sized steps.
  *
  * Note what's *not* here: no React state per scroll tick. MotionValue
  * subscriptions run outside React's render cycle, so scrubbing never
@@ -19,26 +23,39 @@ import { type MotionValue } from "motion/react";
 import { useEffect, useRef } from "react";
 import { computeFit, type Fit, type Size } from "./geometry";
 import { buildEdgeTextures, drawFrame, type EdgeTextures } from "./drawFrame";
-import { FIT, frameIndexAt } from "./timeline";
+import { FrameDecoder, type Drawable } from "./frameDecoder";
+import { FIT, framePositionAt } from "./timeline";
+import type { FrameStore } from "./useFramePreloader";
 
 interface FrameCanvasProps {
-  images: HTMLImageElement[];
+  store: FrameStore;
   imageSize: Size;
   progress: MotionValue<number>;
   /** Accessible description of the animation. */
   label: string;
+  /** Cross-fade between frames (off for prefers-reduced-motion). */
+  blend: boolean;
   onLayout?: (fit: Fit) => void;
   /** Called once with the sampled studio colour (for CSS fallbacks). */
   onBackground?: (color: string) => void;
 }
 
-const MAX_DPR = 2; // beyond 2× the JPEG has no extra detail; save the fill-rate.
+/**
+ * Match the screen up to 3×. Capping at 2× made 3× phones upscale the canvas
+ * a second time in the compositor — two resampling passes, visibly softer.
+ */
+const MAX_DPR = 3;
+/** …but never allocate more than a 4K backing store (big desktop monitors). */
+const MAX_BACKING_PIXELS = 3840 * 2160;
+/** Cross-fade resolution: 1/32 steps are invisible and skip redundant paints. */
+const BLEND_STEPS = 32;
 
 export function FrameCanvas({
-  images,
+  store,
   imageSize,
   progress,
   label,
+  blend,
   onLayout,
   onBackground,
 }: FrameCanvasProps) {
@@ -54,23 +71,38 @@ export function FrameCanvas({
 
   useEffect(() => {
     const canvas = canvasRef.current;
-    if (!canvas || images.length === 0) return;
+    if (!canvas || store.blobs.length === 0) return;
     const ctx = canvas.getContext("2d", { alpha: false });
     if (!ctx) return;
 
-    const edges: EdgeTextures = buildEdgeTextures(images[0]);
+    const edges: EdgeTextures = buildEdgeTextures(store.poster);
     onBackgroundRef.current?.(edges.average);
 
     let fit: Fit | null = null;
-    let drawnIndex = -1;
-    let dirty = true; // layout changed → must repaint even if the index didn't
+    let drawnKey = -1;
+    let dirty = true; // layout changed → must repaint even if the frame didn't
+    let painted = false;
     let raf = 0;
+    let focused = -1;
+    let focusedVersion = -1;
+    let direction: 1 | -1 = 1;
+    let lastPos = 0;
+    let shownFrame = -1;
+
+    /** Coalesce any number of change events into one paint per frame. */
+    const schedule = () => {
+      if (!raf) raf = requestAnimationFrame(render);
+    };
+
+    const decoder = new FrameDecoder(() => store.blobs, schedule);
 
     /** (Re)size the backing store to match CSS size × DPR. */
     const resize = () => {
       const rect = canvas.getBoundingClientRect();
-      const dpr = Math.min(window.devicePixelRatio || 1, MAX_DPR);
       const viewport = { width: rect.width, height: rect.height };
+      let dpr = Math.min(window.devicePixelRatio || 1, MAX_DPR);
+      const area = viewport.width * viewport.height;
+      if (area * dpr * dpr > MAX_BACKING_PIXELS) dpr = Math.max(1, Math.sqrt(MAX_BACKING_PIXELS / area));
       canvas.width = Math.round(viewport.width * dpr);
       canvas.height = Math.round(viewport.height * dpr);
       // Draw in CSS pixels from here on; the transform handles DPR.
@@ -85,20 +117,60 @@ export function FrameCanvas({
       dirty = true;
     };
 
-    const render = () => {
+    function render() {
       raf = 0;
       if (!fit) return;
-      const index = frameIndexAt(progress.get(), images.length);
-      if (index === drawnIndex && !dirty) return; // nothing new to paint
-      drawFrame(ctx, images[index], fit, edges);
-      drawnIndex = index;
-      dirty = false;
-    };
+      const count = store.blobs.length;
+      const pos = framePositionAt(progress.get(), count);
+      if (pos !== lastPos) direction = pos > lastPos ? 1 : -1;
+      lastPos = pos;
 
-    /** Coalesce any number of change events into one paint per frame. */
-    const schedule = () => {
-      if (!raf) raf = requestAnimationFrame(render);
-    };
+      let index = blend ? Math.floor(pos) : Math.round(pos);
+      let frac = blend ? Math.round((pos - index) * BLEND_STEPS) / BLEND_STEPS : 0;
+      if (frac >= 1) {
+        index += 1;
+        frac = 0;
+      }
+      if (index >= count - 1) {
+        index = count - 1;
+        frac = 0;
+      }
+
+      // Move the decode window when the frame changes (or new frames streamed in).
+      if (index !== focused || store.version !== focusedVersion) {
+        decoder.focus(index, direction);
+        focused = index;
+        focusedVersion = store.version;
+      }
+
+      let shown = index;
+      let base: Drawable | undefined = decoder.get(index);
+      if (!base) {
+        // A fast fling outran the decoder: hold the nearest decoded frame for
+        // a moment rather than block. onDecoded() repaints once it's ready.
+        const near = decoder.nearestReady(index);
+        if (near >= 0) {
+          base = decoder.get(near);
+          shown = near;
+        } else if (!painted || index === 0) {
+          base = store.poster;
+          shown = 0;
+        } else return;
+        frac = 0;
+      }
+      const next = frac > 0 ? decoder.get(index + 1) : undefined;
+      const key = shown * (BLEND_STEPS + 1) + (next ? frac * BLEND_STEPS : 0);
+      if (key === drawnKey && !dirty) return; // nothing new to paint
+
+      drawFrame(ctx!, base!, fit, edges, next ? { img: next, alpha: frac } : undefined);
+      drawnKey = key;
+      dirty = false;
+      painted = true;
+      if (shown !== shownFrame) {
+        shownFrame = shown;
+        canvas!.dataset.frame = String(shown); // hook for tests / debugging
+      }
+    }
 
     const observer = new ResizeObserver(() => {
       resize();
@@ -114,8 +186,9 @@ export function FrameCanvas({
       unsubscribe();
       observer.disconnect();
       if (raf) cancelAnimationFrame(raf);
+      decoder.dispose();
     };
-  }, [images, imageSize, progress]);
+  }, [store, imageSize, progress, blend]);
 
   return (
     <canvas

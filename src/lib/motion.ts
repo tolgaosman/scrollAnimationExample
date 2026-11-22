@@ -34,6 +34,13 @@ export const spring = {
  */
 export const scrubSpring = { stiffness: 110, damping: 26, mass: 0.55, restDelta: 0.0001 };
 
+/**
+ * Touch screens already smooth scrolling with native momentum; stacking the
+ * flywheel spring on top made the machine lag the finger and feel sluggish.
+ * Stiffer and lighter: still filters jitter, but tracks the gesture closely.
+ */
+export const scrubSpringTouch = { stiffness: 240, damping: 36, mass: 0.4, restDelta: 0.0001 };
+
 export const duration = { fast: 0.25, base: 0.6, slow: 1.1 };
 
 /** Stagger helper for children of a revealed container. */

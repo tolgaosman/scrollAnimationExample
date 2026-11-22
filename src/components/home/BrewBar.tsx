@@ -51,7 +51,7 @@ export function BrewBar() {
                 aria-expanded={isActive}
                 transition={spring.soft}
                 style={{ flexGrow: isActive ? 4 : 1 }}
-                className={`relative flex min-h-24 basis-0 flex-col overflow-hidden p-5 text-left md:min-h-0 md:p-7 ${surface} ${fg}`}
+                className={`relative flex min-h-24 basis-auto flex-col md:basis-0 overflow-hidden p-5 text-left md:min-h-0 md:p-7 ${surface} ${fg}`}
               >
                 <motion.div layout="position" className="flex w-full items-start justify-between gap-4">
                   <span className="eyebrow opacity-70">{String(i + 1).padStart(2, "0")}</span>

@@ -8,7 +8,7 @@ A bilingual (Turkish-first, English) website for a fictional specialty coffee ro
 
 ```bash
 npm install
-npm run frames     # one-off: unzip the frame archive → public/frames + manifest.json
+npm run frames     # one-off: decode the master mp4 → public/frames + manifest.json
 npm run dev        # http://localhost:3000  (Turkish)  ·  /en  (English)
 ```
 
@@ -17,6 +17,7 @@ npm run dev        # http://localhost:3000  (Turkish)  ·  /en  (English)
 | `npm run build` / `npm start` | Production build (every page is statically generated) |
 | `npm run lint` · `npm run typecheck` | ESLint (unused vars and imports are errors) · `tsc` |
 | `npm run verify` | Playwright smoke test against a running server (see below) |
+| `node scripts/perf-mobile.mjs` | Scroll-jank benchmark for the hero on an emulated 3× phone with 4× CPU throttling |
 
 ## Routes
 
@@ -37,21 +38,23 @@ Everything lives in [`src/components/scroll-machine/`](src/components/scroll-mac
 
 | File | Responsibility |
 |---|---|
-| [`scripts/prepare-frames.mjs`](scripts/prepare-frames.mjs) | Unzips the JPEG sequence, natural-sorts it, renames it to `frame_0001.jpg…`, and writes `manifest.json` (count and pixel size, read from the JPEG header). |
+| [`scripts/prepare-frames.mjs`](scripts/prepare-frames.mjs) | Decodes the master mp4 with ffmpeg (`ffmpeg-static`) at its native frame rate into `frame_0001.jpg…` in a single lossy step, and writes `manifest.json` (count and pixel size, read from the JPEG header). Falls back to a frame zip when there's no video. |
 | [`src/lib/frames.ts`](src/lib/frames.ts) | Reads the manifest at build time and hands the client a URL list, so no filename is hard-coded. |
-| `useFramePreloader.ts` | Loads and `decode()`s the frames with a concurrency pool. Phones load every 2nd frame. Failed frames retry, then fall back to a neighbour. |
+| `useFramePreloader.ts` | Fetches the frames as compressed Blobs with a concurrency pool. Phones unlock after every 2nd frame, then the rest stream in behind. Failed frames retry, then borrow a neighbour. |
+| `frameDecoder.ts` | Keeps a small window of frames around the scroll position decoded with `createImageBitmap` (off the main thread), biased toward the scroll direction, and releases the rest. |
 | `Preloader.tsx` | The 000 → 100 counter; it locks scroll until the frames are ready. |
 | `ScrollMachine.tsx` | A 500vh section with a sticky 100svh stage. Its `useScroll` → `useSpring` chain produces one `progress` value that drives everything else. |
 | `timeline.ts` | **The choreography, as data:** scroll→frame keyframes, phase windows, per-part anchor tracks, and fit/zoom per orientation. |
 | `geometry.ts` | Pure cover/contain fit math plus `imageToScreen()`, shared by the canvas and the HTML overlays. |
-| `FrameCanvas.tsx` | The render loop. It sizes the backing store for devicePixelRatio and paints at most once per animation frame, only when the frame index changes. It never triggers a React render while scrolling. |
+| `FrameCanvas.tsx` | The render loop. It sizes the backing store for devicePixelRatio (up to 3×) and paints at most once per animation frame, cross-fading neighbouring frames by the fractional position. It never triggers a React render while scrolling. |
 | `drawFrame.ts` | Edge extension: the frame's own border pixels are stretched to fill any gap, so the studio background has no visible edge at any aspect ratio. |
 | `PhaseOverlays.tsx` | The four story phases. Callout leader lines follow their part frame by frame (see `anchorAt`). |
 | `Hud.tsx` | Frame counter and progress rail. |
 
 ### Ideas worth stealing
 
-- **`<img>` + `decode()` over `ImageBitmap`.** 300 decoded 1280×720 bitmaps take about 1.1 GB of RAM. `<img>` elements keep only the compressed bytes and let the browser manage decoding.
+- **Keep compressed bytes, decode a window.** 240 decoded 1280×720 frames take about 880 MB of RAM, so phones evict them, and then `drawImage()` re-decodes JPEGs on the main thread mid-scroll (jank). Holding Blobs (~11 MB) and decoding ~20 frames ahead with `createImageBitmap` keeps memory flat and the main thread free.
+- **Cross-fade between frames.** A few hundred frames over several screens of scroll is a step every 15–20 px. Drawing frame *n+1* over frame *n* at the fractional position makes the motion continuous.
 - **Remap scroll to frames with keyframes, not a straight line.** The source footage spends half its length on slow drift. `FRAME_KEYS` spreads out the dramatic part.
 - **One source of truth for layout.** The canvas and the overlays both call `computeFit()`, so callouts can point at real pixels.
 - **Observe the mask, not the masked element.** A line clipped by `overflow: hidden` never intersects the viewport, so put `whileInView` on its wrapper. The comment in `src/components/ui/Reveal.tsx` explains this.
@@ -77,7 +80,8 @@ The verifier visits all 12 routes and fails on any console error, page error, fa
 - checks that the canvas paints and that its edges blend into the studio grey;
 - scrolls through the four story phases;
 - exercises the TR/EN switcher, bean filters and detail sheet, menu drawer, brew calculator and contact form;
-- checks for horizontal overflow at 390, 768 and 1440 px.
+- checks for horizontal overflow at 390, 768 and 1440 px;
+- runs a mobile pass (touch, 3×) at 320×568, 360×740, 390×844, 768×1024 and 844×390: canvas at full DPR, every story phase's copy on screen, fixed header/drawer overflow, clipped cards, tap-to-open team plates.
 
 Screenshots go to `verify-output/`.
 
@@ -96,6 +100,6 @@ docker run -d --name surlarici-web --restart unless-stopped -p 4010:4010 surlari
 
 ## Assets
 
-`assets-source/` holds the original render: the start and end frames, the mp4 and the frame zip. `public/frames/` is generated from it by `npm run frames`.
+`assets-source/` holds the original render: the start and end frames, the mp4 (the master, 24 fps) and a frame zip (an online splitter's 30 fps re-encode, kept as a fallback). `public/frames/` is generated from the mp4 by `npm run frames`.
 
 > The business, people and address are fictional. The phone number is a placeholder.

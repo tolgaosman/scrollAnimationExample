@@ -44,8 +44,12 @@ export function Nav() {
         transition={{ duration: 0.55, ease: ease.outQuint }}
       >
         <div
-          className={`shell flex h-16 items-center justify-between gap-6 transition-[background-color,border-color,backdrop-filter] duration-500 md:h-[4.5rem] ${
-            scrolled ? "border-b border-ink/10 bg-paper/85 backdrop-blur-md" : "border-b border-transparent"
+          className={`shell flex h-16 items-center justify-between gap-3 transition-[background-color,border-color,backdrop-filter] duration-500 sm:gap-6 md:h-[4.5rem] ${
+            // No backdrop blur on touch devices: re-blurring the constantly
+            // repainting hero canvas every frame is a major source of scroll jank.
+            scrolled
+              ? "border-b border-ink/10 bg-paper/95 pointer-fine:bg-paper/85 pointer-fine:backdrop-blur-md"
+              : "border-b border-transparent"
           }`}
         >
           <Link href="/" className="group flex items-center gap-3" aria-label={`SURLARİÇİ — ${t("home")}`}>
@@ -92,7 +96,10 @@ export function Nav() {
           </nav>
 
           <div className="flex items-center gap-3">
-            <LocaleSwitcher id="bar" />
+            {/* Below `sm` the bar is too narrow for both; the drawer has its own switcher. */}
+            <div className="hidden sm:block">
+              <LocaleSwitcher id="bar" />
+            </div>
             <button
               type="button"
               onClick={() => setOpen(true)}

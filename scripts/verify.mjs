@@ -9,7 +9,9 @@
  * <h1>, zero console errors / page errors / failed requests; then exercises
  * the canvas hero (preload, non-blank paint, all four scroll phases), the
  * locale switcher, the menu drawer, the brew calculator and the contact form.
- * Screenshots land in ./verify-output.
+ * A mobile pass (touch, @3x) at 320–844 px checks the hero at full DPR, every
+ * scroll phase's copy staying on screen, fixed header/drawer overflow, clipped
+ * cards and tap-to-open team plates. Screenshots land in ./verify-output.
  */
 import fs from "node:fs";
 import path from "node:path";
@@ -35,8 +37,10 @@ const check = (cond, msg) => {
 
 const browser = await chromium.launch(process.env.BROWSER_CHANNEL ? { channel: process.env.BROWSER_CHANNEL } : {});
 
-async function newPage(viewport = { width: 1440, height: 900 }) {
-  const context = await browser.newContext({ viewport, deviceScaleFactor: 1 });
+async function newPage(viewport = { width: 1440, height: 900 }, mobile = false) {
+  const context = await browser.newContext(
+    mobile ? { viewport, deviceScaleFactor: 3, isMobile: true, hasTouch: true } : { viewport, deviceScaleFactor: 1 },
+  );
   const page = await context.newPage();
   const problems = [];
   page.on("console", (m) => m.type() === "error" && problems.push(`console: ${m.text()}`));
@@ -184,6 +188,139 @@ console.log("\n■ Interactions");
   check(true, "valid submit shows success state");
 
   check(problems.length === 0, `interactions no errors${problems.length ? `\n      ${problems.join("\n      ")}` : ""}`);
+  await context.close();
+}
+
+/* ------------------------------------------------------------ mobile */
+// Real phone emulation: touch, @3x, overlay scrollbars. Covers the narrowest
+// phones, a tablet and a phone held sideways.
+const MOBILE = [[320, 568], [360, 740], [390, 844], [768, 1024], [844, 390]];
+const HERO_PHASES_TR = [
+  { p: 0.05, name: "hero", text: "SURLARİÇİ" },
+  { p: 0.36, name: "boiler", text: "Bakır Isı Eşanjörlü Kazan" },
+  { p: 0.61, name: "groups", text: "3 Gruplu E61" },
+  { p: 0.85, name: "pump", text: "Döner Kanatlı Pompa" },
+];
+
+/** Every visible element inside `selector` must end within the viewport. */
+const fixedOverflow = (page, selector) =>
+  page.evaluate((sel) => {
+    const root = document.querySelector(sel);
+    if (!root) return null;
+    let worst = 0;
+    for (const el of root.querySelectorAll("*")) {
+      const r = el.getBoundingClientRect();
+      if (r.width && r.height) worst = Math.max(worst, r.right - window.innerWidth, -r.left);
+    }
+    return Math.round(worst);
+  }, selector);
+
+for (const [w, h] of MOBILE) {
+  const tag = `${w}×${h}`;
+  console.log(`\n■ Mobile ${tag}`);
+  const { page, context, problems } = await newPage({ width: w, height: h }, true);
+
+  // --- hero / scroll animation
+  await page.goto(BASE + "/", { waitUntil: "domcontentloaded" });
+  await waitForPreloader(page);
+  await page.waitForSelector("canvas");
+  await page.waitForTimeout(1600);
+
+  const hero = await page.evaluate(() => {
+    const c = document.querySelector("canvas");
+    const title = document.querySelector("h1 > span");
+    return {
+      backing: c.width,
+      css: Math.round(c.getBoundingClientRect().width),
+      dpr: devicePixelRatio,
+      titleClipped: title.scrollWidth - title.clientWidth,
+    };
+  });
+  check(hero.backing === Math.round(hero.css * hero.dpr), `${tag} canvas at full DPR (${hero.backing}px for ${hero.css}css @${hero.dpr}x)`);
+  check(hero.titleClipped <= 1, `${tag} hero title not clipped (${hero.titleClipped}px)`);
+  const headerOver = await fixedOverflow(page, "header");
+  check(headerOver <= 1, `${tag} header fits the viewport (${headerOver}px over)`);
+
+  const sectionHeight = await page.evaluate(() => document.querySelector("section").getBoundingClientRect().height);
+  for (const ph of HERO_PHASES_TR) {
+    await page.evaluate((y) => window.scrollTo(0, y), ph.p * (sectionHeight - h));
+    await page.waitForTimeout(1400);
+    const r = await page.evaluate((txt) => {
+      const el = [...document.querySelectorAll("h1, h2")].find((n) => n.textContent?.includes(txt));
+      if (!el) return null;
+      let o = 1;
+      for (let n = el; n; n = n.parentElement) o *= Number(getComputedStyle(n).opacity);
+      // The whole copy block (eyebrow → spec line) must be on screen, not just the heading.
+      const block = el.closest("h1") ? el : el.parentElement;
+      const b = block.getBoundingClientRect();
+      const out = Math.max(-b.top, b.bottom - innerHeight, -b.left, b.right - innerWidth, 0);
+      return { o, out: Math.round(out) };
+    }, ph.text);
+    check(r && r.o > 0.6, `${tag} phase "${ph.name}" visible (opacity ${r?.o.toFixed(2)})`);
+    check(r && r.out <= 1, `${tag} phase "${ph.name}" copy inside viewport (${r?.out}px out)`);
+    await page.screenshot({ path: path.join(OUT, `hero-${w}x${h}-${ph.name}.png`) });
+  }
+
+  // --- menu drawer header
+  await page.evaluate(() => window.scrollTo(0, 0));
+  await page.waitForTimeout(800);
+  await page.locator("header button[aria-controls='menu-drawer']").click();
+  await page.waitForTimeout(1300);
+  const drawerOver = await fixedOverflow(page, "#menu-drawer > div:first-child");
+  check(drawerOver <= 1, `${tag} drawer header fits the viewport (${drawerOver}px over)`);
+  await page.keyboard.press("Escape");
+  await page.waitForTimeout(1000);
+
+  // --- brew bar: the open station must show its full content
+  await page.locator("#brewbar-title").scrollIntoViewIfNeeded();
+  await page.waitForTimeout(1200);
+  const brewClip = await page.evaluate(() =>
+    Math.max(...[...document.querySelectorAll("section[aria-labelledby='brewbar-title'] button")].map((b) => b.scrollHeight - b.clientHeight)),
+  );
+  check(brewClip <= 1, `${tag} brew bar stations not clipped (${brewClip}px)`);
+
+  // --- signature roasts: panels must fit the pinned stage (or, on short
+  // screens, the swipe row) in both directions
+  const roastsTop = await page.evaluate(() => document.querySelector("section[aria-labelledby='roasts-title']").getBoundingClientRect().top + scrollY);
+  await page.evaluate((y) => window.scrollTo(0, y), roastsTop + 10);
+  await page.waitForTimeout(1200);
+  const roastClip = await page.evaluate(() =>
+    Math.max(
+      ...[...document.querySelectorAll("section[aria-labelledby='roasts-title'] article")].flatMap((a) => [
+        a.scrollHeight - a.clientHeight,
+        a.scrollWidth - a.clientWidth,
+      ]),
+    ),
+  );
+  check(roastClip <= 1, `${tag} roast panels not clipped (${roastClip}px overflow)`);
+  await page.screenshot({ path: path.join(OUT, `roasts-${w}x${h}.png`) });
+
+  // --- every route: no horizontal scroll, header fits
+  for (const route of ROUTES.tr) {
+    await page.goto(BASE + route, { waitUntil: "networkidle" });
+    if (route === "/") await waitForPreloader(page);
+    const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
+    const hdr = await fixedOverflow(page, "header");
+    check(overflow <= 1 && hdr <= 1, `${tag} ${route} no horizontal overflow (page ${overflow}px, header ${hdr}px)`);
+  }
+
+  // --- team: a tap opens the detail panel and it stays open
+  if (w === 390) {
+    await page.goto(BASE + "/ekibimiz", { waitUntil: "networkidle" });
+    const plate = page.locator("[aria-describedby^='member-detail-']").first();
+    await plate.scrollIntoViewIfNeeded();
+    await page.waitForTimeout(1200);
+    await plate.tap();
+    await page.waitForTimeout(1000);
+    const open = await page.evaluate(() => {
+      const plate = document.querySelector("[aria-describedby^='member-detail-']");
+      const panel = document.getElementById(plate.getAttribute("aria-describedby"));
+      return panel.getBoundingClientRect().top < plate.getBoundingClientRect().bottom - 20;
+    });
+    check(open, `${tag} team plate opens on tap`);
+  }
+
+  check(problems.length === 0, `${tag} no errors${problems.length ? `\n      ${problems.join("\n      ")}` : ""}`);
   await context.close();
 }
 

@@ -56,7 +56,11 @@ function Portrait({ member, index }: { member: TeamMember; index: number }) {
   const initialsX = useTransform(sx, [-0.5, 0.5], [-14, 14]);
   const initialsY = useTransform(sy, [-0.5, 0.5], [-10, 10]);
 
+  // Tilt + hover reveal are mouse-only. On touch, a finger "leaves" the plate
+  // the moment it lifts, which would snap the panel shut; instead a tap toggles.
+  const isMouse = (e: React.PointerEvent) => e.pointerType === "mouse";
   const onMove = (e: React.PointerEvent) => {
+    if (!isMouse(e)) return;
     const r = ref.current?.getBoundingClientRect();
     if (!r) return;
     px.set((e.clientX - r.left) / r.width - 0.5);
@@ -66,6 +70,16 @@ function Portrait({ member, index }: { member: TeamMember; index: number }) {
     px.set(0);
     py.set(0);
     setActive(false);
+  };
+  // Snapshot before focus fires (focus would already set it to true).
+  const wasActive = useRef(false);
+  const lastPointer = useRef<string>("mouse");
+  const onPointerDown = (e: React.PointerEvent) => {
+    lastPointer.current = e.pointerType;
+    wasActive.current = active;
+  };
+  const onTap = () => {
+    if (lastPointer.current !== "mouse") setActive(!wasActive.current);
   };
 
   const [ground, ink] = member.plate;
@@ -83,8 +97,10 @@ function Portrait({ member, index }: { member: TeamMember; index: number }) {
           ref={ref}
           tabIndex={0}
           onPointerMove={onMove}
-          onPointerEnter={() => setActive(true)}
-          onPointerLeave={reset}
+          onPointerEnter={(e) => isMouse(e) && setActive(true)}
+          onPointerLeave={(e) => isMouse(e) && reset()}
+          onPointerDown={onPointerDown}
+          onClick={onTap}
           onFocus={() => setActive(true)}
           onBlur={reset}
           style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
@@ -118,7 +134,7 @@ function Portrait({ member, index }: { member: TeamMember; index: number }) {
           {/* reveal panel */}
           <motion.div
             id={`member-detail-${member.id}`}
-            className="absolute inset-x-0 bottom-0 bg-ink/92 p-5 text-paper backdrop-blur-sm md:p-6"
+            className="absolute inset-x-0 bottom-0 bg-ink/92 p-5 text-paper pointer-fine:backdrop-blur-sm md:p-6"
             initial={false}
             animate={{ y: active ? "0%" : "101%" }}
             transition={{ duration: 0.6, ease: ease.outQuint }}

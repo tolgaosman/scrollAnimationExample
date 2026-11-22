@@ -68,7 +68,7 @@ function HeroPhase({ progress, revealed }: { progress: MotionValue<number>; reve
   const letters = Array.from(t("titleA"));
 
   return (
-    <motion.div style={{ opacity, y }} className="absolute inset-0 shell flex flex-col justify-between pb-[5svh] pt-28 md:pt-32">
+    <motion.div style={{ opacity, y }} className="absolute inset-0 shell flex flex-col justify-between pb-[5svh] pt-28 md:pt-32 short:pt-20">
       <div className="flex items-start justify-between gap-8">
         <Rise revealed={revealed} delay={0.35}>
           <p className="eyebrow text-ink-soft">{t("eyebrow")}</p>
@@ -88,7 +88,8 @@ function HeroPhase({ progress, revealed }: { progress: MotionValue<number>; reve
           <span
             // pt makes room for the dots on İ inside the overflow mask; tracking is
             // looser than .display so L and A don't fuse into a ligature-like "Ł".
-            className="display -mb-[0.06em] flex overflow-hidden pt-[0.14em] text-[clamp(4rem,17vw,9rem)] tracking-[-0.012em] md:text-[clamp(6rem,10.5vw,12.5rem)]"
+            // Min size is low enough that the word (≈5em wide) still fits a 320px phone.
+            className="display -mb-[0.06em] flex overflow-hidden pt-[0.14em] text-[clamp(2.75rem,16.5vw,9rem)] tracking-[-0.012em] md:text-[clamp(6rem,10.5vw,12.5rem)] short:text-[4.5rem]"
             aria-label={t("titleA")}
           >
             {letters.map((ch, i) => (
@@ -109,7 +110,7 @@ function HeroPhase({ progress, revealed }: { progress: MotionValue<number>; reve
           </Rise>
         </h1>
         <div className="mt-5 flex items-end justify-between gap-6 border-t border-ink/15 pt-4">
-          <Rise revealed={revealed} delay={0.75} className="max-w-[46ch]">
+          <Rise revealed={revealed} delay={0.75} className="max-w-[46ch] short:hidden">
             <p className="text-sm leading-relaxed text-ink-soft md:text-[0.95rem]">{t("lede")}</p>
           </Rise>
           <Rise revealed={revealed} delay={0.85} className="hidden shrink-0 items-center gap-3 sm:flex">
@@ -182,6 +183,9 @@ function Callout({
   // closures; the parent re-keys this component on resize to refresh them.
   const W = layout?.viewport.width ?? 0;
   const H = layout?.viewport.height ?? 0;
+  // Short landscape screens (phones on their side): no room for the text
+  // block below the usual label line — see the compact layout further down.
+  const compact = !portrait && H < 560;
   const lx = phase.label.x * W;
   const ly = phase.label.y * H;
   const anchorFor = (p: number) =>
@@ -197,7 +201,11 @@ function Callout({
   const copy = (
     <>
       <p className="eyebrow text-copper">{t("index")}</p>
-      <h2 className="mt-2 font-display text-[1.6rem] leading-[1.05] tracking-tight md:text-[2rem] lg:text-[2.35rem]">
+      <h2
+        className={`mt-2 font-display leading-[1.05] tracking-tight ${
+          compact ? "text-xl" : "text-[1.6rem] md:text-[2rem] lg:text-[2.35rem]"
+        }`}
+      >
         {t("title")}
       </h2>
       <p className="mt-3 text-sm leading-relaxed text-ink-soft [@media(max-height:780px)]:hidden">
@@ -216,24 +224,29 @@ function Callout({
     );
   }
 
+  // Compact: the copy sits on the bottom edge and only the dot marks the part —
+  // a leader line has no room to run on a ~400px-tall screen.
+  const vertical: React.CSSProperties = compact ? { bottom: Math.round(H * 0.04) } : { top: ly + 14 };
   const blockStyle: React.CSSProperties =
     phase.label.align === "start"
-      ? { left: lx, top: ly + 14 }
+      ? { left: lx, ...vertical }
       : phase.label.align === "end"
-        ? { right: W - lx, top: ly + 14 }
-        : { left: lx, top: ly + 14, translate: "-50% 0" };
+        ? { right: W - lx, ...vertical }
+        : { left: lx, ...vertical, translate: "-50% 0" };
 
   return (
     <motion.div style={{ opacity }} className="absolute inset-0">
       <svg className="absolute inset-0 h-full w-full overflow-visible" aria-hidden="true">
-        <motion.path
-          d={d}
-          fill="none"
-          stroke="currentColor"
-          strokeWidth={1}
-          style={{ pathLength: draw }}
-          vectorEffect="non-scaling-stroke"
-        />
+        {!compact && (
+          <motion.path
+            d={d}
+            fill="none"
+            stroke="currentColor"
+            strokeWidth={1}
+            style={{ pathLength: draw }}
+            vectorEffect="non-scaling-stroke"
+          />
+        )}
         <motion.g style={{ scale: dot, x: dotX, y: dotY }}>
           <circle r={11} fill="none" stroke="var(--color-copper)" strokeWidth={1} />
           <circle r={3.5} fill="var(--color-copper)" />
@@ -241,7 +254,9 @@ function Callout({
       </svg>
       <motion.div
         style={{ ...blockStyle, y }}
-        className={`absolute ${phase.label.align === "center" ? "w-[min(40rem,56vw)]" : "w-[min(27rem,38vw)]"} ${
+        className={`absolute ${
+          phase.label.align === "center" ? "w-[min(40rem,56vw)]" : compact ? "w-[min(27rem,44vw)]" : "w-[min(27rem,38vw)]"
+        } ${
           phase.label.align === "end" ? "text-right" : phase.label.align === "center" ? "text-center" : ""
         }`}
       >

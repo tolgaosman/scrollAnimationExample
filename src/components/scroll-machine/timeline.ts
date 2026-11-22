@@ -5,7 +5,10 @@
  * how scroll maps to frames, when each story phase shows, where each
  * callout points, and how the image fits on landscape vs portrait screens.
  *
- * Source footage notes (300 frames, 1280×720):
+ * Source footage notes, in the 300-step reference timeline the anchor
+ * tracks were measured on (10 s of 1280×720 video; the shipped sequence is
+ * the video's native 240 frames — everything here is normalised 0–1, so the
+ * frame count doesn't matter):
  *   ~1–35    assembled; cups barely lift
  *   ~35–100  side panels swing out, copper boiler emerges on the left
  *   ~100–160 portafilters drop, pump / heat-exchanger block opens right
@@ -48,6 +51,15 @@ export function frameIndexAt(scroll: number, count: number): number {
 }
 
 /**
+ * Fractional frame position (0 … count−1). The canvas draws frame ⌊pos⌋ and
+ * cross-fades frame ⌊pos⌋+1 on top by the fraction, so the image moves
+ * continuously instead of stepping every ~15–20 px of scroll.
+ */
+export function framePositionAt(scroll: number, count: number): number {
+  return frameProgressAt(scroll) * (count - 1);
+}
+
+/**
  * How the frame is laid out per orientation. See computeFit():
  * `zoom` scales beyond plain cover/contain, `offsetY` lifts the machine
  * (fraction of viewport height) to leave room for the type underneath.
@@ -60,7 +72,7 @@ export const FIT: Record<"landscape" | "portrait", { mode: FitMode; zoom: number
 
 export type PhaseId = "hero" | "boiler" | "groups" | "pump";
 
-/** Total frames in the source footage the anchor tracks were measured on. */
+/** Steps in the reference timeline the anchor tracks were measured on (not the shipped frame count). */
 const SOURCE_FRAMES = 300;
 
 /**

@@ -4,19 +4,27 @@
  * ------------------------------------------------------------------
  * One-shot asset pipeline for the scroll-scrubbed canvas hero.
  *
- *  1. Locates the frame archive (first *.zip in the repo root or in
- *     ./assets-source) — or accepts an explicit path as argv[2].
- *  2. Extracts it into a throw-away temp directory (bsdtar ships with
- *     Windows 10+, macOS and most Linux distros and reads .zip files).
- *  3. Natural-sorts every JPEG it finds (so "frame-10" follows "frame-9"),
- *     then copies them to public/frames/frame_0001.jpg … frame_NNNN.jpg.
- *  4. Reads the pixel size of the first frame straight from the JPEG
- *     SOF marker (no image library needed) and writes
- *     public/frames/manifest.json — the single source of truth the
- *     runtime loader reads. No filenames are ever hard-coded in the app.
+ * Preferred source: the master video (first *.mp4 in ./assets-source).
+ *  - Frames are decoded straight from the video with ffmpeg (ffmpeg-static)
+ *    at its native frame rate and written once, at high JPEG quality.
+ *    That's one lossy step instead of two (video → online splitter → JPEG),
+ *    and no duplicated frames from a splitter resampling 24 → 30 fps.
  *
- * Usage:  npm run frames            (auto-detect zip)
- *         node scripts/prepare-frames.mjs path/to/frames.zip
+ * Fallback source: a frame archive (first *.zip in the repo root or in
+ * ./assets-source), when no video or no ffmpeg binary is available.
+ *  1. Extracts it into a throw-away temp directory (bsdtar ships with
+ *     Windows 10+, macOS and most Linux distros and reads .zip files).
+ *  2. Natural-sorts every JPEG it finds (so "frame-10" follows "frame-9"),
+ *     then copies them to public/frames/frame_0001.jpg … frame_NNNN.jpg.
+ *
+ * Either way it then reads the pixel size of the first frame straight from
+ * the JPEG SOF marker (no image library needed) and writes
+ * public/frames/manifest.json — the single source of truth the runtime
+ * loader reads. No filenames are ever hard-coded in the app.
+ *
+ * Usage:  npm run frames                         (auto-detect mp4, else zip)
+ *         node scripts/prepare-frames.mjs path/to/video.mp4|frames.zip
+ *         FRAME_QUALITY=3 npm run frames         (ffmpeg -q:v, 2 = best … 31; default 4)
  */
 import { execFileSync } from "node:child_process";
 import fs from "node:fs";
@@ -28,14 +36,28 @@ const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const OUT_DIR = path.join(ROOT, "public", "frames");
 const PAD = 4;
 
-function findZip() {
+// q:v 4 ≈ 48 KB per 720p frame. The splitter's ~20 KB frames showed heavy 8×8
+// block artefacts once scaled up on 3× phone screens.
+const QUALITY = process.env.FRAME_QUALITY ?? "4";
+
+function findSource() {
   if (process.argv[2]) return path.resolve(process.argv[2]);
-  for (const dir of [ROOT, path.join(ROOT, "assets-source")]) {
-    if (!fs.existsSync(dir)) continue;
-    const zip = fs.readdirSync(dir).find((f) => f.toLowerCase().endsWith(".zip"));
-    if (zip) return path.join(dir, zip);
+  const dirs = [path.join(ROOT, "assets-source"), ROOT].filter((d) => fs.existsSync(d));
+  for (const ext of [".mp4", ".zip"]) {
+    for (const dir of dirs) {
+      const hit = fs.readdirSync(dir).find((f) => f.toLowerCase().endsWith(ext));
+      if (hit) return path.join(dir, hit);
+    }
   }
-  throw new Error("No .zip archive found in the repo root or ./assets-source");
+  throw new Error("No .mp4 video or .zip archive found in ./assets-source or the repo root");
+}
+
+async function findFfmpeg() {
+  try {
+    return (await import("ffmpeg-static")).default;
+  } catch {
+    return null;
+  }
 }
 
 /** Recursively collect JPEG paths below `dir`. */
@@ -63,21 +85,45 @@ function jpegSize(buf) {
   throw new Error("Could not find SOF marker — is this a valid JPEG?");
 }
 
-const zipPath = findZip();
-const tmp = fs.mkdtempSync(path.join(os.tmpdir(), "frames-"));
-console.log(`› extracting ${path.relative(ROOT, zipPath)} → ${tmp}`);
-execFileSync("tar", ["-xf", zipPath, "-C", tmp], { stdio: "inherit" });
+const source = findSource();
+const ffmpeg = source.toLowerCase().endsWith(".mp4") ? await findFfmpeg() : null;
+if (source.toLowerCase().endsWith(".mp4") && !ffmpeg) {
+  throw new Error("Found a video but no ffmpeg binary — run `npm install` (ffmpeg-static) or pass a .zip");
+}
 
-const collator = new Intl.Collator("en", { numeric: true, sensitivity: "base" });
-const frames = collectJpegs(tmp).sort((a, b) => collator.compare(path.basename(a), path.basename(b)));
-if (frames.length === 0) throw new Error("Archive contained no JPEG frames");
+const tmp = fs.mkdtempSync(path.join(os.tmpdir(), "frames-"));
+let frames;
+if (ffmpeg) {
+  console.log(`› decoding ${path.relative(ROOT, source)} with ffmpeg (q:v ${QUALITY}) → ${tmp}`);
+  execFileSync(
+    ffmpeg,
+    [
+      "-hide_banner", "-loglevel", "error",
+      "-i", source,
+      "-an",
+      "-fps_mode", "passthrough", // every source frame exactly once, no dupes/drops
+      "-q:v", QUALITY,
+      path.join(tmp, `frame_%0${PAD}d.jpg`),
+    ],
+    { stdio: "inherit" },
+  );
+  frames = collectJpegs(tmp).sort();
+} else {
+  console.log(`› extracting ${path.relative(ROOT, source)} → ${tmp}`);
+  execFileSync("tar", ["-xf", source, "-C", tmp], { stdio: "inherit" });
+  const collator = new Intl.Collator("en", { numeric: true, sensitivity: "base" });
+  frames = collectJpegs(tmp).sort((a, b) => collator.compare(path.basename(a), path.basename(b)));
+}
+if (frames.length === 0) throw new Error("Source produced no JPEG frames");
 
 fs.rmSync(OUT_DIR, { recursive: true, force: true });
 fs.mkdirSync(OUT_DIR, { recursive: true });
 
+let bytes = 0;
 frames.forEach((src, idx) => {
   const name = `frame_${String(idx + 1).padStart(PAD, "0")}.jpg`;
   fs.copyFileSync(src, path.join(OUT_DIR, name));
+  bytes += fs.statSync(src).size;
 });
 
 const { width, height } = jpegSize(fs.readFileSync(frames[0]));
@@ -94,4 +140,6 @@ const manifest = {
 fs.writeFileSync(path.join(OUT_DIR, "manifest.json"), JSON.stringify(manifest, null, 2) + "\n");
 fs.rmSync(tmp, { recursive: true, force: true });
 
-console.log(`✓ ${frames.length} frames (${width}×${height}) → public/frames/`);
+const mb = (bytes / 1024 / 1024).toFixed(1);
+const kb = Math.round(bytes / frames.length / 1024);
+console.log(`✓ ${frames.length} frames (${width}×${height}, ${mb} MB, ~${kb} KB/frame) → public/frames/`);

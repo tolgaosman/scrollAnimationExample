@@ -20,7 +20,9 @@ export function LimestoneTexture({
     <svg className={className} aria-hidden="true" preserveAspectRatio="none" width="100%" height="100%">
       <defs>
         <filter id={`stone-${id}`} x="0" y="0" width="100%" height="100%">
-          <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="4" seed="7" result="grain" />
+          {/* 2 octaves: at 0.85 base frequency, octaves 3–4 are finer than a pixel
+              (pure aliasing) but each doubles the filter's raster cost. */}
+          <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" seed="7" result="grain" />
           <feDiffuseLighting in="grain" lightingColor="#fff6e4" surfaceScale="1.6" result="lit">
             <feDistantLight azimuth="225" elevation="52" />
           </feDiffuseLighting>

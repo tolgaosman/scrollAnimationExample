@@ -19,6 +19,7 @@
  * The result: no visible frame border at any aspect ratio.
  */
 import type { Fit } from "./geometry";
+import type { Drawable } from "./frameDecoder";
 
 export interface EdgeTextures {
   top: HTMLCanvasElement;
@@ -47,9 +48,9 @@ function makeCanvas(w: number, h: number): [HTMLCanvasElement, CanvasRenderingCo
 
 const rgb = (d: Uint8ClampedArray, i: number) => `rgb(${d[i]} ${d[i + 1]} ${d[i + 2]})`;
 
-export function buildEdgeTextures(img: HTMLImageElement): EdgeTextures {
-  const w = img.naturalWidth;
-  const h = img.naturalHeight;
+export function buildEdgeTextures(img: Drawable): EdgeTextures {
+  const w = "naturalWidth" in img ? img.naturalWidth : img.width;
+  const h = "naturalHeight" in img ? img.naturalHeight : img.height;
 
   // Horizontal strips: (w × SAMPLE_DEPTH) region → (STRIP_RES × 1) canvas
   const [top, tctx] = makeCanvas(STRIP_RES, 1);
@@ -84,12 +85,15 @@ export function buildEdgeTextures(img: HTMLImageElement): EdgeTextures {
 /**
  * Draw `img` according to `fit` on a context whose transform is already
  * scaled for devicePixelRatio (so all numbers here are CSS pixels).
+ * With `next`, that frame is cross-faded on top at `next.alpha` (0–1), which
+ * turns discrete frame steps into continuous motion while scrubbing.
  */
 export function drawFrame(
   ctx: CanvasRenderingContext2D,
-  img: HTMLImageElement,
+  img: Drawable,
   fit: Fit,
   edges: EdgeTextures | null,
+  next?: { img: Drawable; alpha: number },
 ) {
   const { dx, dy, dw, dh, viewport } = fit;
   const { width: W, height: H } = viewport;
@@ -121,4 +125,9 @@ export function drawFrame(
   }
 
   ctx.drawImage(img, dx, dy, dw, dh);
+  if (next && next.alpha > 0) {
+    ctx.globalAlpha = next.alpha;
+    ctx.drawImage(next.img, dx, dy, dw, dh);
+    ctx.globalAlpha = 1;
+  }
 }

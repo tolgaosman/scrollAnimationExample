@@ -149,11 +149,11 @@ function BeanSheet({ bean, onClose }: { bean: Bean | null; onClose: () => void }
             role="dialog"
             aria-modal="true"
             aria-labelledby={`sheet-title-${bean.id}`}
-            className="absolute inset-y-0 right-0 flex w-full max-w-[44rem] flex-col overflow-y-auto bg-paper"
+            className="absolute inset-y-0 right-0 flex w-full max-w-[44rem] flex-col overflow-y-auto overscroll-contain bg-paper"
             variants={{ open: { x: "0%" }, closed: { x: "100%" } }}
             transition={{ duration: 0.7, ease: ease.drawer }}
           >
-            <div className="sticky top-0 z-10 flex items-center justify-between border-b border-ink/10 bg-paper/95 px-6 py-4 backdrop-blur md:px-10">
+            <div className="sticky top-0 z-10 flex items-center justify-between border-b border-ink/10 bg-paper/95 px-6 py-4 pointer-fine:backdrop-blur md:px-10">
               <span className="eyebrow text-copper">
                 {bean.origin[locale]} · {t(`roastLevels.${bean.roast}`)}
               </span>
