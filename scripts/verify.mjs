@@ -236,7 +236,12 @@ for (const [w, h] of MOBILE) {
       titleClipped: title.scrollWidth - title.clientWidth,
     };
   });
-  check(hero.backing === Math.round(hero.css * hero.dpr), `${tag} canvas at full DPR (${hero.backing}px for ${hero.css}css @${hero.dpr}x)`);
+  // Sharp but not wasteful: at least ~1.1× CSS, never finer than the screen's DPR.
+  // (The 1280-px footage only has detail for ~1.2× on a tablet, ~2.4× on a phone.)
+  check(
+    hero.backing >= hero.css * 1.1 - 1 && hero.backing <= Math.round(hero.css * hero.dpr) + 1,
+    `${tag} canvas density sharp but capped (${hero.backing}px for ${hero.css}css @${hero.dpr}x)`,
+  );
   check(hero.titleClipped <= 1, `${tag} hero title not clipped (${hero.titleClipped}px)`);
   const headerOver = await fixedOverflow(page, "header");
   check(headerOver <= 1, `${tag} header fits the viewport (${headerOver}px over)`);

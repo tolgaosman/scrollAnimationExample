@@ -29,6 +29,7 @@ import { PhaseOverlays } from "./PhaseOverlays";
 import { Preloader } from "./Preloader";
 import { useFramePreloader } from "./useFramePreloader";
 import { scrubSpring } from "@/lib/motion";
+import { useMediaQuery } from "@/lib/useMediaQuery";
 
 export interface FrameSequenceProps {
   urls: string[];
@@ -42,6 +43,7 @@ export function ScrollMachine({ sequence }: { sequence: FrameSequenceProps }) {
   const { store, progress: loadProgress, ready } = useFramePreloader(sequence.urls);
 
   const reduceMotion = useReducedMotion();
+  const coarse = useMediaQuery("(pointer: coarse)");
   const { scrollYProgress } = useScroll({ target: sectionRef, offset: ["start start", "end end"] });
   const smoothed = useSpring(scrollYProgress, scrubSpring);
   const progress = reduceMotion ? scrollYProgress : smoothed;
@@ -72,7 +74,9 @@ export function ScrollMachine({ sequence }: { sequence: FrameSequenceProps }) {
               imageSize={imageSize}
               progress={progress}
               label={t("canvasLabel")}
-              blend={!reduceMotion}
+              // Cross-fading two 24-fps frames ghosts fast-moving parts and doubles
+              // the paint cost; touch devices show whole frames instead.
+              blend={!reduceMotion && !coarse}
               onLayout={onLayout}
               onBackground={setStudio}
             />

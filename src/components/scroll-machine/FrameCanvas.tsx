@@ -41,11 +41,13 @@ interface FrameCanvasProps {
 }
 
 /**
- * Match the screen up to 3×. Capping at 2× made 3× phones upscale the canvas
- * a second time in the compositor — two resampling passes, visibly softer.
+ * Match the screen up to 3× — but never finer than the footage itself.
+ * Painting 1280-px frames onto a 1600-px-wide backing store adds no detail,
+ * only fill-rate, and on a phone that's what turns into dropped frames
+ * (visible as jitter). See the per-fit cap in resize().
  */
 const MAX_DPR = 3;
-/** …but never allocate more than a 4K backing store (big desktop monitors). */
+/** …and never allocate more than a 4K backing store (big desktop monitors). */
 const MAX_BACKING_PIXELS = 3840 * 2160;
 /** Cross-fade resolution: 1/32 steps are invisible and skip redundant paints. */
 const BLEND_STEPS = 32;
@@ -100,7 +102,15 @@ export function FrameCanvas({
     const resize = () => {
       const rect = canvas.getBoundingClientRect();
       const viewport = { width: rect.width, height: rect.height };
-      let dpr = Math.min(window.devicePixelRatio || 1, MAX_DPR);
+
+      const orientation = viewport.width / viewport.height >= 1 ? "landscape" : "portrait";
+      const { mode, zoom, offsetY } = FIT[orientation];
+      fit = computeFit(viewport, imageSize, mode, zoom, offsetY);
+
+      // Source pixels per CSS pixel of the drawn frame: the finest backing-store
+      // density that can still show real detail.
+      const sourceDensity = Math.max(1, imageSize.width / fit.dw);
+      let dpr = Math.min(window.devicePixelRatio || 1, MAX_DPR, sourceDensity);
       const area = viewport.width * viewport.height;
       if (area * dpr * dpr > MAX_BACKING_PIXELS) dpr = Math.max(1, Math.sqrt(MAX_BACKING_PIXELS / area));
       canvas.width = Math.round(viewport.width * dpr);
@@ -108,11 +118,8 @@ export function FrameCanvas({
       // Draw in CSS pixels from here on; the transform handles DPR.
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       ctx.imageSmoothingEnabled = true;
-      ctx.imageSmoothingQuality = "high";
-
-      const orientation = viewport.width / viewport.height >= 1 ? "landscape" : "portrait";
-      const { mode, zoom, offsetY } = FIT[orientation];
-      fit = computeFit(viewport, imageSize, mode, zoom, offsetY);
+      // "medium" is plenty for ≤2× scaling; "high" is several times slower per frame.
+      ctx.imageSmoothingQuality = "medium";
       onLayoutRef.current?.(fit);
       dirty = true;
     };
