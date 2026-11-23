@@ -148,24 +148,24 @@ export function BrewBar() {
                   {/* Extraction telemetry bar filling the card purposefully */}
                   <dl className={`mt-5 grid max-w-md grid-cols-3 gap-3 border-t pt-3.5 ${specBorder}`}>
                     <div>
-                      <dt className="eyebrow text-[0.58rem] opacity-65">{t("specs.temp")}</dt>
-                      <dd className="mt-0.5 whitespace-nowrap font-mono text-xs tabular-nums md:text-sm">{temp}</dd>
+                      <dt className="eyebrow text-xs opacity-65">{t("specs.temp")}</dt>
+                      <dd className="mt-0.5 whitespace-nowrap num text-xs tabular-nums md:text-sm">{temp}</dd>
                     </div>
                     <div>
-                      <dt className="eyebrow text-[0.58rem] opacity-65">{t("specs.ratio")}</dt>
-                      <dd className="mt-0.5 whitespace-nowrap font-mono text-xs tabular-nums md:text-sm">{ratio}</dd>
+                      <dt className="eyebrow text-xs opacity-65">{t("specs.ratio")}</dt>
+                      <dd className="mt-0.5 whitespace-nowrap num text-xs tabular-nums md:text-sm">{ratio}</dd>
                     </div>
                     <div>
-                      <dt className="eyebrow text-[0.58rem] opacity-65">{t("specs.method")}</dt>
-                      <dd className="mt-0.5 whitespace-nowrap font-mono text-xs md:text-sm">{t(`items.${key}.setup`)}</dd>
+                      <dt className="eyebrow text-xs opacity-65">{t("specs.method")}</dt>
+                      <dd className="mt-0.5 whitespace-nowrap num text-xs md:text-sm">{t(`items.${key}.setup`)}</dd>
                     </div>
                   </dl>
 
                   <div className="mt-4 flex flex-wrap items-center gap-2">
-                    <span className={`rounded-full border px-2.5 py-0.5 font-mono text-[0.65rem] ${badgeCls}`}>
+                    <span className={`rounded-full border px-2.5 py-0.5 num text-[0.65rem] ${badgeCls}`}>
                       {t(`items.${key}.note`)}
                     </span>
-                    <span className="eyebrow ml-auto text-[0.6rem] opacity-65">
+                    <span className="eyebrow ml-auto text-xs opacity-65">
                       0{i + 1} / 04
                     </span>
                   </div>

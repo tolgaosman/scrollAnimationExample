@@ -69,7 +69,7 @@ export function BrewCalculator() {
                 <label htmlFor={sliderId} className="eyebrow text-paper/55">
                   {t("coffee")}
                 </label>
-                <span className="font-mono text-sm tabular-nums">
+                <span className="num text-sm tabular-nums">
                   {dose} g
                 </span>
               </div>
@@ -89,7 +89,7 @@ export function BrewCalculator() {
                 />
                 <StepButton label="+" onClick={() => nudge(1)} />
               </div>
-              <div className="mt-2 flex justify-between font-mono text-[0.65rem] text-paper/40">
+              <div className="mt-2 flex justify-between num text-[0.65rem] text-paper/40">
                 <span>{spec.dose.min} g</span>
                 <span>{spec.dose.max} g</span>
               </div>
@@ -213,7 +213,7 @@ function StepButton({ label, onClick }: { label: string; onClick: () => void }) 
       type="button"
       onClick={onClick}
       aria-label={label === "+" ? "+1" : "−1"}
-      className="grid size-9 shrink-0 place-items-center rounded-full border border-paper/25 font-mono text-lg transition-[background-color,color,transform] duration-200 hover:bg-paper hover:text-ink active:scale-90"
+      className="grid size-9 shrink-0 place-items-center rounded-full border border-paper/25 num text-lg transition-[background-color,color,transform] duration-200 hover:bg-paper hover:text-ink active:scale-90"
     >
       {label}
     </button>
@@ -224,7 +224,7 @@ function Readout({ label, children }: { label: string; children: React.ReactNode
   return (
     <div className="bg-steel-light/80 px-3.5 py-3.5 sm:px-4 sm:py-4">
       <dt className="eyebrow text-ink/60">{label}</dt>
-      <dd className="mt-2 whitespace-nowrap font-mono text-base tabular-nums sm:text-lg md:text-xl">{children}</dd>
+      <dd className="mt-2 whitespace-nowrap num text-base tabular-nums sm:text-lg md:text-xl">{children}</dd>
     </div>
   );
 }

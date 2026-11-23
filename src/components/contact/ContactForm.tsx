@@ -352,7 +352,7 @@ function Field({
         <label htmlFor={id} className="eyebrow text-ink-soft">
           {label}
         </label>
-        {counter && <span className="font-mono text-[0.65rem] text-ink/40">{counter}</span>}
+        {counter && <span className="num text-[0.65rem] text-ink/40">{counter}</span>}
       </div>
       {children(id, error ? errId : undefined)}
       <AnimatePresence initial={false}>

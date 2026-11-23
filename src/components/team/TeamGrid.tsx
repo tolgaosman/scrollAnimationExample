@@ -121,14 +121,14 @@ function Portrait({ member, index }: { member: TeamMember; index: number }) {
           />
 
           <div className="absolute inset-x-4 top-4 flex items-center justify-between" style={{ color: ink }}>
-            <p className="eyebrow text-[0.6rem]">
+            <p className="eyebrow text-xs">
               {String(index + 1).padStart(2, "0")} · {member.since}
             </p>
             <span className="size-1.5 rounded-full bg-current opacity-60" aria-hidden="true" />
           </div>
 
           <p
-            className="eyebrow absolute bottom-4 left-4 right-4 truncate text-[0.58rem] opacity-75"
+            className="eyebrow absolute bottom-4 left-4 right-4 truncate text-xs opacity-75"
             style={{ color: ink }}
           >
             {member.favorite[locale]}
@@ -142,8 +142,8 @@ function Portrait({ member, index }: { member: TeamMember; index: number }) {
             animate={{ y: active ? "0%" : "101%" }}
             transition={{ duration: 0.55, ease: ease.outQuint }}
           >
-            <p className="eyebrow text-[0.58rem] text-copper-light">{t("favorite")}</p>
-            <p className="mt-1 font-mono text-xs">{member.favorite[locale]}</p>
+            <p className="eyebrow text-xs text-copper-light">{t("favorite")}</p>
+            <p className="mt-1 num text-xs">{member.favorite[locale]}</p>
           </motion.div>
         </motion.div>
       </div>
@@ -152,7 +152,7 @@ function Portrait({ member, index }: { member: TeamMember; index: number }) {
         <h2 id={`member-${member.id}`} className="font-display text-xl tracking-tight md:text-2xl">
           {member.name}
         </h2>
-        <p className="eyebrow mt-1 text-[0.6rem] text-copper">{member.role[locale]}</p>
+        <p className="eyebrow mt-1 text-xs text-copper">{member.role[locale]}</p>
       </div>
       <p className="mt-2.5 text-xs leading-relaxed text-ink-soft md:text-[0.82rem]">{member.bio[locale]}</p>
     </motion.article>

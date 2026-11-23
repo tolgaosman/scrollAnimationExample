@@ -97,7 +97,7 @@ export function MenuDrawer({ open, onClose }: { open: boolean; onClose: () => vo
             <span className="flex items-center gap-3">
               <WallMark className="size-7 text-copper-light" />
               {/* Wordmark drops out on the narrowest phones so switcher + close still fit. */}
-              <span className="hidden font-display text-[1.15rem] tracking-[0.08em] min-[400px]:inline">SURLARİÇİ</span>
+              <span className="hidden wordmark text-[1.05rem] min-[400px]:inline">CYPRUS ROASTERS</span>
             </span>
             <div className="flex items-center gap-3">
               <LocaleSwitcher id="drawer" tone="paper" />
@@ -106,7 +106,7 @@ export function MenuDrawer({ open, onClose }: { open: boolean; onClose: () => vo
                 onClick={onClose}
                 className="group flex h-9 items-center gap-3 rounded-full border border-paper/30 pl-4 pr-3 transition-colors hover:bg-paper hover:text-ink"
               >
-                <span className="eyebrow text-[0.62rem]">{t("close")}</span>
+                <span className="eyebrow text-xs">{t("close")}</span>
                 <span className="relative block size-3" aria-hidden="true">
                   <span className="absolute left-0 top-1/2 block h-px w-3 rotate-45 bg-current" />
                   <span className="absolute left-0 top-1/2 block h-px w-3 -rotate-45 bg-current" />

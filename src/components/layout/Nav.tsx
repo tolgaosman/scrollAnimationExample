@@ -19,6 +19,7 @@ import { NAV_ITEMS } from "./nav-items";
 
 export function Nav() {
   const t = useTranslations("nav");
+  const tb = useTranslations("brand");
   const pathname = usePathname();
   const { scrollY } = useScroll();
   const [hidden, setHidden] = useState(false);
@@ -52,11 +53,11 @@ export function Nav() {
               : "border-b border-transparent"
           }`}
         >
-          <Link href="/" className="group flex items-center gap-3" aria-label={`SURLARİÇİ — ${t("home")}`}>
+          <Link href="/" className="group flex items-center gap-3" aria-label={`Cyprus Roasters — ${t("home")}`}>
             <WallMark className="size-7 transition-transform duration-700 ease-[var(--ease-out-quint)] group-hover:rotate-[32.7deg]" />
             <span className="leading-none">
-              <span className="block font-display text-[1.15rem] tracking-[0.08em]">SURLARİÇİ</span>
-              <span className="eyebrow mt-0.5 block text-[0.56rem] text-ink-soft">Lefkon Roasters</span>
+              <span className="block wordmark text-[1.05rem]">CYPRUS ROASTERS</span>
+              <span className="eyebrow mt-0.5 block text-xs text-ink-soft">{tb("sub")}</span>
             </span>
           </Link>
 
@@ -107,7 +108,7 @@ export function Nav() {
               aria-controls="menu-drawer"
               className="group flex h-9 items-center gap-3 rounded-full bg-ink pl-4 pr-3 text-paper transition-transform duration-300 active:scale-[0.97] lg:hidden"
             >
-              <span className="eyebrow text-[0.62rem]">{t("menuLabel")}</span>
+              <span className="eyebrow text-xs">{t("menuLabel")}</span>
               <span className="flex flex-col gap-[3px]" aria-hidden="true">
                 <span className="block h-px w-4 bg-paper transition-transform duration-500 ease-[var(--ease-out-quint)] group-hover:translate-x-0.5" />
                 <span className="block h-px w-4 bg-paper transition-transform duration-500 ease-[var(--ease-out-quint)] group-hover:-translate-x-0.5" />

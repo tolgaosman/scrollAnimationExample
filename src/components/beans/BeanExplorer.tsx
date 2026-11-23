@@ -11,6 +11,7 @@ import { AnimatePresence, LayoutGroup, motion } from "motion/react";
 import { useLocale, useTranslations } from "next-intl";
 import { useEffect, useId, useMemo, useRef, useState } from "react";
 import { beans, type Bean, type BeanCategory } from "@/content/beans";
+import { CoffeeBeanSwatch } from "@/components/ui/CoffeeBeanSwatch";
 import { CustomSelect } from "@/components/ui/CustomSelect";
 import { Meter } from "@/components/ui/Meter";
 import { ease, spring } from "@/lib/motion";
@@ -44,23 +45,27 @@ export function BeanExplorer() {
         {/* Roastery lot telemetry bar */}
         <dl className="mb-8 grid grid-cols-3 divide-x divide-ink/15 border border-ink/15 bg-paper-deep/45">
           <div className="px-3 py-3 sm:px-4 sm:py-3.5 md:px-6">
-            <dt className="eyebrow text-[0.55rem] text-ink-soft sm:text-[0.58rem]">{t("summary.lots")}</dt>
-            <dd className="mt-1 whitespace-nowrap font-mono text-xs tabular-nums sm:text-sm md:text-base">{beans.length}</dd>
+            <dt className="eyebrow text-xs text-ink-soft sm:text-xs">{t("summary.lots")}</dt>
+            <dd className="mt-1 whitespace-nowrap num text-xs tabular-nums sm:text-sm md:text-base">{beans.length}</dd>
           </div>
           <div className="px-3 py-3 sm:px-4 sm:py-3.5 md:px-6">
-            <dt className="eyebrow text-[0.55rem] text-ink-soft sm:text-[0.58rem]">{t("summary.altitude")}</dt>
-            <dd className="mt-1 whitespace-nowrap font-mono text-xs tabular-nums sm:text-sm md:text-base">
+            <dt className="eyebrow text-xs text-ink-soft sm:text-xs">{t("summary.altitude")}</dt>
+            <dd className="mt-1 whitespace-nowrap num text-xs tabular-nums sm:text-sm md:text-base">
               {(1350).toLocaleString(locale)} – {(2150).toLocaleString(locale)} m
             </dd>
           </div>
           <div className="px-3 py-3 sm:px-4 sm:py-3.5 md:px-6">
-            <dt className="eyebrow text-[0.55rem] text-ink-soft sm:text-[0.58rem]">{t("summary.schedule")}</dt>
-            <dd className="mt-1 whitespace-nowrap font-mono text-xs sm:text-sm md:text-base">{t("summary.scheduleValue")}</dd>
+            <dt className="eyebrow text-xs text-ink-soft sm:text-xs">{t("summary.schedule")}</dt>
+            <dd className="mt-1 whitespace-nowrap num text-xs sm:text-sm md:text-base">{t("summary.scheduleValue")}</dd>
           </div>
         </dl>
 
-        <div className="flex flex-wrap items-end justify-between gap-4 border-b border-ink/15 pb-3">
-          <div role="group" aria-label={t("filters.label")} className="-mb-3 flex flex-wrap gap-x-6 gap-y-2">
+        <div className="flex flex-col gap-3 border-b border-ink/15 pb-3 sm:flex-row sm:flex-wrap sm:items-end sm:justify-between">
+          <div
+            role="group"
+            aria-label={t("filters.label")}
+            className="-mx-[clamp(1.25rem,4vw,4rem)] flex flex-nowrap gap-x-5 overflow-x-auto px-[clamp(1.25rem,4vw,4rem)] [scrollbar-width:none] sm:mx-0 sm:-mb-3 sm:flex-wrap sm:gap-x-6 sm:overflow-visible sm:px-0"
+          >
             {FILTERS.map((f) => {
               const active = f === filter;
               return (
@@ -69,7 +74,7 @@ export function BeanExplorer() {
                   type="button"
                   aria-pressed={active}
                   onClick={() => setFilter(f)}
-                  className={`relative pb-3 text-sm transition-opacity md:text-base ${active ? "opacity-100" : "opacity-55 hover:opacity-100"}`}
+                  className={`relative shrink-0 whitespace-nowrap pb-2.5 text-sm transition-opacity sm:pb-3 md:text-base ${active ? "opacity-100" : "opacity-55 hover:opacity-100"}`}
                 >
                   {t(`filters.${f}`)}
                   {active && (
@@ -126,9 +131,10 @@ export function BeanExplorer() {
                       <motion.span
                         layoutId={`swatch-${bean.id}`}
                         transition={{ type: "spring", stiffness: 340, damping: 32, mass: 0.75 }}
-                        className="block size-9 shrink-0 rounded-full md:size-11"
-                        style={{ background: bean.tone }}
-                      />
+                        className="block size-9 shrink-0 md:size-11"
+                      >
+                        <CoffeeBeanSwatch tone={bean.tone} className="size-full" />
+                      </motion.span>
                     )}
                     <span className="font-display text-2xl leading-tight tracking-tight transition-transform duration-500 ease-[var(--ease-out-quint)] group-hover:translate-x-2 md:text-[2.1rem]">
                       {bean.name}
@@ -137,7 +143,7 @@ export function BeanExplorer() {
                   <span className="col-span-6 col-start-3 text-sm md:col-span-2 md:col-start-auto">
                     {bean.origin[locale]}
                   </span>
-                  <span className="col-span-4 whitespace-nowrap font-mono text-xs tabular-nums text-ink-soft md:col-span-1">
+                  <span className="col-span-4 whitespace-nowrap num text-xs tabular-nums text-ink-soft md:col-span-1">
                     {bean.altitude.toLocaleString(locale)} m
                   </span>
                   <span className="col-span-10 col-start-3 text-sm text-ink-soft md:col-span-2 md:col-start-auto">
@@ -219,9 +225,10 @@ function BeanSheet({ bean, activeId, onClose }: { bean: Bean | null; activeId: s
                   <motion.span
                     layoutId={`swatch-${bean.id}`}
                     transition={{ type: "spring", stiffness: 340, damping: 32, mass: 0.75 }}
-                    className="block size-16 shrink-0 rounded-full md:size-20"
-                    style={{ background: bean.tone }}
-                  />
+                    className="block size-16 shrink-0 md:size-20"
+                  >
+                    <CoffeeBeanSwatch tone={bean.tone} className="size-full" />
+                  </motion.span>
                 ) : (
                   <span className="block size-16 shrink-0 md:size-20" aria-hidden="true" />
                 )}
@@ -268,7 +275,7 @@ function BeanSheet({ bean, activeId, onClose }: { bean: Bean | null; activeId: s
 
               <div className="brushed-steel flex items-center justify-between gap-4 p-5">
                 <span className="eyebrow">{t("labels.brewWith")}</span>
-                <span className="font-mono text-sm">{bean.brew[locale]}</span>
+                <span className="num text-sm">{bean.brew[locale]}</span>
               </div>
             </div>
           </motion.aside>
@@ -282,7 +289,7 @@ function Spec({ label, value, mono = false }: { label: string; value: string; mo
   return (
     <div>
       <dt className="eyebrow text-ink-soft">{label}</dt>
-      <dd className={`mt-1 text-sm ${mono ? "font-mono tabular-nums" : ""}`}>{value}</dd>
+      <dd className={`mt-1 text-sm ${mono ? "num tabular-nums" : ""}`}>{value}</dd>
     </div>
   );
 }

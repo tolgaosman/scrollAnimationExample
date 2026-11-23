@@ -67,10 +67,10 @@ export function NicosiaMap() {
             strokeDasharray="1.4 1.2"
             strokeOpacity="0.7"
           />
-          <text x="-56" y="15" className="fill-ink-soft font-mono text-[2.6px] uppercase tracking-[0.2em]">
+          <text x="-56" y="15" className="fill-ink-soft num text-[2.6px] uppercase tracking-[0.2em]">
             {t("buffer")}
           </text>
-          <text x="0" y="-55" textAnchor="middle" className="fill-ink-soft font-mono text-[2.6px] uppercase tracking-[0.2em]">
+          <text x="0" y="-55" textAnchor="middle" className="fill-ink-soft num text-[2.6px] uppercase tracking-[0.2em]">
             {t("walls")}
           </text>
 
@@ -111,11 +111,15 @@ export function NicosiaMap() {
               >
                 <text
                   x={0}
-                  y={-4.8}
+                  y={-5.2}
                   textAnchor="middle"
-                  className={`font-display text-[4.3px] italic ${
-                    focus === "us" ? "fill-ink" : "fill-[#8c3f19]"
-                  }`}
+                  className="fill-ink font-sans text-[3.6px] font-medium"
+                  style={{
+                    paintOrder: "stroke",
+                    stroke: "var(--color-paper)",
+                    strokeWidth: 1.6,
+                    strokeLinejoin: "round",
+                  }}
                 >
                   {t(focus)}
                 </text>
@@ -126,7 +130,7 @@ export function NicosiaMap() {
           {/* compass */}
           <g transform="translate(52 -52)" className="text-ink">
             <path d="M0,-5 L1.6,2 L0,1 L-1.6,2 Z" fill="currentColor" />
-            <text y="7" textAnchor="middle" className="fill-ink font-mono text-[2.6px]">
+            <text y="7" textAnchor="middle" className="fill-ink num text-[2.6px]">
               N
             </text>
           </g>

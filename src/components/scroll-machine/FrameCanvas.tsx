@@ -280,7 +280,7 @@ export function FrameCanvas({
   return (
     <canvas
       ref={canvasRef}
-      className="absolute inset-0 z-0 block h-full w-full contrast-[1.04] saturate-[1.03]"
+      className="absolute inset-0 z-10 block h-full w-full"
       role="img"
       aria-label={label}
     />

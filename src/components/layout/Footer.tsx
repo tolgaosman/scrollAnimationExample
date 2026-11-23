@@ -19,7 +19,6 @@ export async function Footer() {
           <p className="mt-5 max-w-[28ch] font-display text-xl font-light leading-snug md:text-2xl">
             {t("tagline")}
           </p>
-          <p className="eyebrow mt-4 text-paper/50">{t("coords")}</p>
         </div>
 
         <div className="col-span-6 md:col-span-2 md:col-start-6">
@@ -41,7 +40,7 @@ export async function Footer() {
             <p>{tc("address.line1")}</p>
             <p>{tc("address.line2")}</p>
             <p>{tc("address.line3")}</p>
-            <p className="pt-2.5 font-mono text-xs">{tc("hours.weekdaysTime")}</p>
+            <p className="pt-2.5 num text-xs">{tc("hours.weekdaysTime")}</p>
             <p className="text-xs text-copper-light">{tc("hours.roastDay")}</p>
           </address>
         </div>
@@ -55,7 +54,7 @@ export async function Footer() {
                 {tc("reach.email")}
               </a>
             </li>
-            <li className="whitespace-nowrap font-mono text-xs">{tc("reach.phone")}</li>
+            <li className="whitespace-nowrap num text-xs">{tc("reach.phone")}</li>
           </ul>
         </div>
       </div>

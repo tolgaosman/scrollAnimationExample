@@ -1,34 +1,35 @@
 {
   "meta": {
-    "siteName": "SURLARİÇİ // Lefkon Roasters & Atelier",
+    "siteName": "Cyprus Roasters — Coffee & Atelier",
     "home": {
-      "title": "SURLARİÇİ Roasters — Engineering & Craft in the Heart of Nicosia",
-      "description": "Specialty coffee roasted in small batches inside a restored stone workshop in the walled city of Nicosia. Roastery, brew bar and tasting room."
+      "title": "Cyprus Roasters — Engineering & Craft in the Heart of Nicosia",
+      "description": "Specialty coffee roasted in small batches inside a restored stone workshop in Nicosia, Cyprus. Roastery, brew bar and tasting room."
     },
     "beans": {
-      "title": "Our Coffee Beans — SURLARİÇİ Roasters",
+      "title": "Our Coffee Beans — Cyprus Roasters",
       "description": "Direct-trade single origins from Ethiopia to Colombia, espresso blends and seasonal micro-lots."
     },
     "menu": {
-      "title": "Menu & Brew Guide — SURLARİÇİ Roasters",
+      "title": "Menu & Brew Guide — Cyprus Roasters",
       "description": "Signature cold brews, carob cortado, pistachio cremoso and an interactive brew ratio calculator for the perfect cup at home."
     },
     "team": {
-      "title": "Our Team — SURLARİÇİ Roasters",
+      "title": "Our Team — Cyprus Roasters",
       "description": "Meet our head roaster, lead barista, Q-grader and pastry chef."
     },
     "about": {
-      "title": "About Us — SURLARİÇİ Roasters",
-      "description": "How a forgotten stone workshop inside Nicosia's Venetian walls became a third-wave micro-roastery."
+      "title": "About Us — Cyprus Roasters",
+      "description": "How a forgotten stone workshop in Nicosia became a third-wave micro-roastery."
     },
     "contact": {
-      "title": "Contact — SURLARİÇİ Roasters",
-      "description": "Arasta, walled city of Nicosia. Opening hours, reservations and wholesale bean enquiries."
+      "title": "Contact — Cyprus Roasters",
+      "description": "Arasta, Nicosia, Cyprus. Opening hours, reservations and wholesale bean enquiries."
     }
   },
   "brand": {
-    "wordmark": "SURLARİÇİ",
-    "sub": "Lefkon Roasters & Atelier",
+    "wordmark": "CYPRUS ROASTERS",
+    "sub": "Nicosia · Atelier",
+    "footerSub": "Coffee & Atelier",
     "est": "Est. 2019 · Nicosia"
   },
   "nav": {
@@ -53,14 +54,44 @@
     "ready": "Ready"
   },
   "hero": {
-    "eyebrow": "Nicosia · Walled City · 35.17°N 33.36°E",
-    "titleA": "SURLARİÇİ",
+    "eyebrow": "Cyprus · Nicosia",
+    "titleA": "CYPRUS",
     "titleB": "ROASTERS",
     "subtitle": "Engineering & Craft in the Heart of Nicosia",
     "lede": "Inside the Venetian walls, in a workshop of golden sandstone, we take apart the machine behind every cup — piece by piece.",
     "scroll": "Scroll — open the machine",
     "progress": "Teardown",
-    "canvasLabel": "A three-group espresso machine that comes apart into its components as you scroll."
+    "canvasLabel": "A walnut-panelled espresso machine pulling a fresh golden shot and pouring it over crystal ice as you scroll."
+  },
+  "ritual": {
+    "heroLede": "Inside Nicosia's Venetian walls, in a workshop of golden limestone — scroll naturally to experience the entire ritual from 9-bar extraction to the amber pour over crystal ice.",
+    "ctaMenu": "Menu & Brewing",
+    "ctaBeans": "Explore Beans",
+    "scrollCue": "Scroll to pull the shot",
+    "walnutLabel": "American Walnut · 304 Steel",
+    "originsLede": "Behind the fresh glass lifted from the group head stand three seasonal signature origins.",
+    "acts": {
+      "ready": { "short": "Machine ready · 93 °C", "tab": "Ready" },
+      "extraction": { "short": "9 bar extraction", "tab": "Extract" },
+      "craft": { "short": "The barista's hand", "tab": "Craft" },
+      "pour": { "short": "The ice pour", "tab": "Pour" }
+    },
+    "specBar": "9 BAR · 93 °C · 28 S",
+    "secUnit": "s",
+    "pour": {
+      "eyebrow": "The Ice Pour",
+      "title": "From 93 °C to 4 °C — alchemy over crystal ice.",
+      "body": "The instant a fresh double ristretto meets crystal ice, volatile aromatics lock in — cascading into ribbons of mahogany, dark chocolate and citrus.",
+      "recipeLabel": "Signature Iced Espresso Blueprint",
+      "spec1Label": "Dose & Yield",
+      "spec1Value": "18 g → 36 g",
+      "spec2Label": "Thermal Shift",
+      "spec2Value": "93 °C → 4 °C",
+      "spec3Label": "Origin",
+      "spec3Value": "House No. 01",
+      "ctaCalc": "Open Calculator",
+      "ctaVisit": "Book a Table"
+    }
   },
   "callouts": {
     "boiler": {
@@ -134,25 +165,29 @@
           "name": "Espresso",
           "tag": "Intense · 30 s",
           "body": "Nine bar, eighteen grams, thirty seconds. Russet crema, a finish of dark chocolate.",
-          "note": "House Blend No. 01"
+          "note": "House Blend No. 01",
+          "setup": "9 bar"
         },
         "pourover": {
           "name": "Pour-Over",
           "tag": "Clear · 3 min",
           "body": "Slow pours through V60 and Kalita Wave. Floral, tea-like, a cup that opens in layers.",
-          "note": "Yirgacheffe · Micro-Lot"
+          "note": "Yirgacheffe · Micro-Lot",
+          "setup": "V60 / Kalita"
         },
         "coldbrew": {
           "name": "Cold Brew",
           "tag": "Patient · 16 hrs",
           "body": "Sixteen hours steeped in cold water — the coolest shade in Nicosia on an August afternoon.",
-          "note": "Guatemala Antigua"
+          "note": "Guatemala Antigua",
+          "setup": "16 h steep"
         },
         "cezve": {
           "name": "Cypriot Coffee",
           "tag": "Rooted · Sand-fired",
           "body": "Brewed in a copper cezve over hot sand, its foam gathered with patience. The workshop's oldest recipe.",
-          "note": "Medium-Dark · Extra Fine"
+          "note": "Medium-Dark · Extra Fine",
+          "setup": "Sand-fired"
         }
       }
     },
@@ -354,13 +389,13 @@
     "reach": {
       "label": "Reach us",
       "phone": "+90 392 000 00 00",
-      "email": "atolye@surlarici.coffee"
+      "email": "hello@cyprusroasters.coffee"
     },
     "socialLabel": "Social & Direct Message",
     "map": {
-      "title": "Map of walled Nicosia",
+      "title": "Map of Nicosia atelier",
       "walls": "Venetian Walls · 1567",
-      "us": "SURLARİÇİ Atelier",
+      "us": "Cyprus Roasters Atelier",
       "selimiye": "Selimiye Mosque",
       "buyukhan": "Büyük Han",
       "kyrenia": "Kyrenia Gate",
@@ -430,7 +465,7 @@
     "whatsapp": {
       "label": "WhatsApp",
       "aria": "Message us on WhatsApp",
-      "prefill": "Hello SURLARİÇİ, I would like to ask about the atelier."
+      "prefill": "Hello Cyprus Roasters, I would like to ask about the atelier."
     }
   },
   "notFound": {

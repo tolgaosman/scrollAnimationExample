@@ -19,7 +19,6 @@ export default async function TeamPage({ params }: PageProps<"/[locale]/ekibimiz
   return (
     <>
       <PageHero
-        index="04 / 06"
         eyebrow={t("eyebrow")}
         title={t("title")}
         lede={t("lede")}

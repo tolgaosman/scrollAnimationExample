@@ -63,7 +63,7 @@ export function Timeline() {
                 className="group flex w-full items-baseline justify-between gap-6 text-left"
               >
                 <span className="flex flex-col gap-1 md:flex-row md:items-baseline md:gap-6">
-                  <span className="font-mono text-sm tabular-nums text-copper">{m.year}</span>
+                  <span className="num text-sm tabular-nums text-copper">{m.year}</span>
                   <span className="font-display text-2xl tracking-tight transition-transform duration-500 ease-[var(--ease-out-quint)] group-hover:translate-x-1 md:text-3xl">
                     {m.title[locale]}
                   </span>

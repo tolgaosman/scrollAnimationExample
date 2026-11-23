@@ -54,7 +54,7 @@ export function LocaleSwitcher({ id = "nav", tone = "ink" }: { id?: string; tone
               lang={locale}
               aria-pressed={isActive}
               onClick={() => select(locale)}
-              className={`relative z-0 h-7 w-10 rounded-full font-mono text-[0.7rem] tracking-[0.14em] uppercase transition-colors duration-300 ${
+              className={`relative z-0 h-7 w-10 rounded-full num text-[0.7rem] font-medium uppercase tracking-wider transition-colors duration-300 ${
                 isActive ? activeFg : `${fg} opacity-70 hover:opacity-100`
               }`}
             >

@@ -29,7 +29,6 @@ export function Manifesto() {
       <div className="shell grid-arch gap-y-8">
         <div className="col-span-12 flex items-baseline justify-between">
           <p className="eyebrow">{t("eyebrow")}</p>
-          <p className="eyebrow text-ink-soft">01 · SURLARİÇİ</p>
         </div>
         <DrawnRule className="col-span-12 -mt-5" />
 
@@ -54,10 +53,10 @@ export function Manifesto() {
             </svg>
             <div className="absolute inset-0 bg-gradient-to-t from-ink/55 via-ink/10 to-transparent" />
             <div className="absolute inset-x-4 top-4 flex items-center justify-between">
-              <p className="eyebrow bg-paper/75 px-2.5 py-1 text-[0.62rem] text-ink backdrop-blur-[2px]">
+              <p className="eyebrow bg-paper/75 px-2.5 py-1 text-xs text-ink backdrop-blur-[2px]">
                 {t("stoneLabel")}
               </p>
-              <span className="font-mono text-[0.62rem] tracking-widest text-ink/70">1567</span>
+              <span className="num text-[0.62rem] tracking-widest text-ink/70">1567</span>
             </div>
             <MaskedLines
               lines={[t("titleA")]}
@@ -87,8 +86,8 @@ export function Manifesto() {
               <line x1="36" y1="140" x2="368" y2="140" stroke="currentColor" strokeWidth="0.5" strokeDasharray="3 4" />
             </svg>
             <div className="absolute inset-x-5 top-4 flex items-center justify-between">
-              <p className="eyebrow text-[0.62rem] text-ink/75">{t("steelLabel")}</p>
-              <span className="font-mono text-[0.62rem] tracking-widest text-ink/60">PID ±0.1°C</span>
+              <p className="eyebrow text-xs text-ink/75">{t("steelLabel")}</p>
+              <span className="num text-[0.62rem] tracking-widest text-ink/60">PID ±0.1°C</span>
             </div>
             {/* four copper rivets */}
             {["left-2.5 top-2.5", "right-2.5 top-2.5", "left-2.5 bottom-2.5", "right-2.5 bottom-2.5"].map((pos) => (
@@ -124,7 +123,7 @@ export function Manifesto() {
               delay={i * 0.06}
               className="flex flex-col-reverse border-b border-ink/15 px-5 py-4 last:border-b-0 sm:border-b-0 md:px-6 md:py-5"
             >
-              <dt className="eyebrow mt-1.5 text-[0.62rem] text-ink-soft">{label}</dt>
+              <dt className="eyebrow mt-1.5 text-xs text-ink-soft">{label}</dt>
               <dd className="display text-[clamp(2.1rem,3.4vw,3rem)] text-ink">{value}</dd>
             </Reveal>
           ))}

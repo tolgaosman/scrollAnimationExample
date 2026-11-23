@@ -17,6 +17,7 @@ import { useLocale, useTranslations } from "next-intl";
 import { useMemo, useRef, useState } from "react";
 import { signatureBeans } from "@/content/beans";
 import { ArrowLink } from "@/components/ui/ArrowLink";
+import { CoffeeBeanSwatch } from "@/components/ui/CoffeeBeanSwatch";
 import { LimestoneTexture } from "@/components/ui/LimestoneTexture";
 import { Meter } from "@/components/ui/Meter";
 import { scrubSpring, scrubTouchSpring } from "@/lib/motion";
@@ -36,7 +37,6 @@ export interface FrameSequenceProps {
   urls: string[];
   width: number;
   height: number;
-}
   shiftX?: number[];
   shiftY?: number[];
 }
@@ -92,14 +92,14 @@ export function ScrollMachine({ sequence }: { sequence: FrameSequenceProps }) {
     [tm("stat3"), tm("stat3Label")],
   ] as const;
 
-  const bgStyle = studio ? { backgroundColor: studio } : undefined;
+  const sectionStyle = studio ? ({ "--stage-bg": studio, backgroundColor: studio } as React.CSSProperties) : undefined;
 
   return (
     <section
       ref={rootRef}
       aria-label={th("subtitle")}
       className="relative bg-studio pt-16 lg:pt-0"
-      style={bgStyle}
+      style={sectionStyle}
     >
         <div className="shell relative grid grid-cols-1 gap-4 pb-8 lg:grid-cols-12 lg:items-start lg:gap-10 lg:pb-0">
           {/* ============================================================
@@ -110,8 +110,7 @@ export function ScrollMachine({ sequence }: { sequence: FrameSequenceProps }) {
            ============================================================ */}
           <div
             data-stage-pin
-            className="sticky top-16 z-30 order-first -mx-[clamp(1.25rem,4vw,4rem)] bg-studio px-[clamp(1.25rem,4vw,4rem)] pb-3 pt-1 lg:top-0 lg:order-last lg:col-span-7 lg:mx-0 lg:flex lg:h-svh lg:flex-col lg:justify-center lg:bg-transparent lg:px-0 lg:pb-6 lg:pt-16"
-            style={bgStyle}
+            className="sticky top-16 z-20 order-first -mx-[clamp(1.25rem,4vw,4rem)] bg-[var(--stage-bg,var(--color-studio))] px-[clamp(1.25rem,4vw,4rem)] pb-3 pt-1 lg:top-0 lg:z-10 lg:order-last lg:col-span-7 lg:mx-0 lg:flex lg:h-svh lg:flex-col lg:justify-center lg:bg-transparent lg:px-0 lg:pb-6 lg:pt-16"
           >
               {/* Razor-sharp, completely unframed 16:9 canvas with true 4-side edge fade */}
               <div className="stage-fade relative mx-auto aspect-video max-h-[34svh] w-full overflow-hidden lg:max-h-[68svh]">
@@ -128,8 +127,8 @@ export function ScrollMachine({ sequence }: { sequence: FrameSequenceProps }) {
                   <FrameCanvas
                     store={store}
                     imageSize={imageSize}
-                    shiftY={sequence.shiftY}
                     shiftX={sequence.shiftX}
+                    shiftY={sequence.shiftY}
                     progress={progress}
                     label={th("canvasLabel")}
                     blend={false}
@@ -141,14 +140,14 @@ export function ScrollMachine({ sequence }: { sequence: FrameSequenceProps }) {
               {/* Quiet Editorial Telemetry & 4-Act Scrubber (frameless, native ink palette) */}
               <div className="mt-2 border-t border-ink/15 pt-2.5 lg:mt-4 lg:pt-3">
                 <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-1">
-                  <span className="eyebrow flex items-center gap-2 text-[0.6rem] text-ink">
+                  <span className="eyebrow flex items-center gap-2 text-xs text-ink">
                     <span className="block size-1.5 rounded-full bg-copper" aria-hidden="true" />
                     {t(`acts.${activeAct}.short`)}
                   </span>
 
                   <div className="flex items-center gap-3 font-mono text-[0.68rem] tabular-nums text-ink-soft sm:gap-4">
                     <span className="whitespace-nowrap">
-                      <span className="mr-1 text-[0.58rem] uppercase tracking-wider opacity-60">BAR</span>
+                      <span className="mr-1 text-[0.58rem] opacity-60">BAR</span>
                       <motion.span className="font-medium text-copper">{barText}</motion.span>
                     </span>
                     <span className="whitespace-nowrap">
@@ -184,10 +183,10 @@ export function ScrollMachine({ sequence }: { sequence: FrameSequenceProps }) {
                         className={`flex items-center justify-center gap-1 py-1 text-center transition-colors duration-300 sm:justify-start sm:gap-1.5 ${isActive ? "text-ink" : "text-ink/45 hover:text-ink/80"
                           }`}
                       >
-                        <span className={`font-mono text-[0.58rem] ${isActive ? "text-copper" : "opacity-60"}`}>
+                        <span className={`num text-[0.58rem] ${isActive ? "text-copper" : "opacity-60"}`}>
                           {act.index}
                         </span>
-                        <span className="truncate font-mono text-[0.58rem] uppercase tracking-[0.08em] sm:text-[0.64rem]">
+                        <span className="truncate text-xs sm:text-[0.64rem]">
                           {t(`acts.${act.id}.tab`)}
                         </span>
                       </button>
@@ -200,9 +199,9 @@ export function ScrollMachine({ sequence }: { sequence: FrameSequenceProps }) {
             {/* ============================================================
             SCROLLING EDITORIAL SPINE (4 CHOREOGRAPHED ACTS)
            ============================================================ */}
-              <div className="space-y-8 lg:col-span-5 lg:space-y-26 lg:pb-24 lg:pt-20">
+              <div className="space-y-8 lg:col-span-5 lg:space-y-14 lg:pb-16 lg:pt-0">
                 {/* ACT 00: OPENING ATELIER HERO */}
-                <div className="flex flex-col justify-center pt-2 lg:min-h-[76svh] lg:pt-0">
+                <div className="flex flex-col justify-center pt-2 lg:min-h-svh lg:pt-16">
                   <p className="eyebrow flex items-center gap-2.5 text-copper">
                     <span className="block size-1.5 rounded-full bg-copper" aria-hidden="true" />
                     {th("eyebrow")}
@@ -212,7 +211,7 @@ export function ScrollMachine({ sequence }: { sequence: FrameSequenceProps }) {
                     <span className="display -mt-[0.28em] block pb-[0.1em] pt-[0.28em] text-[clamp(2.85rem,11.5vw,5.2rem)] tracking-[-0.015em] text-ink lg:text-[clamp(3.6rem,5.2vw,5.5rem)]">
                       {th("titleA")}
                     </span>
-                    <span className="eyebrow mt-1.5 block text-xs tracking-[0.34em] text-ink-soft">
+                    <span className="eyebrow mt-1.5 block text-xs text-ink-soft">
                       {th("titleB")} · {tc("address.line2")}
                     </span>
                   </h1>
@@ -232,19 +231,14 @@ export function ScrollMachine({ sequence }: { sequence: FrameSequenceProps }) {
                   </div>
 
                   <div className="mt-7 flex flex-wrap items-center justify-between gap-3 border-t border-ink/15 pt-4">
-                    <span className="eyebrow text-[0.6rem] text-copper">{tc("hours.roastDay")}</span>
-                    <span className="eyebrow flex items-center gap-2 text-[0.6rem] text-ink-soft">
-                      {t("scrollCue")}
-                      <span aria-hidden="true" className="text-copper">↓</span>
-                    </span>
+                    <span className="eyebrow text-xs text-copper">{tc("hours.roastDay")}</span>
                   </div>
                 </div>
 
                 {/* ACT 01: 9-BAR EXTRACTION & STONE/WALNUT/STEEL MANIFESTO */}
-                <article className="border-t border-ink/15 pt-6 lg:min-h-[74svh] lg:pt-12" aria-labelledby="manifesto-title">
+                <article className="border-t border-ink/15 pt-6 lg:min-h-[62svh] lg:pt-8" aria-labelledby="manifesto-title">
                   <div className="flex items-baseline justify-between gap-2">
-                    <p className="eyebrow text-copper">01 · {tm("eyebrow")}</p>
-                    <span className="eyebrow whitespace-nowrap text-[0.6rem] text-ink-soft">{t("specBar")}</span>
+                    <p className="eyebrow text-copper">{tm("eyebrow")}</p>
                   </div>
 
                   <h2 id="manifesto-title" className="display mt-3 text-[clamp(1.9rem,4vw,3.15rem)] text-ink">
@@ -256,16 +250,16 @@ export function ScrollMachine({ sequence }: { sequence: FrameSequenceProps }) {
                     <div className="relative aspect-[16/11] overflow-hidden border border-ink/15 p-2.5 sm:p-3">
                       <LimestoneTexture className="absolute inset-0 h-full w-full" />
                       <div className="absolute inset-0 bg-gradient-to-t from-ink/55 via-transparent to-transparent" />
-                      <span className="eyebrow relative z-10 inline-block bg-paper/80 px-1.5 py-0.5 text-[0.52rem] text-ink">
+                      <span className="eyebrow relative z-10 inline-block bg-paper/80 px-1.5 py-0.5 text-xs text-ink">
                         {tm("stoneLabel")}
                       </span>
                       <p className="font-display relative z-10 mt-5 text-lg italic leading-tight text-paper">1567</p>
                     </div>
                     <div className="walnut-grain relative aspect-[16/11] overflow-hidden border border-walnut/40 p-2.5 text-paper sm:p-3">
-                      <span className="eyebrow inline-block border border-paper/20 px-1.5 py-0.5 text-[0.52rem] text-paper/85">
+                      <span className="eyebrow inline-block border border-paper/20 px-1.5 py-0.5 text-xs text-paper/85">
                         {t("walnutLabel")}
                       </span>
-                      <p className="font-mono mt-5 text-xs text-crema">PID ±0.1 °C</p>
+                      <p className="num mt-5 text-xs text-crema">PID ±0.1 °C</p>
                     </div>
                   </div>
 
@@ -276,17 +270,16 @@ export function ScrollMachine({ sequence }: { sequence: FrameSequenceProps }) {
                     {manifestoStats.map(([value, label]) => (
                       <div key={label} className="px-2.5 py-3 sm:px-3.5 sm:py-3.5">
                         <dd className="display whitespace-nowrap text-xl text-ink sm:text-3xl">{value}</dd>
-                        <dt className="eyebrow mt-1 text-[0.52rem] text-ink-soft sm:text-[0.56rem]">{label}</dt>
+                        <dt className="eyebrow mt-1 text-xs text-ink-soft sm:text-xs">{label}</dt>
                       </div>
                     ))}
                   </dl>
                 </article>
 
                 {/* ACT 02: THE BARISTA'S HAND & SIGNATURE ORIGINS */}
-                <article className="border-t border-ink/15 pt-6 lg:min-h-[82svh] lg:pt-12" aria-labelledby="roasts-title">
+                <article className="border-t border-ink/15 pt-6 lg:min-h-[66svh] lg:pt-8" aria-labelledby="roasts-title">
                   <div className="flex items-baseline justify-between gap-2">
-                    <p className="eyebrow text-copper">02 · {tr("eyebrow")}</p>
-                    <span className="eyebrow whitespace-nowrap text-[0.6rem] text-ink-soft">18 G → 36 G</span>
+                    <p className="eyebrow text-copper">{tr("eyebrow")}</p>
                   </div>
 
                   <h2 id="roasts-title" className="display mt-3 text-[clamp(1.9rem,4vw,3.15rem)] text-ink">
@@ -302,21 +295,15 @@ export function ScrollMachine({ sequence }: { sequence: FrameSequenceProps }) {
                       >
                         <div className="flex items-start justify-between gap-3">
                           <div className="flex min-w-0 items-center gap-3">
-                            <span
-                              className="block size-8 shrink-0 rounded-full shadow-inner"
-                              style={{
-                                background: `radial-gradient(circle at 32% 28%, color-mix(in oklab, ${bean.tone} 55%, white) 0%, ${bean.tone} 55%, color-mix(in oklab, ${bean.tone} 65%, black) 100%)`,
-                              }}
-                              aria-hidden="true"
-                            />
+                            <CoffeeBeanSwatch tone={bean.tone} className="size-9 shrink-0" />
                             <div className="min-w-0">
-                              <p className="eyebrow truncate text-[0.56rem] text-copper">
-                                0{i + 1} · {bean.origin[locale]} · {tl(bean.roast)}
+                              <p className="eyebrow truncate text-xs text-copper">
+                                {bean.origin[locale]} · {tl(bean.roast)}
                               </p>
                               <h3 className="font-display text-lg leading-tight text-ink sm:text-xl">{bean.name}</h3>
                             </div>
                           </div>
-                          <span className="shrink-0 whitespace-nowrap font-mono text-[0.68rem] tabular-nums text-ink-soft">
+                          <span className="shrink-0 whitespace-nowrap num text-[0.68rem] tabular-nums text-ink-soft">
                             {bean.altitude.toLocaleString(locale)} m
                           </span>
                         </div>
@@ -346,10 +333,9 @@ export function ScrollMachine({ sequence }: { sequence: FrameSequenceProps }) {
                 </article>
 
                 {/* ACT 03: CRYSTAL ICE POUR & SIGNATURE GLASS BLUEPRINT */}
-                <article className="border-t border-ink/15 pt-6 lg:min-h-[68svh] lg:pt-12" aria-labelledby="pour-title">
+                <article className="border-t border-ink/15 pt-6 lg:min-h-[56svh] lg:pt-8" aria-labelledby="pour-title">
                   <div className="flex items-baseline justify-between gap-2">
-                    <p className="eyebrow text-copper">03 · {t("pour.eyebrow")}</p>
-                    <span className="eyebrow whitespace-nowrap text-[0.6rem] text-ink-soft">93 °C → 4 °C</span>
+                    <p className="eyebrow text-copper">{t("pour.eyebrow")}</p>
                   </div>
 
                   <h2 id="pour-title" className="display mt-3 text-[clamp(1.9rem,4vw,3.15rem)] text-ink">
@@ -360,21 +346,21 @@ export function ScrollMachine({ sequence }: { sequence: FrameSequenceProps }) {
                   {/* Architectural Glass Spec Card */}
                   <div className="mt-6 border border-ink/15 bg-ink p-4 text-paper sm:p-5">
                     <div className="flex items-baseline justify-between gap-2 border-b border-paper/15 pb-3">
-                      <span className="eyebrow text-[0.58rem] text-crema">{t("pour.recipeLabel")}</span>
-                      <span className="shrink-0 whitespace-nowrap font-mono text-xs text-paper/75">240 ML · 1:2</span>
+                      <span className="eyebrow text-xs text-crema">{t("pour.recipeLabel")}</span>
+                      <span className="shrink-0 whitespace-nowrap num text-xs text-paper/75">240 ML · 1:2</span>
                     </div>
                     <dl className="mt-4 grid grid-cols-3 gap-2 sm:gap-3">
                       <div>
-                        <dt className="eyebrow text-[0.52rem] text-paper/50">{t("pour.spec1Label")}</dt>
-                        <dd className="mt-1 whitespace-nowrap font-mono text-xs text-paper sm:text-sm">{t("pour.spec1Value")}</dd>
+                        <dt className="eyebrow text-xs text-paper/50">{t("pour.spec1Label")}</dt>
+                        <dd className="mt-1 whitespace-nowrap num text-xs text-paper sm:text-sm">{t("pour.spec1Value")}</dd>
                       </div>
                       <div>
-                        <dt className="eyebrow text-[0.52rem] text-paper/50">{t("pour.spec2Label")}</dt>
-                        <dd className="mt-1 whitespace-nowrap font-mono text-xs text-crema sm:text-sm">{t("pour.spec2Value")}</dd>
+                        <dt className="eyebrow text-xs text-paper/50">{t("pour.spec2Label")}</dt>
+                        <dd className="mt-1 whitespace-nowrap num text-xs text-crema sm:text-sm">{t("pour.spec2Value")}</dd>
                       </div>
                       <div>
-                        <dt className="eyebrow text-[0.52rem] text-paper/50">{t("pour.spec3Label")}</dt>
-                        <dd className="mt-1 whitespace-nowrap font-mono text-xs text-paper sm:text-sm">{t("pour.spec3Value")}</dd>
+                        <dt className="eyebrow text-xs text-paper/50">{t("pour.spec3Label")}</dt>
+                        <dd className="mt-1 whitespace-nowrap num text-xs text-paper sm:text-sm">{t("pour.spec3Value")}</dd>
                       </div>
                     </dl>
                     <div className="mt-5 flex flex-wrap gap-2.5 border-t border-paper/12 pt-4">
@@ -391,7 +377,7 @@ export function ScrollMachine({ sequence }: { sequence: FrameSequenceProps }) {
             </div>
 
             {/* Seamless transition strip from studio background into warm paper BrewBar */}
-            <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 bottom-0 h-8 bg-gradient-to-b from-transparent to-paper" />
+            <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 bottom-0 z-30 h-12 bg-gradient-to-b from-transparent to-paper" />
           </section>
           );
 }

@@ -150,7 +150,7 @@ export function CustomDatePicker({
           invalid ? "border-copper" : open ? "border-ink" : "border-ink/25 hover:border-ink/60"
         }`}
       >
-        <span className={formattedValue ? "font-mono text-sm tabular-nums text-ink" : "text-sm text-ink/40"}>
+        <span className={formattedValue ? "num text-sm tabular-nums text-ink" : "text-sm text-ink/40"}>
           {formattedValue || t("placeholder")}
         </span>
         <svg
@@ -175,7 +175,7 @@ export function CustomDatePicker({
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 4, scale: 0.98 }}
             transition={{ duration: 0.22, ease: ease.outExpo }}
-            className="absolute left-0 z-50 mt-2 w-[18.5rem] border border-ink/20 bg-paper p-4 shadow-[0_24px_48px_-16px_rgb(28_24_20/0.32)]"
+            className="absolute left-0 z-50 mt-2 w-[min(18.5rem,calc(100vw-2.5rem))] border border-ink/20 bg-paper p-3.5 shadow-[0_24px_48px_-16px_rgb(28_24_20/0.32)] sm:p-4"
           >
             {/* Header */}
             <div className="mb-3 flex items-center justify-between border-b border-ink/12 pb-2.5">
@@ -205,7 +205,7 @@ export function CustomDatePicker({
             {/* Weekdays */}
             <div className="mb-1.5 grid grid-cols-7 text-center">
               {weekdays.map((wd) => (
-                <span key={wd} className="eyebrow py-1 text-[0.6rem] text-ink-soft">
+                <span key={wd} className="eyebrow py-1 text-xs text-ink-soft">
                   {wd}
                 </span>
               ))}
@@ -220,7 +220,7 @@ export function CustomDatePicker({
                     type="button"
                     disabled={cell.disabled}
                     onClick={() => selectDay(cell.iso)}
-                    className={`grid h-8 place-items-center font-mono text-xs tabular-nums transition-colors ${
+                    className={`grid h-8 place-items-center num text-xs tabular-nums transition-colors ${
                       cell.iso === value
                         ? "bg-copper text-paper"
                         : cell.iso === todayIso
@@ -243,7 +243,7 @@ export function CustomDatePicker({
               <button
                 type="button"
                 onClick={() => selectDay(todayIso)}
-                className="eyebrow text-[0.62rem] text-copper transition-opacity hover:opacity-75"
+                className="eyebrow text-xs text-copper transition-opacity hover:opacity-75"
               >
                 {t("today")}
               </button>
@@ -255,7 +255,7 @@ export function CustomDatePicker({
                     setOpen(false);
                     onBlur?.();
                   }}
-                  className="eyebrow text-[0.62rem] text-ink-soft transition-colors hover:text-ink"
+                  className="eyebrow text-xs text-ink-soft transition-colors hover:text-ink"
                 >
                   {t("clear")}
                 </button>

@@ -185,7 +185,7 @@ export function CustomSelect({
                       <span>{opt.label}</span>
                     </span>
                     {opt.meta && (
-                      <span className={`font-mono text-[0.68rem] ${isSelected ? "text-paper/65" : "text-ink-soft"}`}>
+                      <span className={`num text-[0.68rem] ${isSelected ? "text-paper/65" : "text-ink-soft"}`}>
                         {opt.meta}
                       </span>
                     )}

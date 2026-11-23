@@ -15,6 +15,7 @@ import { useLocale, useTranslations } from "next-intl";
 import { useEffect, useRef, useState } from "react";
 import { signatureBeans, type Bean } from "@/content/beans";
 import { ArrowLink } from "@/components/ui/ArrowLink";
+import { CoffeeBeanSwatch } from "@/components/ui/CoffeeBeanSwatch";
 import { Meter } from "@/components/ui/Meter";
 import { useMediaQuery } from "@/lib/useMediaQuery";
 
@@ -112,21 +113,13 @@ function RoastPanel({ bean, index }: { bean: Bean; index: number }) {
         <span className="display text-[clamp(3.25rem,7vw,6.25rem)] text-ink/15 [@media(max-height:760px)]:text-[clamp(2.75rem,7vw,6rem)]">
           {String(index + 1).padStart(2, "0")}
         </span>
-        {/* Roast colour chip with topographic altitude rings */}
+        {/* Roast colour coffee bean with topographic altitude ring */}
         <div
           className="relative aspect-square w-24 md:w-full md:max-w-[13rem] max-md:[@media(max-height:760px)]:w-16 md:[@media(max-height:760px)]:max-w-[8.5rem]"
           aria-hidden="true"
         >
           <span className="absolute -inset-2.5 rounded-full border border-dashed border-ink/15" />
-          <div
-            className="absolute inset-0 rounded-full shadow-[0_18px_36px_-18px_rgb(28_24_20/0.45)]"
-            style={{
-              background: `radial-gradient(circle at 32% 28%, color-mix(in oklab, ${bean.tone} 55%, white) 0%, ${bean.tone} 45%, color-mix(in oklab, ${bean.tone} 60%, black) 100%)`,
-            }}
-          />
-          <svg viewBox="0 0 100 100" className="absolute inset-0 text-paper/45">
-            <path d="M50 12 C 38 35, 62 65, 50 88" stroke="currentColor" strokeWidth="1.2" fill="none" />
-          </svg>
+          <CoffeeBeanSwatch tone={bean.tone} className="absolute inset-0 size-full" />
         </div>
       </div>
 
@@ -160,7 +153,7 @@ function RoastPanel({ bean, index }: { bean: Bean; index: number }) {
         <dl className="grid grid-cols-2 gap-4 border-t border-ink/15 pt-4">
           <div>
             <dt className="eyebrow text-ink-soft">{t("altitude")}</dt>
-            <dd className="mt-1 font-mono text-sm tabular-nums">{bean.altitude.toLocaleString(locale)} m</dd>
+            <dd className="mt-1 num text-sm tabular-nums">{bean.altitude.toLocaleString(locale)} m</dd>
           </div>
           <div>
             <dt className="eyebrow text-ink-soft">{t("process")}</dt>

@@ -7,7 +7,7 @@
  */
 import { motion, useTransform, type MotionValue } from "motion/react";
 import { useTranslations } from "next-intl";
-import { CALLOUTS, frameIndexAt } from "./timeline";
+import { frameIndexAt, RITUAL_ACTS } from "./timeline";
 
 export function Hud({ progress, frameCount }: { progress: MotionValue<number>; frameCount: number }) {
   const t = useTranslations("hero");
@@ -25,7 +25,7 @@ export function Hud({ progress, frameCount }: { progress: MotionValue<number>; f
       <span className="eyebrow [writing-mode:vertical-rl]">{t("progress")}</span>
       <div className="relative h-[38svh] w-px bg-ink/15">
         <motion.div className="absolute inset-0 origin-top bg-ink" style={{ scaleY: rail }} />
-        {CALLOUTS.map((c, i) => (
+        {RITUAL_ACTS.map((c, i) => (
           <span
             key={c.id}
             className="absolute -left-[3px] block h-px w-[7px] bg-ink"

@@ -59,10 +59,10 @@ export function MenuList() {
                 className={`group relative flex flex-col justify-between overflow-hidden border p-5 transition-transform duration-500 ease-[var(--ease-out-quint)] hover:-translate-y-1 md:p-6 ${surface}`}
               >
                 <div className="flex items-start justify-between gap-3">
-                  <span className="eyebrow text-[0.62rem] opacity-75">
-                    0{idx + 1} · {item.badge ? t(item.badge) : t("sections.signature")}
+                  <span className="eyebrow text-xs opacity-75">
+                    {item.badge ? t(item.badge) : t("sections.signature")}
                   </span>
-                  <span className="shrink-0 whitespace-nowrap font-mono text-sm font-medium tabular-nums">
+                  <span className="shrink-0 whitespace-nowrap num text-sm font-medium tabular-nums">
                     {`${priceFmt.format(item.price)}\u00A0${t("currency")}`}
                   </span>
                 </div>
@@ -77,7 +77,7 @@ export function MenuList() {
                 </div>
 
                 <div>
-                  <p className="eyebrow mb-3 text-[0.6rem] opacity-70">{item.spec[locale]}</p>
+                  <p className="eyebrow mb-3 text-xs opacity-70">{item.spec[locale]}</p>
                   <ul className="flex flex-wrap gap-1.5">
                     {item.notes[locale].map((note) => (
                       <li key={note} className={`rounded-full border px-2.5 py-0.5 text-[0.68rem] ${chip}`}>
@@ -94,8 +94,12 @@ export function MenuList() {
 
       {/* 2. Interactive Category & Serve Filter Toolbar */}
       <LayoutGroup id="menu-filters">
-        <div className="mb-10 flex flex-col gap-4 border-y border-ink/15 py-4 lg:flex-row lg:items-center lg:justify-between">
-          <div role="group" aria-label={t("filters.categories")} className="flex flex-wrap gap-1.5">
+        <div className="mb-10 flex flex-col gap-3.5 border-y border-ink/15 py-4 lg:flex-row lg:items-center lg:justify-between">
+          <div
+            role="group"
+            aria-label={t("filters.categories")}
+            className="-mx-[clamp(1.25rem,4vw,4rem)] flex flex-nowrap gap-1.5 overflow-x-auto px-[clamp(1.25rem,4vw,4rem)] [scrollbar-width:none] sm:mx-0 sm:flex-wrap sm:overflow-visible sm:px-0"
+          >
             {SECTION_TABS.map((tab) => {
               const active = section === tab;
               return (
@@ -131,7 +135,7 @@ export function MenuList() {
                     type="button"
                     aria-pressed={active}
                     onClick={() => setServe(sv)}
-                    className={`whitespace-nowrap rounded-full px-2.5 py-1 font-mono text-[0.64rem] uppercase tracking-[0.1em] transition-colors sm:px-3 ${
+                    className={`whitespace-nowrap rounded-full px-2.5 py-1 text-xs transition-colors sm:px-3 ${
                       active ? "bg-copper text-paper" : "text-ink-soft hover:text-ink"
                     }`}
                   >
@@ -213,12 +217,12 @@ function MenuCard({
             {item.name[locale]}
           </h3>
           {item.badge && (
-            <span className="eyebrow shrink-0 whitespace-nowrap rounded-full border border-copper/50 px-1.5 py-0.5 text-[0.52rem] text-copper sm:px-2 sm:text-[0.56rem]">
+            <span className="eyebrow shrink-0 whitespace-nowrap rounded-full border border-copper/50 px-1.5 py-0.5 text-xs text-copper sm:px-2 sm:text-xs">
               {t(item.badge)}
             </span>
           )}
           <span className="mb-1 hidden min-w-3 flex-1 border-b border-dotted border-ink/25 sm:block" aria-hidden="true" />
-          <span className="ml-auto shrink-0 whitespace-nowrap font-mono text-sm font-medium tabular-nums text-ink sm:ml-0">
+          <span className="ml-auto shrink-0 whitespace-nowrap num text-sm font-medium tabular-nums text-ink sm:ml-0">
             {`${priceFmt.format(item.price)}\u00A0${t("currency")}`}
           </span>
         </div>
@@ -233,7 +237,7 @@ function MenuCard({
             </span>
           ))}
         </div>
-        <span className="eyebrow whitespace-nowrap text-[0.58rem] text-ink-soft">{item.spec[locale]}</span>
+        <span className="eyebrow whitespace-nowrap text-xs text-ink-soft">{item.spec[locale]}</span>
       </div>
     </li>
   );

@@ -19,7 +19,7 @@ export default async function MenuPage({ params }: PageProps<"/[locale]/menu">) 
 
   return (
     <>
-      <PageHero index="03 / 06" eyebrow={t("eyebrow")} title={t("title")} lede={t("lede")} />
+      <PageHero eyebrow={t("eyebrow")} title={t("title")} lede={t("lede")} />
       <MenuList />
       <BrewCalculator />
     </>

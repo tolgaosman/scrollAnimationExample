@@ -70,9 +70,13 @@ export function buildEdgeTextures(img: Drawable): EdgeTextures {
   const b = bctx.getImageData(0, 0, STRIP_RES, 1).data;
   const last = (STRIP_RES - 1) * 4;
 
-  // Average of the top-centre and bottom-centre for the CSS fallback colour.
-  const mid = Math.floor(STRIP_RES / 2) * 4;
-  const avg = [0, 1, 2].map((k) => Math.round((t[mid + k] + b[mid + k]) / 2));
+  // Sample the clean upper studio wall (left, mid, right of top strip) so the
+  // page background matches the open backdrop around the machine rather than
+  // getting darkened by the bottom table shadow.
+  const s1 = Math.floor(STRIP_RES * 0.12) * 4;
+  const s2 = Math.floor(STRIP_RES * 0.5) * 4;
+  const s3 = Math.floor(STRIP_RES * 0.88) * 4;
+  const avg = [0, 1, 2].map((k) => Math.round((t[s1 + k] + t[s2 + k] + t[s3 + k]) / 3));
 
   return {
     top,

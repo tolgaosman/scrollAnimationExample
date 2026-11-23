@@ -138,7 +138,7 @@ export const beans: Bean[] = [
   },
   {
     id: "house-blend-01",
-    name: "Surlariçi House Blend No. 01",
+    name: "Cyprus House Blend No. 01",
     origin: { tr: "Brezilya · Etiyopya · Kolombiya", en: "Brazil · Ethiopia · Colombia" },
     region: "Cerrado Mineiro · Sidama · Huila",
     farm: "Fazenda Pinhal · Bombe · El Mirador",

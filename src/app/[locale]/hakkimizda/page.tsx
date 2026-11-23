@@ -21,7 +21,7 @@ export default async function AboutPage({ params }: PageProps<"/[locale]/hakkimi
 
   return (
     <>
-      <PageHero index="05 / 06" eyebrow={t("eyebrow")} title={t("title")} lede={t("lede")} />
+      <PageHero eyebrow={t("eyebrow")} title={t("title")} lede={t("lede")} />
 
       {/* Story: compact stone arch vignette + tight editorial narrative */}
       <section className="shell grid-arch items-start gap-y-8 pb-16 md:pb-22">
@@ -34,7 +34,7 @@ export default async function AboutPage({ params }: PageProps<"/[locale]/hakkimi
             <path d="M16 105V52a34 34 0 0 1 68 0v53" fill="none" stroke="#1c1814" strokeOpacity="0.28" strokeWidth="0.4" strokeDasharray="2 2" />
           </svg>
           <WallMark className="absolute bottom-[12%] left-1/2 size-12 -translate-x-1/2 text-copper-light" />
-          <p className="eyebrow absolute left-3.5 top-3.5 bg-paper/75 px-2 py-0.5 text-[0.6rem] text-ink">
+          <p className="eyebrow absolute left-3.5 top-3.5 bg-paper/75 px-2 py-0.5 text-xs text-ink">
             Arasta · 1890 → 2019
           </p>
         </Reveal>
@@ -50,7 +50,7 @@ export default async function AboutPage({ params }: PageProps<"/[locale]/hakkimi
           <Reveal delay={0.12}>
             <blockquote className="border-l-2 border-copper bg-paper-deep/45 px-5 py-4">
               <p className="font-display text-lg italic leading-relaxed md:text-xl">“{t("story.quote")}”</p>
-              <footer className="eyebrow mt-3 text-[0.62rem] text-ink-soft">— {t("story.quoteBy")}</footer>
+              <footer className="eyebrow mt-3 text-xs text-ink-soft">— {t("story.quoteBy")}</footer>
             </blockquote>
           </Reveal>
         </div>

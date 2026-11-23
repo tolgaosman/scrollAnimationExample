@@ -3,13 +3,11 @@ import { MaskedLines, Reveal } from "./Reveal";
 
 /** Shared compact architectural opening spread for inner pages. */
 export function PageHero({
-  index,
   eyebrow,
   title,
   lede,
   aside,
 }: {
-  index: string;
   eyebrow: string;
   title: string;
   lede: string;
@@ -17,15 +15,12 @@ export function PageHero({
 }) {
   return (
     <header className="shell grid-arch gap-y-5 pb-10 pt-24 md:pb-12 md:pt-30">
-      <div className="col-span-12 flex items-baseline justify-between border-b border-ink/15 pb-3.5">
+      <div className="col-span-12 flex items-baseline border-b border-ink/15 pb-3.5">
         <Reveal y={8}>
           <p className="eyebrow flex items-center gap-2.5">
             <span className="block size-1.5 rounded-full bg-copper" aria-hidden="true" />
             {eyebrow}
           </p>
-        </Reveal>
-        <Reveal y={8} delay={0.08}>
-          <p className="eyebrow text-ink-soft">{index}</p>
         </Reveal>
       </div>
       <MaskedLines

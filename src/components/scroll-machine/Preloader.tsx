@@ -67,7 +67,7 @@ export function Preloader({ progress, ready, total }: PreloaderProps) {
           transition={{ duration: 0.55, ease: ease.drawer }}
         >
           <div className="flex items-start justify-between">
-            <span className="eyebrow">SURLARİÇİ // Lefkon Roasters</span>
+            <span className="eyebrow">Cyprus Roasters</span>
             <motion.span style={{ rotate }} className="block size-10 md:size-12">
               <WallMark className="size-full" />
             </motion.span>

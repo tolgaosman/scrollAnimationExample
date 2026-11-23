@@ -37,17 +37,16 @@ const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const OUT_DIR = path.join(ROOT, "public", "frames");
 const PAD = 4;
 
-// q:v 4 at 1600×900 gives crisp studio detail while keeping individual frames
-// light enough for progressive streaming.
-const QUALITY = process.env.FRAME_QUALITY ?? "4";
+// q:v 2 at 1600×900 preserves razor-sharp metallic & walnut grain detail with
+// virtually zero JPEG compression artefacts.
+const QUALITY = process.env.FRAME_QUALITY ?? "2";
 
-// Crisp 1600×900 Lanczos upscale + gentle temporal stabilization (s=5 instead
-// of s=15 so fine metallic edges stay sharp) + luminance unsharp masking +
-// subtle micro-contrast so the espresso machine reads sharply in the foreground.
-// Set FRAME_FILTER="" to disable, or pass any ffmpeg -vf chain.
+// Ultra-crisp 1600×900 Lanczos upscale + multi-band unsharp masking + studio
+// color/contrast calibration (no temporal blur, so pouring espresso & hand
+// motion stay razor-sharp on every single frame).
 const FILTER =
   process.env.FRAME_FILTER ??
-  "scale=1600:900:flags=lanczos,atadenoise=s=5:0a=0.015:0b=0.03,unsharp=5:5:0.85:3:3:0.0,eq=contrast=1.07:brightness=-0.012:saturation=1.06";
+  "scale=1600:900:flags=lanczos,unsharp=7:7:1.15:3:3:0.35,eq=contrast=1.09:brightness=-0.012:saturation=1.12";
 
 function findSource() {
   if (process.argv[2]) return path.resolve(process.argv[2]);
@@ -118,6 +117,16 @@ if (ffmpeg) {
     { stdio: "inherit" },
   );
   frames = collectJpegs(tmp).sort();
+  // Ensure the espresso glass handle (present from frame 78 onward in the
+  // source video) is seamlessly composited onto frames 1..77.
+  const patchScript = path.join(ROOT, "scripts", "patch-cup-handle.py");
+  if (fs.existsSync(patchScript)) {
+    try {
+      execFileSync("python", [patchScript, tmp], { stdio: "inherit" });
+    } catch {
+      console.warn("⚠ Could not run patch-cup-handle.py (Python/Pillow not available)");
+    }
+  }
 } else {
   console.log(`› extracting ${path.relative(ROOT, source)} → ${tmp}`);
   execFileSync("tar", ["-xf", source, "-C", tmp], { stdio: "inherit" });
@@ -158,6 +167,11 @@ const manifest = {
   generatedAt: new Date().toISOString(),
 };
 fs.writeFileSync(path.join(OUT_DIR, "manifest.json"), JSON.stringify(manifest, null, 2) + "\n");
+const zeros = Array.from({ length: frames.length }, () => 0);
+fs.writeFileSync(
+  path.join(OUT_DIR, "stabilize.json"),
+  JSON.stringify({ shiftX: zeros, shiftY: zeros }) + "\n",
+);
 fs.rmSync(tmp, { recursive: true, force: true });
 
 const mb = (bytes / 1024 / 1024).toFixed(1);

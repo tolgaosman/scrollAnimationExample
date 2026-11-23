@@ -18,7 +18,7 @@ export default async function BeansPage({ params }: PageProps<"/[locale]/cekirde
 
   return (
     <>
-      <PageHero index="02 / 06" eyebrow={t("eyebrow")} title={t("title")} lede={t("lede")} />
+      <PageHero eyebrow={t("eyebrow")} title={t("title")} lede={t("lede")} />
       <BeanExplorer />
     </>
   );

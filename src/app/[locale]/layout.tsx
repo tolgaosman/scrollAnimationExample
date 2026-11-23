@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { IBM_Plex_Mono, Newsreader, Schibsted_Grotesk } from "next/font/google";
+import { Fraunces, Geist_Mono, Instrument_Sans } from "next/font/google";
 import { notFound } from "next/navigation";
 import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { getTranslations, setRequestLocale } from "next-intl/server";
@@ -9,24 +9,27 @@ import { Nav } from "@/components/layout/Nav";
 import { routing } from "@/i18n/routing";
 import { SITE_URL } from "@/lib/site";
 
-const display = Newsreader({
+// Serif: warm, soft-cornered display + editorial voice (opsz = optical size, SOFT = corner softness).
+const display = Fraunces({
   subsets: ["latin", "latin-ext"],
   style: ["normal", "italic"],
-  axes: ["opsz"],
-  variable: "--font-newsreader",
+  axes: ["opsz", "SOFT"],
+  variable: "--font-serif-src",
   display: "swap",
 });
 
-const sans = Schibsted_Grotesk({
+// UI + body + all numbers (tabular figures, not mono).
+const sans = Instrument_Sans({
   subsets: ["latin", "latin-ext"],
-  variable: "--font-schibsted",
+  variable: "--font-sans-src",
   display: "swap",
 });
 
-const mono = IBM_Plex_Mono({
+// Machine telemetry + roast-curve axes only.
+const mono = Geist_Mono({
   subsets: ["latin", "latin-ext"],
   weight: ["400", "500"],
-  variable: "--font-plex-mono",
+  variable: "--num-src",
   display: "swap",
 });
 

@@ -57,7 +57,7 @@ export function SocialLinks({ tone = "light", compact = false, className = "" }:
           } ${baseBtn}`}
         >
           <Icon className="size-3.5 shrink-0" />
-          {!compact && <span className="font-mono text-[0.7rem] uppercase tracking-[0.12em]">{name}</span>}
+          {!compact && <span className="num text-xs font-medium">{name}</span>}
         </a>
       ))}
     </div>

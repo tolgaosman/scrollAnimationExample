@@ -30,9 +30,9 @@
   --color-steel-light: #c9cdd1;
   --color-line: rgb(28 24 20 / 0.14);
 
-  --font-display: var(--font-newsreader), "Times New Roman", serif;
-  --font-sans: var(--font-schibsted), ui-sans-serif, system-ui, sans-serif;
-  --font-mono: var(--font-plex-mono), ui-monospace, monospace;
+  --font-display: var(--font-serif-src), "Times New Roman", serif;
+  --font-sans: var(--font-sans-src), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-mono-src), ui-monospace, monospace;
 
   --text-mega: clamp(3rem, 11vw, 11.5rem);
   --text-display: clamp(2.35rem, 5.2vw, 5rem);
@@ -57,7 +57,7 @@
 
   body {
     font-family: var(--font-sans);
-    font-feature-settings: "ss01", "kern";
+    font-feature-settings: "kern";
     min-height: 100dvh;
   }
 
@@ -86,18 +86,35 @@
 @layer components {
   /* Small spec-sheet label: mono, tracked, uppercase. */
   .eyebrow {
-    font-family: var(--font-mono);
-    font-size: 0.6875rem;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
+    font-family: var(--font-sans);
+    font-size: 0.8125rem;
+    font-weight: 450;
+    letter-spacing: 0.01em;
     line-height: 1.4;
   }
 
   .display {
     font-family: var(--font-display);
-    font-weight: 300;
-    letter-spacing: -0.035em;
-    line-height: 0.92;
+    font-weight: 400;
+    font-optical-sizing: auto;
+    font-variation-settings: "SOFT" 50;
+    letter-spacing: -0.02em;
+    line-height: 0.95;
+  }
+
+  /* Brand wordmark: serif caps, medium weight, open tracking. */
+  .wordmark {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-variation-settings: "SOFT" 50;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  /* Prices, hours, phone, altitude: body sans with aligned lining figures. */
+  .num {
+    font-family: var(--font-sans);
+    font-variant-numeric: tabular-nums lining-nums;
   }
 
   /* 12-column architectural grid with generous gutters. */

@@ -1,34 +1,35 @@
 {
   "meta": {
-    "siteName": "SURLARİÇİ // Lefkon Roasters & Atelier",
+    "siteName": "Cyprus Roasters — Coffee & Atelier",
     "home": {
-      "title": "SURLARİÇİ Roasters — Lefkoşa'nın Kalbinde Mühendislik ve Zanaat",
-      "description": "Lefkoşa Surlariçi'nde, restore edilmiş bir taş atölyede küçük partilerle kavrulan nitelikli kahve. Kavurma atölyesi, demleme barı ve tadım odası."
+      "title": "Cyprus Roasters — Lefkoşa'nın Kalbinde Mühendislik ve Zanaat",
+      "description": "Lefkoşa'da, restore edilmiş bir taş atölyede küçük partilerle kavrulan nitelikli kahve. Kavurma atölyesi, demleme barı ve tadım odası."
     },
     "beans": {
-      "title": "Kahve Çekirdeklerimiz — SURLARİÇİ Roasters",
+      "title": "Kahve Çekirdeklerimiz — Cyprus Roasters",
       "description": "Etiyopya'dan Kolombiya'ya, doğrudan ticaretle getirdiğimiz tek kökenli çekirdekler, espresso harmanları ve mikro-lotlar."
     },
     "menu": {
-      "title": "Menü & Demleme Rehberi — SURLARİÇİ Roasters",
+      "title": "Menü & Demleme Rehberi — Cyprus Roasters",
       "description": "İmza soğuk demlemeler, keçiboynuzlu kortado, fıstıklı cremoso ve evde mükemmel fincan için interaktif demleme hesaplayıcısı."
     },
     "team": {
-      "title": "Ekibimiz — SURLARİÇİ Roasters",
+      "title": "Ekibimiz — Cyprus Roasters",
       "description": "Kavurma ustamız, baş baristamız, Q-Grader'ımız ve pasta şefimizle tanışın."
     },
     "about": {
-      "title": "Hakkımızda — SURLARİÇİ Roasters",
-      "description": "Surlariçi'nde unutulmuş bir taş atölyenin, üçüncü dalga bir mikro kavurma evine dönüşme hikâyesi."
+      "title": "Hakkımızda — Cyprus Roasters",
+      "description": "Lefkoşa'da unutulmuş bir taş atölyenin, üçüncü dalga bir mikro kavurma evine dönüşme hikâyesi."
     },
     "contact": {
-      "title": "İletişim — SURLARİÇİ Roasters",
-      "description": "Arasta, Surlariçi, Lefkoşa. Çalışma saatleri, rezervasyon ve toptan çekirdek talepleri."
+      "title": "İletişim — Cyprus Roasters",
+      "description": "Arasta, Lefkoşa. Çalışma saatleri, rezervasyon ve toptan çekirdek talepleri."
     }
   },
   "brand": {
-    "wordmark": "SURLARİÇİ",
-    "sub": "Lefkon Roasters & Atelier",
+    "wordmark": "CYPRUS ROASTERS",
+    "sub": "Lefkoşa · Atölye",
+    "footerSub": "Kahve & Atölye",
     "est": "Kur. 2019 · Lefkoşa"
   },
   "nav": {
@@ -44,7 +45,7 @@
     "skip": "İçeriğe geç",
     "language": "Dil seçimi",
     "reserve": "Masa ayırt",
-    "drawerNote": "Arasta, Surlariçi — her gün 07:30'dan itibaren kavurma kokusu.",
+    "drawerNote": "Arasta, Lefkoşa — her gün 07:30'dan itibaren taze kavurma kokusu.",
     "primary": "Ana gezinme"
   },
   "preloader": {
@@ -53,14 +54,44 @@
     "ready": "Hazır"
   },
   "hero": {
-    "eyebrow": "Lefkoşa · Surlariçi · 35.17°K 33.36°D",
-    "titleA": "SURLARİÇİ",
-    "titleB": "ROASTERS",
+    "eyebrow": "Kıbrıs · Lefkoşa",
+    "titleA": "KIBRIS",
+    "titleB": "KAVURMA ATÖLYESİ",
     "subtitle": "Lefkoşa'nın Kalbinde Mühendislik ve Zanaat",
     "lede": "Venedik surlarının içinde, sarı taştan bir atölyede; her fincanın arkasındaki makineyi parça parça açıyoruz.",
     "scroll": "Kaydırın — makine açılsın",
     "progress": "Sökülme",
-    "canvasLabel": "Üç gruplu espresso makinesi; kaydırdıkça parçalarına ayrılıyor."
+    "canvasLabel": "Ceviz yan panelli espresso makinesi; kaydırdıkça taze espresso çekiliyor ve kristal buzlu bardağa dökülüyor."
+  },
+  "ritual": {
+    "heroLede": "Venedik surlarının içinde, sarı taştan bir atölyede; aşağı kaydırdıkça 9 bar espresso akışından kristal buzla buluşmaya kadar bir fincanın bütün ritüelini yaşayın.",
+    "ctaMenu": "Menü & Demleme",
+    "ctaBeans": "Çekirdekler",
+    "scrollCue": "Kaydırın — akış başlasın",
+    "walnutLabel": "Amerikan Cevizi · 304 Çelik",
+    "originsLede": "Baristanın elindeki o taze fincanın arkasında, mevsimin en seçkin üç kökeni var.",
+    "acts": {
+      "ready": { "short": "Makine hazır · 93 °C", "tab": "Hazırlık" },
+      "extraction": { "short": "9 bar ekstraksiyon", "tab": "Akış" },
+      "craft": { "short": "Usta eli · taze shot", "tab": "Usta Eli" },
+      "pour": { "short": "Buzla buluşma", "tab": "Döküş" }
+    },
+    "specBar": "9 BAR · 93 °C · 28 SN",
+    "secUnit": "sn",
+    "pour": {
+      "eyebrow": "Buzla Buluşma",
+      "title": "93 °C'den 4 °C'ye — kristal buzla simya.",
+      "body": "Taze çekilmiş çift ristretto, kristal buzların üzerine döküldüğü an aromalar kilitlenir; koyu çikolata ve narenciye katmanları bardakta kehribar bulutlarına dönüşür.",
+      "recipeLabel": "İmza Buzlu Espresso Reçetesi",
+      "spec1Label": "Doz & Verim",
+      "spec1Value": "18 g → 36 g",
+      "spec2Label": "Termal Şok",
+      "spec2Value": "93 °C → 4 °C",
+      "spec3Label": "Çekirdek",
+      "spec3Value": "Ev Harmanı No. 01",
+      "ctaCalc": "Oranı Hesapla",
+      "ctaVisit": "Masa Ayırt"
+    }
   },
   "callouts": {
     "boiler": {
@@ -98,7 +129,7 @@
       "eyebrow": "Manifesto",
       "titleA": "Taş sabırla,",
       "titleB": "çelik hassasiyetle.",
-      "p1": "Surlariçi'nin sarı taşı yüzyıllardır güneşi biriktirir; akşamüstü avuç içine sıcak düşer. Biz de kahveyi böyle severiz: acele etmeden, ısıyı içinde tutarak.",
+      "p1": "Lefkoşa'nın sarı taşı yüzyıllardır güneşi biriktirir; akşamüstü avuç içine sıcak düşer. Biz de kahveyi böyle severiz: acele etmeden, ısıyı içinde tutarak.",
       "p2": "Atölyemizde 500 yıllık kemerlerin altında paslanmaz çelik çalışır. Bir yanda ölçü, termometre, profil eğrisi; öbür yanda koku, ses, sezgi. İkisi aynı tezgâhı paylaşır.",
       "stoneLabel": "Sarı Taş · Lefkoşa kireçtaşı",
       "steelLabel": "Fırçalanmış paslanmaz · 304",
@@ -134,25 +165,29 @@
           "name": "Espresso",
           "tag": "Yoğun · 30 sn",
           "body": "Dokuz bar, on sekiz gram, otuz saniye. Krema kızıl kahve, bitiş bitter çikolata.",
-          "note": "House Blend No. 01"
+          "note": "House Blend No. 01",
+          "setup": "9 bar"
         },
         "pourover": {
           "name": "Pour-Over",
           "tag": "Berrak · 3 dk",
           "body": "V60 ve Kalita Wave ile yavaş döküm. Çiçeksi, çay gibi, katman katman açılan bir fincan.",
-          "note": "Yirgacheffe · Mikro-Lot"
+          "note": "Yirgacheffe · Mikro-Lot",
+          "setup": "V60 / Kalita"
         },
         "coldbrew": {
           "name": "Soğuk Demleme",
           "tag": "Sabırlı · 16 sa",
           "body": "On altı saat soğuk suda bekleyen çekirdek; ağustos öğlesinde Lefkoşa'nın en serin gölgesi.",
-          "note": "Guatemala Antigua"
+          "note": "Guatemala Antigua",
+          "setup": "16 sa demleme"
         },
         "cezve": {
           "name": "Kıbrıs Kahvesi",
-          "tag": "Köklü · Kül ateşi",
+          "tag": "Köklü · Kum ocağı",
           "body": "Bakır cezvede, kum ocağında, köpüğü sabırla toplanmış. Atölyenin en eski tarifi.",
-          "note": "Orta-Koyu · İnce Öğütüm"
+          "note": "Orta-Koyu · İnce Öğütüm",
+          "setup": "Kum ocağı"
         }
       }
     },
@@ -338,7 +373,7 @@
     "address": {
       "label": "Adres",
       "line1": "Zahra Sokak No. 11",
-      "line2": "Arasta Bölgesi, Surlariçi",
+      "line2": "Arasta Bölgesi, Lefkoşa",
       "line3": "Lefkoşa, KKTC"
     },
     "hours": {
@@ -354,13 +389,13 @@
     "reach": {
       "label": "Bize ulaşın",
       "phone": "+90 392 000 00 00",
-      "email": "atolye@surlarici.coffee"
+      "email": "atolye@cyprusroasters.coffee"
     },
     "socialLabel": "Sosyal & Hızlı İletişim",
     "map": {
-      "title": "Lefkoşa Surlariçi haritası",
+      "title": "Lefkoşa atölye haritası",
       "walls": "Venedik Surları · 1567",
-      "us": "SURLARİÇİ Atölye",
+      "us": "Cyprus Roasters Atölye",
       "selimiye": "Selimiye Camii",
       "buyukhan": "Büyük Han",
       "kyrenia": "Girne Kapısı",
@@ -430,12 +465,12 @@
     "whatsapp": {
       "label": "WhatsApp",
       "aria": "WhatsApp ile bize yazın",
-      "prefill": "Merhaba SURLARİÇİ, atölyeniz hakkında bilgi almak istiyorum."
+      "prefill": "Merhaba Cyprus Roasters, atölyeniz hakkında bilgi almak istiyorum."
     }
   },
   "notFound": {
     "title": "Bu sokak çıkmaz.",
-    "body": "Surlariçi'nin dar sokakları bazen insanı şaşırtır. Aradığınız sayfa burada değil.",
+    "body": "Lefkoşa'nın dar sokakları bazen insanı şaşırtır. Aradığınız sayfa burada değil.",
     "back": "Ana sayfaya dönün"
   }
 }
