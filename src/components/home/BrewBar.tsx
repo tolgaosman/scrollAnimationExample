@@ -79,6 +79,36 @@ export function BrewBar() {
           {STATIONS.map(({ key, surface, fg, badgeCls, specBorder, temp, ratio }, i) => {
             const isActive = active === key;
             const Icon = BrewIcons[key];
+            const details = (
+              <>
+                <p className="mt-3 max-w-[44ch] text-sm leading-relaxed opacity-90">
+                  {t(`items.${key}.body`)}
+                </p>
+
+                {/* Extraction telemetry bar filling the card purposefully */}
+                <dl className={`mt-5 grid max-w-md grid-cols-3 gap-3 border-t pt-3.5 ${specBorder}`}>
+                  <div>
+                    <dt className="eyebrow text-xs opacity-65">{t("specs.temp")}</dt>
+                    <dd className="mt-0.5 whitespace-nowrap num text-xs tabular-nums md:text-sm">{temp}</dd>
+                  </div>
+                  <div>
+                    <dt className="eyebrow text-xs opacity-65">{t("specs.ratio")}</dt>
+                    <dd className="mt-0.5 whitespace-nowrap num text-xs tabular-nums md:text-sm">{ratio}</dd>
+                  </div>
+                  <div>
+                    <dt className="eyebrow text-xs opacity-65">{t("specs.method")}</dt>
+                    <dd className="mt-0.5 whitespace-nowrap num text-xs md:text-sm">{t(`items.${key}.setup`)}</dd>
+                  </div>
+                </dl>
+
+                <div className="mt-4 flex flex-wrap items-center gap-2">
+                  <span className={`rounded-full border px-2.5 py-0.5 num text-[0.65rem] ${badgeCls}`}>
+                    {t(`items.${key}.note`)}
+                  </span>
+                  <span className="eyebrow ml-auto text-xs opacity-65">0{i + 1} / 04</span>
+                </div>
+              </>
+            );
             return (
               <button
                 key={key}
@@ -122,53 +152,42 @@ export function BrewBar() {
                   {t(`items.${key}.name`)}
                 </span>
 
-                {/* Mobile collapsed header */}
-                {!isActive && (
-                  <span className="relative z-10 mt-3 block font-display text-2xl leading-none tracking-tight md:hidden">
+                {/* Mobile: smooth height reveal via grid-template-rows 0fr → 1fr */}
+                <div className="relative z-10 mt-3 md:hidden">
+                  <div
+                    className={`grid transition-[grid-template-rows,opacity] duration-500 ease-[var(--ease-out-quint)] ${
+                      isActive ? "grid-rows-[1fr] opacity-75" : "grid-rows-[0fr] opacity-0"
+                    }`}
+                  >
+                    <div className="overflow-hidden">
+                      <p className="eyebrow pb-1.5">{t(`items.${key}.tag`)}</p>
+                    </div>
+                  </div>
+                  <h3 className="font-display text-[1.7rem] leading-none tracking-tight">
                     {t(`items.${key}.name`)}
-                  </span>
-                )}
+                  </h3>
+                  <div
+                    className={`grid transition-[grid-template-rows,opacity] duration-500 ease-[var(--ease-out-quint)] ${
+                      isActive ? "grid-rows-[1fr] opacity-100 delay-75" : "grid-rows-[0fr] opacity-0"
+                    }`}
+                  >
+                    <div className="overflow-hidden">{details}</div>
+                  </div>
+                </div>
 
-                {/* Active expanded content (fixed font size — zero font-size animation!) */}
+                {/* Desktop expanded content (fixed font size — zero font-size animation!) */}
                 <div
-                  className={`relative z-10 mt-auto transition-[opacity,transform] duration-400 ease-[var(--ease-out-quint)] will-change-[opacity,transform] ${
+                  className={`relative z-10 mt-auto hidden transition-[opacity,transform] duration-400 ease-[var(--ease-out-quint)] will-change-[opacity,transform] md:block ${
                     isActive
                       ? "pointer-events-auto translate-y-0 opacity-100 delay-100"
-                      : "pointer-events-none hidden translate-y-3 opacity-0 md:block md:h-0 md:overflow-hidden"
+                      : "pointer-events-none h-0 translate-y-3 overflow-hidden opacity-0"
                   }`}
                 >
                   <p className="eyebrow opacity-75">{t(`items.${key}.tag`)}</p>
-                  <h3 className="mt-1.5 font-display text-3xl leading-none tracking-tight md:text-5xl">
+                  <h3 className="mt-1.5 font-display text-5xl leading-none tracking-tight">
                     {t(`items.${key}.name`)}
                   </h3>
-                  <p className="mt-3 max-w-[44ch] text-sm leading-relaxed opacity-90">
-                    {t(`items.${key}.body`)}
-                  </p>
-
-                  {/* Extraction telemetry bar filling the card purposefully */}
-                  <dl className={`mt-5 grid max-w-md grid-cols-3 gap-3 border-t pt-3.5 ${specBorder}`}>
-                    <div>
-                      <dt className="eyebrow text-xs opacity-65">{t("specs.temp")}</dt>
-                      <dd className="mt-0.5 whitespace-nowrap num text-xs tabular-nums md:text-sm">{temp}</dd>
-                    </div>
-                    <div>
-                      <dt className="eyebrow text-xs opacity-65">{t("specs.ratio")}</dt>
-                      <dd className="mt-0.5 whitespace-nowrap num text-xs tabular-nums md:text-sm">{ratio}</dd>
-                    </div>
-                    <div>
-                      <dt className="eyebrow text-xs opacity-65">{t("specs.method")}</dt>
-                      <dd className="mt-0.5 whitespace-nowrap num text-xs md:text-sm">{t(`items.${key}.setup`)}</dd>
-                    </div>
-                  </dl>
-
-                  <div className="mt-4 flex flex-wrap items-center gap-2">
-                    <span className={`rounded-full border px-2.5 py-0.5 num text-[0.65rem] ${badgeCls}`}>
-                      {t(`items.${key}.note`)}
-                    </span>
-                    <span className="eyebrow ml-auto text-xs opacity-65">
-                      0{i + 1} / 04
-                    </span>
-                  </div>
+                  {details}
                 </div>
               </button>
             );
