@@ -175,6 +175,15 @@ export function BrewCalculator() {
           </div>
         </div>
       </div>
+
+      {/* Architectural divider separating the dark calculator from the dark footer */}
+      <div className="shell" aria-hidden="true">
+        <div className="relative flex items-center justify-center py-1">
+          <div className="h-px w-full bg-paper/15" />
+          <span className="mx-4 block size-1.5 shrink-0 rotate-45 bg-copper-light" />
+          <div className="h-px w-full bg-paper/15" />
+        </div>
+      </div>
     </section>
   );
 }
@@ -195,7 +204,7 @@ function Segment({
       type="button"
       aria-pressed={active}
       onClick={onClick}
-      className={`relative z-0 h-10 rounded-full px-2 text-[0.8rem] transition-colors duration-300 md:text-sm ${
+      className={`relative z-0 h-10 whitespace-nowrap rounded-full px-2 text-[clamp(0.7rem,2.6vw,0.85rem)] transition-colors duration-300 md:text-sm ${
         active ? "text-ink" : "text-paper/70 hover:text-paper"
       }`}
     >
@@ -222,9 +231,9 @@ function StepButton({ label, onClick }: { label: string; onClick: () => void }) 
 
 function Readout({ label, children }: { label: string; children: React.ReactNode }) {
   return (
-    <div className="bg-steel-light/80 px-4 py-4">
+    <div className="bg-steel-light/80 px-3.5 py-3.5 sm:px-4 sm:py-4">
       <dt className="eyebrow text-ink/60">{label}</dt>
-      <dd className="mt-2 font-mono text-lg tabular-nums md:text-xl">{children}</dd>
+      <dd className="mt-2 whitespace-nowrap font-mono text-base tabular-nums sm:text-lg md:text-xl">{children}</dd>
     </div>
   );
 }

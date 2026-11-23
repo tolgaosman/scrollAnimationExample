@@ -54,7 +54,7 @@ export const team: TeamMember[] = [
     initials: "KH",
     role: { tr: "Kalite Kontrol · Q-Grader", en: "Quality Control · Q-Grader" },
     since: "2021",
-    favorite: { tr: "Kupaj kaşığı, 8,25 g / 150 ml", en: "Cupping spoon, 8.25 g / 150 ml" },
+    favorite: { tr: "Tadım kaşığı, 8,25 g / 150 ml", en: "Cupping spoon, 8.25 g / 150 ml" },
     philosophy: {
       tr: "Damak bir kas gibidir; her sabah çalıştırılmazsa yalan söylemeye başlar.",
       en: "The palate is a muscle — skip a morning of training and it starts to lie.",
@@ -78,7 +78,7 @@ export const team: TeamMember[] = [
     },
     bio: {
       tr: "Hellimli zahter poğaçası ve keçiboynuzlu kruvasanı, sabah 6'da Arasta'nın ilk kokusu oldu.",
-      en: "Her halloumi-za'atar pogača and carob croissant became the Arasta's first scent at 6 a.m.",
+      en: "Her halloumi-za'atar poğaça and carob croissant became the Arasta's first scent at 6 a.m.",
     },
     plate: ["#E4D7C3", "#7A3D20"],
   },

@@ -43,17 +43,19 @@ export function BeanExplorer() {
       <section className="shell pb-18 md:pb-24" aria-label={t("title")}>
         {/* Roastery lot telemetry bar */}
         <dl className="mb-8 grid grid-cols-3 divide-x divide-ink/15 border border-ink/15 bg-paper-deep/45">
-          <div className="px-4 py-3.5 md:px-6">
-            <dt className="eyebrow text-[0.58rem] text-ink-soft">{t("summary.lots")}</dt>
-            <dd className="mt-1 font-mono text-sm tabular-nums md:text-base">{beans.length}</dd>
+          <div className="px-3 py-3 sm:px-4 sm:py-3.5 md:px-6">
+            <dt className="eyebrow text-[0.55rem] text-ink-soft sm:text-[0.58rem]">{t("summary.lots")}</dt>
+            <dd className="mt-1 whitespace-nowrap font-mono text-xs tabular-nums sm:text-sm md:text-base">{beans.length}</dd>
           </div>
-          <div className="px-4 py-3.5 md:px-6">
-            <dt className="eyebrow text-[0.58rem] text-ink-soft">{t("summary.altitude")}</dt>
-            <dd className="mt-1 font-mono text-sm tabular-nums md:text-base">1,250 – 2,100 m</dd>
+          <div className="px-3 py-3 sm:px-4 sm:py-3.5 md:px-6">
+            <dt className="eyebrow text-[0.55rem] text-ink-soft sm:text-[0.58rem]">{t("summary.altitude")}</dt>
+            <dd className="mt-1 whitespace-nowrap font-mono text-xs tabular-nums sm:text-sm md:text-base">
+              {(1350).toLocaleString(locale)} – {(2150).toLocaleString(locale)} m
+            </dd>
           </div>
-          <div className="px-4 py-3.5 md:px-6">
-            <dt className="eyebrow text-[0.58rem] text-ink-soft">{t("summary.schedule")}</dt>
-            <dd className="mt-1 font-mono text-sm md:text-base">{t("summary.scheduleValue")}</dd>
+          <div className="px-3 py-3 sm:px-4 sm:py-3.5 md:px-6">
+            <dt className="eyebrow text-[0.55rem] text-ink-soft sm:text-[0.58rem]">{t("summary.schedule")}</dt>
+            <dd className="mt-1 whitespace-nowrap font-mono text-xs sm:text-sm md:text-base">{t("summary.scheduleValue")}</dd>
           </div>
         </dl>
 
@@ -118,22 +120,24 @@ export function BeanExplorer() {
                     {String(beans.indexOf(bean) + 1).padStart(2, "0")}
                   </span>
                   <span className="col-span-10 flex items-center gap-4 md:col-span-5">
-                    <motion.span
-                      layoutId={`swatch-${bean.id}`}
-                      className="block size-9 shrink-0 rounded-full transition-transform duration-500 group-hover:scale-110 md:size-11"
-                      style={{ background: bean.tone }}
-                    />
-                    <motion.span
-                      layoutId={`name-${bean.id}`}
-                      className="font-display text-2xl leading-tight tracking-tight transition-transform duration-500 ease-[var(--ease-out-quint)] group-hover:translate-x-2 md:text-[2.1rem]"
-                    >
+                    {openId === bean.id ? (
+                      <span className="block size-9 shrink-0 md:size-11" aria-hidden="true" />
+                    ) : (
+                      <motion.span
+                        layoutId={`swatch-${bean.id}`}
+                        transition={{ type: "spring", stiffness: 340, damping: 32, mass: 0.75 }}
+                        className="block size-9 shrink-0 rounded-full md:size-11"
+                        style={{ background: bean.tone }}
+                      />
+                    )}
+                    <span className="font-display text-2xl leading-tight tracking-tight transition-transform duration-500 ease-[var(--ease-out-quint)] group-hover:translate-x-2 md:text-[2.1rem]">
                       {bean.name}
-                    </motion.span>
+                    </span>
                   </span>
                   <span className="col-span-6 col-start-3 text-sm md:col-span-2 md:col-start-auto">
                     {bean.origin[locale]}
                   </span>
-                  <span className="col-span-4 font-mono text-xs tabular-nums text-ink-soft md:col-span-1">
+                  <span className="col-span-4 whitespace-nowrap font-mono text-xs tabular-nums text-ink-soft md:col-span-1">
                     {bean.altitude.toLocaleString(locale)} m
                   </span>
                   <span className="col-span-10 col-start-3 text-sm text-ink-soft md:col-span-2 md:col-start-auto">
@@ -151,12 +155,12 @@ export function BeanExplorer() {
         </motion.ul>
       </section>
 
-      <BeanSheet bean={open} onClose={() => setOpenId(null)} />
+      <BeanSheet bean={open} activeId={openId} onClose={() => setOpenId(null)} />
     </LayoutGroup>
   );
 }
 
-function BeanSheet({ bean, onClose }: { bean: Bean | null; onClose: () => void }) {
+function BeanSheet({ bean, activeId, onClose }: { bean: Bean | null; activeId: string | null; onClose: () => void }) {
   const t = useTranslations("beans");
   const locale = useLocale();
   const closeRef = useRef<HTMLButtonElement>(null);
@@ -193,7 +197,7 @@ function BeanSheet({ bean, onClose }: { bean: Bean | null; onClose: () => void }
             aria-labelledby={`sheet-title-${bean.id}`}
             className="absolute inset-y-0 right-0 flex w-full max-w-[44rem] flex-col overflow-y-auto overscroll-contain bg-paper"
             variants={{ open: { x: "0%" }, closed: { x: "100%" } }}
-            transition={{ duration: 0.7, ease: ease.drawer }}
+            transition={{ duration: 0.48, ease: ease.drawer }}
           >
             <div className="sticky top-0 z-10 flex items-center justify-between border-b border-ink/10 bg-paper/95 px-6 py-4 pointer-fine:backdrop-blur md:px-10">
               <span className="eyebrow text-copper">
@@ -211,24 +215,31 @@ function BeanSheet({ bean, onClose }: { bean: Bean | null; onClose: () => void }
 
             <div className="space-y-10 px-6 pb-16 pt-8 md:px-10">
               <div className="flex items-center gap-5">
-                <motion.span
-                  layoutId={`swatch-${bean.id}`}
-                  className="block size-16 shrink-0 rounded-full md:size-20"
-                  style={{ background: bean.tone }}
-                />
-                <motion.h2
+                {activeId === bean.id ? (
+                  <motion.span
+                    layoutId={`swatch-${bean.id}`}
+                    transition={{ type: "spring", stiffness: 340, damping: 32, mass: 0.75 }}
+                    className="block size-16 shrink-0 rounded-full md:size-20"
+                    style={{ background: bean.tone }}
+                  />
+                ) : (
+                  <span className="block size-16 shrink-0 md:size-20" aria-hidden="true" />
+                )}
+                <h2
                   id={`sheet-title-${bean.id}`}
-                  layoutId={`name-${bean.id}`}
                   className="font-display text-[clamp(2rem,4.5vw,3.25rem)] leading-[1.02] tracking-tight"
                 >
                   {bean.name}
-                </motion.h2>
+                </h2>
               </div>
 
               <p className="font-display text-xl italic leading-snug text-ink-soft">{bean.story[locale]}</p>
 
               <dl className="grid grid-cols-2 gap-x-6 gap-y-5 border-y border-ink/12 py-6 sm:grid-cols-3">
-                <Spec label={t("labels.farm")} value={bean.farm} />
+                <Spec
+                  label={t("labels.farm")}
+                  value={typeof bean.farm === "string" ? bean.farm : bean.farm[locale]}
+                />
                 <Spec label={t("labels.region")} value={bean.region} />
                 <Spec label={t("labels.altitude")} value={`${bean.altitude.toLocaleString(locale)} m`} mono />
                 <Spec label={t("labels.process")} value={bean.process[locale]} />

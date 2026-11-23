@@ -53,7 +53,7 @@ export default async function ContactPage({ params }: PageProps<"/[locale]/ileti
                   {t("reach.email")}
                 </a>
               </p>
-              <p className="mt-1 font-mono text-sm">{t("reach.phone")}</p>
+              <p className="mt-1 whitespace-nowrap font-mono text-sm">{t("reach.phone")}</p>
             </Reveal>
             <Reveal delay={0.1} className="sm:col-span-2 border-t border-ink/12 pt-4">
               <h2 className="eyebrow mb-3 text-ink-soft">{t("socialLabel")}</h2>
@@ -63,9 +63,9 @@ export default async function ContactPage({ params }: PageProps<"/[locale]/ileti
               <h2 className="eyebrow mb-2.5 text-ink-soft">{t("hours.label")}</h2>
               <dl className="divide-y divide-ink/10 border-y border-ink/10">
                 {hours.map(([day, time]) => (
-                  <div key={day} className="flex justify-between py-2 text-sm">
+                  <div key={day} className="flex justify-between gap-4 py-2 text-sm">
                     <dt>{day}</dt>
-                    <dd className="font-mono tabular-nums">{time}</dd>
+                    <dd className="shrink-0 whitespace-nowrap font-mono tabular-nums">{time}</dd>
                   </div>
                 ))}
               </dl>

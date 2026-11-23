@@ -99,19 +99,29 @@ export function NicosiaMap() {
             );
           })}
 
-          {/* active label */}
-          <AnimatePresence mode="wait">
-            <motion.g
-              key={focus}
-              initial={{ opacity: 0, y: 2 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -2 }}
-              transition={{ duration: 0.3 }}
-              transform={`translate(${LANDMARKS[focus].x + 3} ${LANDMARKS[focus].y - 3})`}
-            >
-              <text className="fill-ink font-display text-[4.2px] italic">{t(focus)}</text>
-            </motion.g>
-          </AnimatePresence>
+          {/* active label — positioned directly above the selected landmark dot */}
+          <g transform={`translate(${LANDMARKS[focus].x} ${LANDMARKS[focus].y})`}>
+            <AnimatePresence mode="wait">
+              <motion.g
+                key={focus}
+                initial={{ opacity: 0, y: 1.5 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -1.5 }}
+                transition={{ duration: 0.25 }}
+              >
+                <text
+                  x={0}
+                  y={-4.8}
+                  textAnchor="middle"
+                  className={`font-display text-[4.3px] italic ${
+                    focus === "us" ? "fill-ink" : "fill-[#8c3f19]"
+                  }`}
+                >
+                  {t(focus)}
+                </text>
+              </motion.g>
+            </AnimatePresence>
+          </g>
 
           {/* compass */}
           <g transform="translate(52 -52)" className="text-ink">

@@ -58,12 +58,12 @@ export function MenuList() {
                 key={item.id}
                 className={`group relative flex flex-col justify-between overflow-hidden border p-5 transition-transform duration-500 ease-[var(--ease-out-quint)] hover:-translate-y-1 md:p-6 ${surface}`}
               >
-                <div className="flex items-start justify-between gap-4">
+                <div className="flex items-start justify-between gap-3">
                   <span className="eyebrow text-[0.62rem] opacity-75">
                     0{idx + 1} · {item.badge ? t(item.badge) : t("sections.signature")}
                   </span>
-                  <span className="font-mono text-sm font-medium tabular-nums">
-                    {priceFmt.format(item.price)} {t("currency")}
+                  <span className="shrink-0 whitespace-nowrap font-mono text-sm font-medium tabular-nums">
+                    {`${priceFmt.format(item.price)}\u00A0${t("currency")}`}
                   </span>
                 </div>
 
@@ -104,7 +104,7 @@ export function MenuList() {
                   type="button"
                   aria-pressed={active}
                   onClick={() => setSection(tab)}
-                  className={`relative z-0 h-9 rounded-full px-4 text-xs tracking-wide transition-colors md:text-sm ${
+                  className={`relative z-0 h-9 shrink-0 whitespace-nowrap rounded-full px-3.5 text-xs tracking-wide transition-colors md:px-4 md:text-sm ${
                     active ? "text-paper" : "text-ink/70 hover:text-ink"
                   }`}
                 >
@@ -131,7 +131,7 @@ export function MenuList() {
                     type="button"
                     aria-pressed={active}
                     onClick={() => setServe(sv)}
-                    className={`rounded-full px-3 py-1 font-mono text-[0.65rem] uppercase tracking-[0.12em] transition-colors ${
+                    className={`whitespace-nowrap rounded-full px-2.5 py-1 font-mono text-[0.64rem] uppercase tracking-[0.1em] transition-colors sm:px-3 ${
                       active ? "bg-copper text-paper" : "text-ink-soft hover:text-ink"
                     }`}
                   >
@@ -205,21 +205,21 @@ function MenuCard({
     item.serve === "iced" ? "bg-steel" : item.serve === "baked" ? "bg-stone-deep" : "bg-copper";
 
   return (
-    <li className="group flex flex-col justify-between border border-ink/12 bg-paper-deep/35 p-5 transition-colors duration-300 hover:border-ink/35 hover:bg-paper">
+    <li className="group flex flex-col justify-between border border-ink/12 bg-paper-deep/35 p-4 transition-colors duration-300 hover:border-ink/35 hover:bg-paper sm:p-5">
       <div>
-        <div className="flex items-baseline gap-2.5">
+        <div className="flex items-baseline gap-2">
           <span className={`size-2 shrink-0 rounded-full ${serveDot}`} title={t(`serve.${item.serve}`)} />
-          <h3 className="font-display text-xl tracking-tight transition-colors group-hover:text-copper md:text-2xl">
+          <h3 className="min-w-0 font-display text-[clamp(1.05rem,3.8vw,1.35rem)] leading-tight tracking-tight transition-colors group-hover:text-copper md:text-[clamp(1.15rem,1.35vw,1.45rem)]">
             {item.name[locale]}
           </h3>
           {item.badge && (
-            <span className="eyebrow rounded-full border border-copper/50 px-2 py-0.5 text-[0.56rem] text-copper">
+            <span className="eyebrow shrink-0 whitespace-nowrap rounded-full border border-copper/50 px-1.5 py-0.5 text-[0.52rem] text-copper sm:px-2 sm:text-[0.56rem]">
               {t(item.badge)}
             </span>
           )}
-          <span className="mb-1 flex-1 border-b border-dotted border-ink/25" aria-hidden="true" />
-          <span className="font-mono text-sm font-medium tabular-nums text-ink">
-            {priceFmt.format(item.price)} {t("currency")}
+          <span className="mb-1 hidden min-w-3 flex-1 border-b border-dotted border-ink/25 sm:block" aria-hidden="true" />
+          <span className="ml-auto shrink-0 whitespace-nowrap font-mono text-sm font-medium tabular-nums text-ink sm:ml-0">
+            {`${priceFmt.format(item.price)}\u00A0${t("currency")}`}
           </span>
         </div>
         <p className="mt-2 text-sm leading-relaxed text-ink-soft">{item.description[locale]}</p>
@@ -228,12 +228,12 @@ function MenuCard({
       <div className="mt-4 flex flex-wrap items-center justify-between gap-2 border-t border-ink/10 pt-3">
         <div className="flex flex-wrap items-center gap-1.5">
           {item.notes[locale].map((note) => (
-            <span key={note} className="rounded-full border border-ink/15 bg-paper px-2 py-0.5 text-[0.68rem] text-ink-soft">
+            <span key={note} className="whitespace-nowrap rounded-full border border-ink/15 bg-paper px-2 py-0.5 text-[0.68rem] text-ink-soft">
               {note}
             </span>
           ))}
         </div>
-        <span className="eyebrow text-[0.58rem] text-ink-soft">{item.spec[locale]}</span>
+        <span className="eyebrow whitespace-nowrap text-[0.58rem] text-ink-soft">{item.spec[locale]}</span>
       </div>
     </li>
   );

@@ -59,7 +59,7 @@ export const timeline: Milestone[] = [
     year: "2026",
     title: { tr: "Atölye & tadım odası", en: "Atelier & tasting room" },
     body: {
-      tr: "Bitişikteki ikinci kemeri de restore ederek halka açık kupaj seansları düzenlediğimiz bir tadım odasına dönüştürüyoruz.",
+      tr: "Bitişikteki ikinci kemeri de restore ederek halka açık tadım (cupping) seansları düzenlediğimiz bir tadım odasına dönüştürüyoruz.",
       en: "We restore the neighbouring arch too, opening a tasting room for public cupping sessions.",
     },
   },

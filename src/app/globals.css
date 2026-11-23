@@ -41,6 +41,9 @@
 
 @layer base {
   html {
+    /* Proportional fluid scaling: tighter on narrow phones (~13.5px @360px),
+       16px at 1440px, and gently scales up on large monitors (up to 18px). */
+    font-size: clamp(13.5px, 0.25vw + 12.4px, 18px);
     background: var(--color-paper);
     color: var(--color-ink);
     -webkit-font-smoothing: antialiased;

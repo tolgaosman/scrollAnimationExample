@@ -19,7 +19,6 @@ const STATIONS: {
   specBorder: string;
   temp: string;
   ratio: string;
-  pressure: string;
 }[] = [
   {
     key: "espresso",
@@ -29,7 +28,6 @@ const STATIONS: {
     specBorder: "border-paper/15",
     temp: "93 °C",
     ratio: "1:2",
-    pressure: "9 bar",
   },
   {
     key: "pourover",
@@ -39,7 +37,6 @@ const STATIONS: {
     specBorder: "border-ink/15",
     temp: "92 °C",
     ratio: "1:16",
-    pressure: "V60 / Kalita",
   },
   {
     key: "coldbrew",
@@ -49,7 +46,6 @@ const STATIONS: {
     specBorder: "border-ink/20",
     temp: "4 °C",
     ratio: "1:10",
-    pressure: "16 h steep",
   },
   {
     key: "cezve",
@@ -59,7 +55,6 @@ const STATIONS: {
     specBorder: "border-paper/20",
     temp: "96 °C",
     ratio: "1:10",
-    pressure: "Sand-fired",
   },
 ];
 
@@ -81,7 +76,7 @@ export function BrewBar() {
         </div>
 
         <div className="mt-7 flex flex-col gap-2 md:h-[26rem] md:flex-row">
-          {STATIONS.map(({ key, surface, fg, badgeCls, specBorder, temp, ratio, pressure }, i) => {
+          {STATIONS.map(({ key, surface, fg, badgeCls, specBorder, temp, ratio }, i) => {
             const isActive = active === key;
             const Icon = BrewIcons[key];
             return (
@@ -154,15 +149,15 @@ export function BrewBar() {
                   <dl className={`mt-5 grid max-w-md grid-cols-3 gap-3 border-t pt-3.5 ${specBorder}`}>
                     <div>
                       <dt className="eyebrow text-[0.58rem] opacity-65">{t("specs.temp")}</dt>
-                      <dd className="mt-0.5 font-mono text-xs tabular-nums md:text-sm">{temp}</dd>
+                      <dd className="mt-0.5 whitespace-nowrap font-mono text-xs tabular-nums md:text-sm">{temp}</dd>
                     </div>
                     <div>
                       <dt className="eyebrow text-[0.58rem] opacity-65">{t("specs.ratio")}</dt>
-                      <dd className="mt-0.5 font-mono text-xs tabular-nums md:text-sm">{ratio}</dd>
+                      <dd className="mt-0.5 whitespace-nowrap font-mono text-xs tabular-nums md:text-sm">{ratio}</dd>
                     </div>
                     <div>
                       <dt className="eyebrow text-[0.58rem] opacity-65">{t("specs.method")}</dt>
-                      <dd className="mt-0.5 font-mono text-xs md:text-sm">{pressure}</dd>
+                      <dd className="mt-0.5 whitespace-nowrap font-mono text-xs md:text-sm">{t(`items.${key}.setup`)}</dd>
                     </div>
                   </dl>
 

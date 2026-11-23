@@ -143,9 +143,7 @@ function Portrait({ member, index }: { member: TeamMember; index: number }) {
             transition={{ duration: 0.55, ease: ease.outQuint }}
           >
             <p className="eyebrow text-[0.58rem] text-copper-light">{t("favorite")}</p>
-            <p className="mt-0.5 font-mono text-xs">{member.favorite[locale]}</p>
-            <p className="eyebrow mt-3 text-[0.58rem] text-copper-light">{t("philosophy")}</p>
-            <p className="mt-1 font-display text-sm italic leading-snug">“{member.philosophy[locale]}”</p>
+            <p className="mt-1 font-mono text-xs">{member.favorite[locale]}</p>
           </motion.div>
         </motion.div>
       </div>

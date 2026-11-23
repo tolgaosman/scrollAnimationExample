@@ -54,7 +54,7 @@ export async function Footer() {
                 {tc("reach.email")}
               </a>
             </li>
-            <li className="font-mono text-xs">{tc("reach.phone")}</li>
+            <li className="whitespace-nowrap font-mono text-xs">{tc("reach.phone")}</li>
           </ul>
         </div>
       </div>

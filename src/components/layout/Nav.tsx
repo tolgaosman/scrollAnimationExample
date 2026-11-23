@@ -105,7 +105,7 @@ export function Nav() {
               onClick={() => setOpen(true)}
               aria-expanded={open}
               aria-controls="menu-drawer"
-              className="group flex h-9 items-center gap-3 rounded-full bg-ink pl-4 pr-3 text-paper transition-transform duration-300 active:scale-[0.97]"
+              className="group flex h-9 items-center gap-3 rounded-full bg-ink pl-4 pr-3 text-paper transition-transform duration-300 active:scale-[0.97] lg:hidden"
             >
               <span className="eyebrow text-[0.62rem]">{t("menuLabel")}</span>
               <span className="flex flex-col gap-[3px]" aria-hidden="true">

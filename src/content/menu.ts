@@ -140,7 +140,7 @@ export const menu: MenuItem[] = [
       tr: "Azotla köpürtülmüş soğuk demleme, keçiboynuzu şurubu ve deniz tuzu.",
       en: "Nitrogen-infused cold brew, carob syrup and a pinch of sea salt.",
     },
-    spec: { tr: "Azot Musluk · Deniz Tuzu", en: "Nitro Tap · Sea Salt" },
+    spec: { tr: "Nitro Musluk · Deniz Tuzu", en: "Nitro Tap · Sea Salt" },
     notes: { tr: ["Köpüklü", "Harnup", "Tuzlu Karamel"], en: ["Cascading", "Carob", "Salted Caramel"] },
     price: 160,
     badge: "seasonal",
@@ -164,7 +164,7 @@ export const menu: MenuItem[] = [
     id: "halloumi-pogaca",
     section: "pastry",
     serve: "baked",
-    name: { tr: "Hellimli Zahter Poğaça", en: "Halloumi & Za'atar Pogača" },
+    name: { tr: "Hellimli Zahter Poğaça", en: "Halloumi & Za'atar Poğaça" },
     description: {
       tr: "Taze hellim, dağ kekiği ve susam; sabah 6'da fırından.",
       en: "Fresh halloumi, wild thyme and sesame; out of the oven at 6 a.m.",

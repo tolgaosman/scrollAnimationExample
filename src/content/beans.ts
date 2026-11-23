@@ -16,7 +16,7 @@ export interface Bean {
   name: string;
   origin: Localized;
   region: string;
-  farm: string;
+  farm: string | Localized;
   altitude: number; // metres above sea level
   process: Localized;
   variety: string;
@@ -43,7 +43,7 @@ export const beans: Bean[] = [
     name: "Yirgacheffe Kochere",
     origin: { tr: "Etiyopya", en: "Ethiopia" },
     region: "Gedeo, Yirgacheffe",
-    farm: "Kochere Debo İstasyonu",
+    farm: { tr: "Kochere Debo İstasyonu", en: "Kochere Debo Station" },
     altitude: 2150,
     process: { tr: "Yıkanmış", en: "Washed" },
     variety: "Kurume, Wolisho",
@@ -174,7 +174,7 @@ export const beans: Bean[] = [
     name: "Nyeri Gatomboya AA",
     origin: { tr: "Kenya", en: "Kenya" },
     region: "Nyeri",
-    farm: "Gatomboya Kooperatifi",
+    farm: { tr: "Gatomboya Kooperatifi", en: "Gatomboya Cooperative" },
     altitude: 1800,
     process: { tr: "Yıkanmış", en: "Washed" },
     variety: "SL28, SL34",
@@ -182,7 +182,7 @@ export const beans: Bean[] = [
     category: "filter",
     roast: "light",
     notes: {
-      tr: ["Kuş üzümü", "Domates yaprağı", "Kan portakalı", "Pekmez"],
+      tr: ["Siyah frenk üzümü", "Domates yaprağı", "Kan portakalı", "Pekmez"],
       en: ["Blackcurrant", "Tomato leaf", "Blood orange", "Molasses"],
     },
     acidity: 9,

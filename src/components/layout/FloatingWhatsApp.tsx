@@ -1,8 +1,8 @@
 "use client";
 
 /**
- * FloatingWhatsApp — bottom-right quick-contact action styled in SURLARİÇİ's
- * espresso-ink, warm paper, and copper palette (never jarring neon green).
+ * FloatingWhatsApp — circular icon-only bottom-right WhatsApp button
+ * styled in SURLARİÇİ's espresso-ink, warm paper, and copper palette.
  */
 import { useTranslations } from "next-intl";
 import { SOCIAL_LINKS } from "@/lib/site";
@@ -18,16 +18,10 @@ export function FloatingWhatsApp() {
       target="_blank"
       rel="noopener noreferrer"
       aria-label={t("aria")}
-      className="group fixed bottom-5 right-5 z-40 inline-flex h-12 items-center gap-2.5 rounded-full border border-copper/55 bg-ink pl-3.5 pr-4 text-paper shadow-[0_14px_34px_-10px_rgb(28_24_20/0.55)] transition-all duration-300 hover:-translate-y-0.5 hover:border-copper-light hover:bg-copper active:scale-95 md:bottom-7 md:right-7"
+      title={t("label")}
+      className="fixed bottom-5 right-5 z-40 grid size-13 place-items-center rounded-full border border-copper/55 bg-ink text-paper shadow-[0_14px_34px_-10px_rgb(28_24_20/0.55)] transition-all duration-300 hover:-translate-y-0.5 hover:border-copper-light hover:bg-copper active:scale-95 md:bottom-7 md:right-7 md:size-14"
     >
-      <span className="relative flex size-6 items-center justify-center">
-        <span className="absolute -right-0.5 -top-0.5 block size-2 rounded-full bg-copper-light ring-2 ring-ink transition-colors group-hover:bg-paper group-hover:ring-copper" aria-hidden="true" />
-        <WhatsAppIcon className="size-5" />
-      </span>
-      <span className="eyebrow hidden text-[0.65rem] tracking-[0.16em] text-paper sm:inline">
-        {t("label")}
-      </span>
+      <WhatsAppIcon className="size-6" />
     </a>
   );
 }
-
