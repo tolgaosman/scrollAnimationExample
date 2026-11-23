@@ -57,10 +57,10 @@ const MAX_BACKING_PIXELS = 3840 * 2160;
 /** Cross-fade resolution: 1/32 steps are invisible and skip redundant paints. */
 const BLEND_STEPS = 32;
 /** How many frames ahead of the scroll direction to keep decoded. */
-const WARM_AHEAD = 16;
-const WARM_BEHIND = 4;
+const WARM_AHEAD = 28;
+const WARM_BEHIND = 10;
 /** Concurrent bitmap decodes. */
-const MAX_IN_FLIGHT = 4;
+const MAX_IN_FLIGHT = 6;
 
 export function FrameCanvas({
   store,

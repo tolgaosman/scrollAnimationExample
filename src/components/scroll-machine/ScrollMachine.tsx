@@ -194,7 +194,7 @@ export function ScrollMachine({ sequence }: { sequence: FrameSequenceProps }) {
                     shiftY={sequence.shiftY}
                     progress={progress}
                     label={th("canvasLabel")}
-                    blend={false}
+                    blend={!coarse && !reduceMotion}
                     onBackground={setStudio}
                   />
                 )}
