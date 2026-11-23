@@ -1,22 +1,14 @@
 /**
  * geometry.ts — pure layout math for drawing an image into a viewport.
  * ------------------------------------------------------------------
- * The canvas and the HTML overlays MUST agree on where the image is drawn,
- * otherwise the callout leader lines would point at empty space. So the
- * math lives here, framework-free, and both sides import it.
+ * Framework-free so it can be reasoned about (and tested) on its own.
  *
- *   computeFit()    → where/how big the image is drawn (CSS pixels)
- *   imageToScreen() → map a point in source-image pixels to CSS pixels
+ *   computeFit() → where/how big the image is drawn (CSS pixels)
  */
 
 export interface Size {
   width: number;
   height: number;
-}
-
-export interface Point {
-  x: number;
-  y: number;
 }
 
 export type FitMode = "cover" | "contain";
@@ -60,15 +52,6 @@ export function computeFit(viewport: Size, image: Size, mode: FitMode, zoom = 1,
     dy: Math.round((viewport.height - dh) / 2 + offsetY * viewport.height),
     viewport,
   };
-}
-
-/** Reference dimensions in which anchor tracks in timeline.ts were measured. */
-const REF_W = 1280;
-const REF_H = 720;
-
-/** Map a point measured on the 1280×720 reference space into CSS pixels (resolution-independent). */
-export function imageToScreen(pt: Point, fit: Fit): Point {
-  return { x: fit.dx + (pt.x / REF_W) * fit.dw, y: fit.dy + (pt.y / REF_H) * fit.dh };
 }
 
 export const clamp = (v: number, min: number, max: number) => Math.min(max, Math.max(min, v));

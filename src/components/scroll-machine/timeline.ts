@@ -1,20 +1,17 @@
 /**
  * timeline.ts — the choreography, as data.
  * ------------------------------------------------------------------
- * Everything you'd want to tweak while art-directing the hero lives here:
- * how scroll maps to frames, when each story phase shows, where each
- * callout points, and how the image fits on landscape vs portrait screens.
+ * How scroll maps to frames, and how the image fits on landscape vs
+ * portrait screens. The page scrolls normally over the pinned machine, so
+ * "scroll progress" is simply how far through the intro section you are.
  *
- * Source footage notes, in the 300-step reference timeline the anchor
- * tracks were measured on (10 s of 1280×720 video; the shipped sequence is
- * the video's native 240 frames — everything here is normalised 0–1, so the
- * frame count doesn't matter):
- *   ~1–35    assembled; cups barely lift
- *   ~35–100  side panels swing out, copper boiler emerges on the left
- *   ~100–160 portafilters drop, pump / heat-exchanger block opens right
- *   ~160–300 full teardown, only subtle drift
+ * Source footage notes (10 s of 1280×720 video, 240 frames):
+ *   first ~12 %   assembled; cups barely lift
+ *   ~12–33 %      side panels swing out, copper boiler emerges on the left
+ *   ~33–53 %      portafilters drop, pump / heat-exchanger block opens right
+ *   last ~47 %    full teardown, only subtle drift
  */
-import type { FitMode, Point } from "./geometry";
+import type { FitMode } from "./geometry";
 import { clamp } from "./geometry";
 
 /**
@@ -25,10 +22,10 @@ import { clamp } from "./geometry";
  */
 export const FRAME_KEYS: ReadonlyArray<readonly [scroll: number, frame: number]> = [
   [0, 0],
-  [0.09, 0.1], // brief hold so the machine responds immediately on first scroll
-  [0.42, 0.35], // boiler fully out
-  [0.71, 0.58], // portafilters dropped, right block open
-  [1, 1], // settle into the full teardown
+  [0.06, 0.08], // the machine answers the very first scroll
+  [0.4, 0.34], // boiler fully out
+  [0.72, 0.6], // portafilters dropped, right block open
+  [1, 1], // fully apart as the last card leaves
 ];
 
 /** Piecewise-linear interpolation over FRAME_KEYS. */
@@ -69,89 +66,3 @@ export const FIT: Record<"landscape" | "portrait", { mode: FitMode; zoom: number
   // Portrait crops the outermost side panels so the machine itself reads boldly at phone size.
   portrait: { mode: "contain", zoom: 1.42, offsetY: -0.075 },
 };
-
-export type PhaseId = "hero" | "boiler" | "groups" | "pump";
-
-/** Steps in the reference timeline the anchor tracks were measured on (not the shipped frame count). */
-const SOURCE_FRAMES = 300;
-
-/**
- * A part's position over time: [source frame number, x, y] keyframes in
- * source-image pixels. The callout dot follows the part as it flies out.
- */
-export type AnchorTrack = ReadonlyArray<readonly [frame: number, x: number, y: number]>;
-
-/** Interpolate an anchor track at a normalised frame position (0–1). */
-export function anchorAt(track: AnchorTrack, frameProgress: number): Point {
-  const f = frameProgress * (SOURCE_FRAMES - 1) + 1;
-  if (f <= track[0][0]) return { x: track[0][1], y: track[0][2] };
-  for (let i = 1; i < track.length; i++) {
-    const [f1, x1, y1] = track[i];
-    if (f <= f1) {
-      const [f0, x0, y0] = track[i - 1];
-      const t = (f - f0) / (f1 - f0);
-      return { x: x0 + (x1 - x0) * t, y: y0 + (y1 - y0) * t };
-    }
-  }
-  const last = track[track.length - 1];
-  return { x: last[1], y: last[2] };
-}
-
-export interface CalloutPhase {
-  id: Exclude<PhaseId, "hero">;
-  /** Scroll window [enter, exit] in 0–1. */
-  range: readonly [number, number];
-  /** Where the leader line points, tracked across frames (source-image px). */
-  track: AnchorTrack;
-  /**
-   * Where the leader line ends and the text block hangs from, as a fraction
-   * of the viewport. The line runs: anchor → vertical to label.y → horizontal to label.x.
-   */
-  label: { x: number; y: number; align: "start" | "center" | "end" };
-}
-
-export const HERO_RANGE = [0, 0.16] as const;
-
-export const CALLOUTS: readonly CalloutPhase[] = [
-  {
-    // Copper boiler, sliding out to the left of the chassis.
-    id: "boiler",
-    range: [0.22, 0.43],
-    track: [
-      [70, 392, 395],
-      [85, 362, 395],
-      [110, 322, 392],
-      [150, 300, 392],
-      [300, 300, 392],
-    ],
-    label: { x: 0.05, y: 0.74, align: "start" },
-  },
-  {
-    // Centre portafilter: drops away beneath its E61 group head.
-    id: "groups",
-    range: [0.48, 0.69],
-    track: [
-      [100, 640, 462],
-      [150, 640, 488],
-      [300, 640, 500],
-    ],
-    label: { x: 0.5, y: 0.765, align: "center" },
-  },
-  {
-    // Pump / heat-exchanger block opening on the right.
-    id: "pump",
-    range: [0.74, 0.94],
-    track: [
-      [110, 985, 382],
-      [160, 1000, 386],
-      [300, 998, 386],
-    ],
-    label: { x: 0.9, y: 0.74, align: "end" },
-  },
-];
-
-/** Scroll window of the closing line once the machine is fully apart. */
-export const OUTRO_RANGE = [0.955, 1] as const;
-
-/** Fade distance (in scroll progress) used at the edges of every window. */
-export const FADE = 0.024;
