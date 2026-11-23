@@ -30,6 +30,7 @@ export interface FrameSequence {
   height: number;
   /** Per-frame horizontal drift of the footage in source px (scripts/stabilize-frames.py). */
   shiftX?: number[];
+  shiftY?: number[];
 }
 
 export async function getFrameSequence(): Promise<FrameSequence> {
@@ -50,12 +51,14 @@ export async function getFrameSequence(): Promise<FrameSequence> {
   });
 
   let shiftX: number[] | undefined;
+  let shiftY: number[] | undefined;
   try {
     const raw = JSON.parse(await fs.readFile(path.join(process.cwd(), "public", "frames", "stabilize.json"), "utf8"));
     if (Array.isArray(raw.shiftX) && raw.shiftX.length === manifest.count) shiftX = raw.shiftX;
+    if (Array.isArray(raw.shiftY) && raw.shiftY.length === manifest.count) shiftY = raw.shiftY;
   } catch {
     // optional: no stabilisation data
   }
 
-  return { urls, width: manifest.width, height: manifest.height, shiftX };
+  return { urls, width: manifest.width, height: manifest.height, shiftX, shiftY };
 }

@@ -39,6 +39,7 @@ interface FrameCanvasProps {
   imageSize: Size;
   /** Per-frame horizontal drift (source px) to cancel, so the machine stays put. */
   shiftX?: number[];
+  shiftY?: number[];
   progress: MotionValue<number>;
   /** Accessible description of the animation. */
   label: string;
@@ -65,6 +66,7 @@ export function FrameCanvas({
   store,
   imageSize,
   shiftX,
+  shiftY,
   progress,
   label,
   blend,
@@ -239,8 +241,11 @@ export function FrameCanvas({
       const t0 = performance.now();
       // Cancel the footage's slow sideways sway: shift each frame back by its measured drift.
       const k = fit.dw / imageSize.width;
-      const at = (i: number) => (shiftX?.[i] ?? 0) * k;
-      const shiftedFit = { ...fit, dx: fit.dx - (at(index) + (next ? (at(index + 1) - at(index)) * frac : 0)) };
+      const mix = (arr: number[] | undefined) => {
+        const a = (arr?.[index] ?? 0) * k;
+        return next ? a + ((arr?.[index + 1] ?? 0) * k - a) * frac : a;
+      };
+      const shiftedFit = { ...fit, dx: fit.dx - mix(shiftX), dy: fit.dy - mix(shiftY) };
       drawFrame(ctx!, base, shiftedFit, edges, next ? { img: next, alpha: frac } : undefined);
       debug?.paint(performance.now() - t0, index, base instanceof HTMLImageElement);
       drawnKey = key;
@@ -270,7 +275,7 @@ export function FrameCanvas({
       bitmaps.clear();
       debug?.dispose();
     };
-  }, [store, imageSize, shiftX, progress, blend]);
+  }, [store, imageSize, shiftX, shiftY, progress, blend]);
 
   return (
     <canvas

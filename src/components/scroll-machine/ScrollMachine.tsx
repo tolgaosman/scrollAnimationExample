@@ -38,6 +38,8 @@ export interface FrameSequenceProps {
   height: number;
 }
   shiftX?: number[];
+  shiftY?: number[];
+}
 
 export function ScrollMachine({ sequence }: { sequence: FrameSequenceProps }) {
   const t = useTranslations("ritual");
@@ -126,6 +128,7 @@ export function ScrollMachine({ sequence }: { sequence: FrameSequenceProps }) {
                   <FrameCanvas
                     store={store}
                     imageSize={imageSize}
+                    shiftY={sequence.shiftY}
                     shiftX={sequence.shiftX}
                     progress={progress}
                     label={th("canvasLabel")}
