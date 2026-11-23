@@ -164,7 +164,7 @@
   },
   "beans": {
     "eyebrow": "Bean Library",
-    "title": "The coffees we roast",
+    "title": "The beans we roast",
     "lede": "We know the name of every hand that grew these beans. Filter by origin, altitude and process; open a card to study its roast curve.",
     "filters": {
       "label": "Filter beans",
