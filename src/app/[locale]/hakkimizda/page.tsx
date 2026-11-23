@@ -21,7 +21,7 @@ export default async function AboutPage({ params }: PageProps<"/[locale]/hakkimi
 
   return (
     <>
-      <PageHero eyebrow={t("eyebrow")} title={t("title")} lede={t("lede")} />
+      <PageHero eyebrow={t("eyebrow")} title={t("title")} />
 
       {/* Story: compact stone arch vignette + tight editorial narrative */}
       <section className="shell grid-arch items-start gap-y-8 pb-16 md:pb-22">

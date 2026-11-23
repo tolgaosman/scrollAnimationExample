@@ -10,7 +10,8 @@ export function PageHero({
 }: {
   eyebrow: string;
   title: string;
-  lede: string;
+  /** Optional intro paragraph. Without it the title spans the full width. */
+  lede?: string;
   aside?: ReactNode;
 }) {
   return (
@@ -26,14 +27,18 @@ export function PageHero({
       <MaskedLines
         as="h1"
         lines={[title]}
-        className="display col-span-12 text-display lg:col-span-8"
+        className={`display col-span-12 text-display ${lede || aside ? "lg:col-span-8" : ""}`}
       />
-      <div className="col-span-12 flex flex-col justify-end md:col-span-7 lg:col-span-4 lg:col-start-9">
-        <Reveal delay={0.18}>
-          <p className="text-sm leading-relaxed text-ink-soft md:text-base">{lede}</p>
-        </Reveal>
-        {aside}
-      </div>
+      {(lede || aside) && (
+        <div className="col-span-12 flex flex-col justify-end md:col-span-7 lg:col-span-4 lg:col-start-9">
+          {lede && (
+            <Reveal delay={0.18}>
+              <p className="text-sm leading-relaxed text-ink-soft md:text-base">{lede}</p>
+            </Reveal>
+          )}
+          {aside}
+        </div>
+      )}
     </header>
   );
 }

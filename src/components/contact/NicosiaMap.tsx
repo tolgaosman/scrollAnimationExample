@@ -91,11 +91,14 @@ const MAPS_URL = "https://www.google.com/maps/search/?api=1&query=35.1761,33.363
 export function NicosiaMap() {
   const t = useTranslations("contact.map");
   const uid = useId().replace(/:/g, "");
-  const [focus, setFocus] = useState<LandmarkKey>("us");
+  // Nothing is selected until the visitor hovers or clicks a landmark. A hovered
+  // or clicked landmark stays selected after the pointer leaves; clicking empty
+  // map space clears the selection (and with it the label and route).
+  const [focus, setFocus] = useState<LandmarkKey | null>(null);
 
-  const activeLandmark = LANDMARKS[focus];
-  const pillLeft = ((activeLandmark.x - VB_X) / VB_W) * 100;
-  const pillTop = ((activeLandmark.y - VB_Y) / VB_H) * 100;
+  const activeLandmark = focus ? LANDMARKS[focus] : null;
+  const pillLeft = activeLandmark ? ((activeLandmark.x - VB_X) / VB_W) * 100 : 0;
+  const pillTop = activeLandmark ? ((activeLandmark.y - VB_Y) / VB_H) * 100 : 0;
 
   return (
     <figure className="overflow-hidden border border-ink/15 bg-paper-deep/55">
@@ -113,6 +116,7 @@ export function NicosiaMap() {
         <svg
           viewBox={`${VB_X} ${VB_Y} ${VB_W} ${VB_H}`}
           className="h-full w-full select-none"
+          onClick={() => setFocus(null)}
           role="img"
           aria-label={t("title")}
         >
@@ -247,7 +251,7 @@ export function NicosiaMap() {
 
           {/* Animated copper walking route from focused landmark to our atelier */}
           <AnimatePresence mode="wait">
-            {activeLandmark.routeToUs && (
+            {activeLandmark?.routeToUs && (
               <motion.path
                 key={`route-${focus}`}
                 d={activeLandmark.routeToUs}
@@ -273,7 +277,10 @@ export function NicosiaMap() {
               <g
                 key={key}
                 transform={`translate(${x} ${y})`}
-                onClick={() => setFocus(key)}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setFocus(key);
+                }}
                 onMouseEnter={() => setFocus(key)}
                 className="cursor-pointer"
                 role="button"
@@ -351,24 +358,26 @@ export function NicosiaMap() {
           style={{ left: `${pillLeft}%`, top: `${pillTop}%` }}
         >
           <AnimatePresence mode="wait">
-            <motion.div
-              key={focus}
-              initial={{ opacity: 0, y: activeLandmark.labelBelow ? -4 : 4, scale: 0.96 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: activeLandmark.labelBelow ? -2 : 2, scale: 0.96 }}
-              transition={{ duration: 0.22, ease: ease.outQuint }}
-              className={`relative -translate-x-1/2 whitespace-nowrap rounded-full border border-paper/15 bg-ink px-3 py-1 text-[0.7rem] font-medium tracking-wide text-paper shadow-md ${
-                activeLandmark.labelBelow ? "translate-y-3" : "-translate-y-[calc(100%+12px)]"
-              }`}
-            >
-              <span className="flex items-center gap-1.5">
-                <span
-                  className={`block size-1.5 rounded-full ${focus === "us" ? "bg-copper-light" : "bg-stone"}`}
-                  aria-hidden="true"
-                />
-                {t(focus)}
-              </span>
-            </motion.div>
+            {focus && activeLandmark && (
+              <motion.div
+                key={focus}
+                initial={{ opacity: 0, y: activeLandmark.labelBelow ? -4 : 4, scale: 0.96 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: activeLandmark.labelBelow ? -2 : 2, scale: 0.96 }}
+                transition={{ duration: 0.22, ease: ease.outQuint }}
+                className={`relative -translate-x-1/2 whitespace-nowrap rounded-full border border-paper/15 bg-ink px-3 py-1 text-[0.7rem] font-medium tracking-wide text-paper shadow-md ${
+                  activeLandmark.labelBelow ? "translate-y-3" : "-translate-y-[calc(100%+12px)]"
+                }`}
+              >
+                <span className="flex items-center gap-1.5">
+                  <span
+                    className={`block size-1.5 rounded-full ${focus === "us" ? "bg-copper-light" : "bg-stone"}`}
+                    aria-hidden="true"
+                  />
+                  {t(focus)}
+                </span>
+              </motion.div>
+            )}
           </AnimatePresence>
         </div>
       </div>
@@ -376,16 +385,19 @@ export function NicosiaMap() {
       {/* Bottom Interactive Landmark Selector & Walking Distance Strip */}
       <figcaption className="border-t border-ink/12 bg-paper/80 p-3.5 sm:p-4">
         <div className="flex flex-wrap items-center justify-between gap-2 border-b border-ink/10 pb-3">
-          <p className="text-xs font-medium text-ink">
-            {focus === "us"
-              ? t("ourLocation")
-              : t("walkMin", { min: activeLandmark.walkMin ?? 2 })}
+          {/* Nothing selected -> no text here (the row keeps its height). */}
+          <p className="min-h-[1.1em] text-xs font-medium text-ink" aria-live="polite">
+            {focus && activeLandmark
+              ? focus === "us"
+                ? t("ourLocation")
+                : t("walkMin", { min: activeLandmark.walkMin ?? 2 })
+              : null}
           </p>
           <a
             href={MAPS_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="eyebrow inline-flex items-center gap-1 text-[0.7rem] text-copper transition-colors hover:text-ink"
+            className="eyebrow ml-auto inline-flex items-center gap-1 text-[0.7rem] text-copper transition-colors hover:text-ink"
           >
             {t("directions")}
             <span aria-hidden="true">↗</span>
