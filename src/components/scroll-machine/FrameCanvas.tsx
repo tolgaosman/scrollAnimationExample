@@ -37,6 +37,8 @@ import type { Frame, FrameStore } from "./useFramePreloader";
 interface FrameCanvasProps {
   store: FrameStore;
   imageSize: Size;
+  /** Per-frame horizontal drift (source px) to cancel, so the machine stays put. */
+  shiftX?: number[];
   progress: MotionValue<number>;
   /** Accessible description of the animation. */
   label: string;
@@ -62,6 +64,7 @@ const MAX_IN_FLIGHT = 4;
 export function FrameCanvas({
   store,
   imageSize,
+  shiftX,
   progress,
   label,
   blend,
@@ -234,7 +237,11 @@ export function FrameCanvas({
       const base = drawable(frames[index]);
       if (!base) return; // frame not decoded yet — keep the last paint
       const t0 = performance.now();
-      drawFrame(ctx!, base, fit, edges, next ? { img: next, alpha: frac } : undefined);
+      // Cancel the footage's slow sideways sway: shift each frame back by its measured drift.
+      const k = fit.dw / imageSize.width;
+      const at = (i: number) => (shiftX?.[i] ?? 0) * k;
+      const shiftedFit = { ...fit, dx: fit.dx - (at(index) + (next ? (at(index + 1) - at(index)) * frac : 0)) };
+      drawFrame(ctx!, base, shiftedFit, edges, next ? { img: next, alpha: frac } : undefined);
       debug?.paint(performance.now() - t0, index, base instanceof HTMLImageElement);
       drawnKey = key;
       dirty = false;
@@ -263,7 +270,7 @@ export function FrameCanvas({
       bitmaps.clear();
       debug?.dispose();
     };
-  }, [store, imageSize, progress, blend]);
+  }, [store, imageSize, shiftX, progress, blend]);
 
   return (
     <canvas
