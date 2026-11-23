@@ -56,11 +56,13 @@ const MAX_DPR = 3;
 const MAX_BACKING_PIXELS = 3840 * 2160;
 /** Cross-fade resolution: 1/32 steps are invisible and skip redundant paints. */
 const BLEND_STEPS = 32;
-/** How many frames ahead of the scroll direction to keep decoded. */
-const WARM_AHEAD = 28;
-const WARM_BEHIND = 10;
+/** How many frames ahead/behind of the scroll direction to keep decoded. */
+const WARM_AHEAD = 48;
+const WARM_BEHIND = 36;
+/** Maximum decoded ImageBitmaps retained in LRU cache before evicting distant frames. */
+const MAX_BITMAP_CACHE = 160;
 /** Concurrent bitmap decodes. */
-const MAX_IN_FLIGHT = 6;
+const MAX_IN_FLIGHT = 8;
 
 export function FrameCanvas({
   store,
@@ -127,8 +129,21 @@ export function FrameCanvas({
         createImageBitmap(blob).then(
           (bmp) => {
             inFlight.delete(blob);
-            if (disposed || !wanted.has(blob)) bmp.close();
-            else bitmaps.set(blob, bmp);
+            if (disposed) {
+              bmp.close();
+            } else {
+              bitmaps.set(blob, bmp);
+              // Only evict oldest non-wanted bitmaps once we exceed the LRU budget.
+              if (bitmaps.size > MAX_BITMAP_CACHE) {
+                for (const [oldBlob, oldBmp] of bitmaps) {
+                  if (bitmaps.size <= MAX_BITMAP_CACHE) break;
+                  if (!wanted.has(oldBlob)) {
+                    oldBmp.close();
+                    bitmaps.delete(oldBlob);
+                  }
+                }
+              }
+            }
             pump();
           },
           () => {
@@ -163,10 +178,21 @@ export function FrameCanvas({
         return;
       }
       wanted = seen;
-      for (const [blob, bmp] of bitmaps) {
-        if (!seen.has(blob)) {
-          bmp.close();
-          bitmaps.delete(blob);
+      // Refresh LRU insertion order for active frames already in cache.
+      for (const f of order) {
+        const existing = bitmaps.get(f.blob);
+        if (existing) {
+          bitmaps.delete(f.blob);
+          bitmaps.set(f.blob, existing);
+        }
+      }
+      if (bitmaps.size > MAX_BITMAP_CACHE) {
+        for (const [blob, bmp] of bitmaps) {
+          if (bitmaps.size <= MAX_BITMAP_CACHE) break;
+          if (!seen.has(blob)) {
+            bmp.close();
+            bitmaps.delete(blob);
+          }
         }
       }
       queue = order.map((f) => f.blob).filter((b) => !bitmaps.has(b) && !inFlight.has(b));
@@ -174,6 +200,22 @@ export function FrameCanvas({
     };
 
     const drawable = (f: Frame | undefined) => (f ? (bitmaps.get(f.blob) ?? f.img) : undefined);
+
+    const bestBaseDrawable = (frames: Frame[], index: number) => {
+      const exact = frames[index];
+      if (!exact) return undefined;
+      const exactBmp = bitmaps.get(exact.blob);
+      if (exactBmp) return exactBmp;
+      // Avoid synchronous main-thread <img> JPEG decode during fast scrubs when an
+      // adjacent frame is already decoded on GPU; fall back to exact <img> if none.
+      for (let d = 1; d <= 2; d++) {
+        const prev = frames[index - d];
+        if (prev && bitmaps.has(prev.blob)) return bitmaps.get(prev.blob)!;
+        const nxt = frames[index + d];
+        if (nxt && bitmaps.has(nxt.blob)) return bitmaps.get(nxt.blob)!;
+      }
+      return exact.img;
+    };
 
     /** (Re)size the backing store to match CSS size × DPR. */
     const resize = () => {
@@ -236,7 +278,7 @@ export function FrameCanvas({
       const key = index * (BLEND_STEPS + 1) + (next ? frac * BLEND_STEPS : 0);
       if (key === drawnKey && !dirty) return; // nothing new to paint
 
-      const base = drawable(frames[index]);
+      const base = bestBaseDrawable(frames, index);
       if (!base) return; // frame not decoded yet — keep the last paint
       const t0 = performance.now();
       // Cancel the footage's slow sideways sway: shift each frame back by its measured drift.

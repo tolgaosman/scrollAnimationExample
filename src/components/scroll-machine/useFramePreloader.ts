@@ -71,13 +71,36 @@ async function loadFrame(src: string): Promise<Frame> {
 }
 
 function fillHoles(loaded: (Frame | undefined)[]): Frame[] {
-  const have = loaded.map((frame, i) => (frame ? i : -1)).filter((i) => i >= 0);
-  if (have.length === 0) return [];
-  return loaded.map((frame, i) => {
-    if (frame) return frame;
-    const nearest = have.reduce((a, c) => (Math.abs(c - i) < Math.abs(a - i) ? c : a));
-    return loaded[nearest]!;
-  });
+  const n = loaded.length;
+  const out = new Array<Frame | undefined>(n);
+  const dist = new Int32Array(n);
+  let lastIdx = -1;
+
+  // Forward pass: carry nearest loaded frame on the left.
+  for (let i = 0; i < n; i++) {
+    if (loaded[i]) {
+      lastIdx = i;
+      out[i] = loaded[i];
+      dist[i] = 0;
+    } else if (lastIdx >= 0) {
+      out[i] = loaded[lastIdx];
+      dist[i] = i - lastIdx;
+    } else {
+      dist[i] = n + 1;
+    }
+  }
+  if (lastIdx < 0) return [];
+
+  // Backward pass: replace with closer loaded frame on the right.
+  let nextIdx = -1;
+  for (let i = n - 1; i >= 0; i--) {
+    if (loaded[i]) {
+      nextIdx = i;
+    } else if (nextIdx >= 0 && nextIdx - i < dist[i]) {
+      out[i] = loaded[nextIdx];
+    }
+  }
+  return out as Frame[];
 }
 
 async function pool<T>(items: T[], limit: number, job: (item: T) => Promise<void>, cancelled: () => boolean) {
@@ -99,11 +122,11 @@ export function useFramePreloader(urls: string[]): PreloadState {
     if (cache.has(key) || urls.length === 0) return;
 
     let cancelled = false;
-    const loaded: (Frame | undefined)[] = new Array(urls.length);
+    let flushRaf = 0;
+    const loaded: (Frame | undefined)[] = new Array<Frame | undefined>(urls.length).fill(undefined);
 
     void (async () => {
       // 1. Instant frame 0 — unlock canvas right away without waiting for the rest.
-      let store: FrameStore;
       try {
         loaded[0] = await loadFrame(urls[0]);
       } catch {
@@ -112,7 +135,7 @@ export function useFramePreloader(urls: string[]): PreloadState {
       }
       if (cancelled) return;
 
-      store = { frames: fillHoles(loaded), version: 0 };
+      const store: FrameStore = { frames: fillHoles(loaded), version: 0 };
       cache.set(key, store);
       setState({ store, progress: 0.1, ready: true });
 
@@ -122,11 +145,16 @@ export function useFramePreloader(urls: string[]): PreloadState {
       const bootWave = allRest.slice(0, bootCount);
       const refineWave = conn?.saveData ? [] : allRest.slice(bootCount);
 
-      const ingest = (i: number, frame: Frame) => {
-        loaded[i] = frame;
+      const flush = () => {
+        flushRaf = 0;
         const filled = fillHoles(loaded);
         for (let k = 0; k < filled.length; k++) store.frames[k] = filled[k];
         store.version++;
+      };
+
+      const ingest = (i: number, frame: Frame) => {
+        loaded[i] = frame;
+        if (!flushRaf) flushRaf = requestAnimationFrame(flush);
       };
 
       // 2. High-concurrency keyframe wave
@@ -164,6 +192,7 @@ export function useFramePreloader(urls: string[]): PreloadState {
 
     return () => {
       cancelled = true;
+      if (flushRaf) cancelAnimationFrame(flushRaf);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [key]);
