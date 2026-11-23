@@ -9,7 +9,7 @@ export interface Milestone {
 export const timeline: Milestone[] = [
   {
     year: "1567",
-    title: { tr: "Surlar yükseliyor", en: "The walls rise" },
+    title: { tr: "Surların inşası", en: "Building the walls" },
     body: {
       tr: "Venedikliler Lefkoşa'yı on bir burçlu kusursuz bir daireyle çevreliyor. Atölyemizin taşları da aynı ocaklardan geliyor.",
       en: "The Venetians encircle Nicosia with a perfect eleven-bastion ring. Our workshop's stones come from the same quarries.",
