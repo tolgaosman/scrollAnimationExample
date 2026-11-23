@@ -201,6 +201,7 @@ export function FrameCanvas({
       if (!fit) return;
       const frames = store.frames;
       const count = frames.length;
+      if (count === 0) return;
       const pos = framePositionAt(progress.get(), count);
       // Only flip direction on real movement, so the spring's tiny settling
       // wobble doesn't keep flipping which side we pre-decode.
@@ -209,7 +210,7 @@ export function FrameCanvas({
         lastPos = pos;
       }
 
-      let index = blend ? Math.floor(pos) : Math.round(pos);
+      let index = Math.min(count - 1, Math.max(0, (blend ? Math.floor(pos) : Math.round(pos)) || 0));
       let frac = blend ? Math.round((pos - index) * BLEND_STEPS) / BLEND_STEPS : 0;
       if (frac >= 1) {
         index += 1;
@@ -230,7 +231,8 @@ export function FrameCanvas({
       const key = index * (BLEND_STEPS + 1) + (next ? frac * BLEND_STEPS : 0);
       if (key === drawnKey && !dirty) return; // nothing new to paint
 
-      const base = drawable(frames[index])!;
+      const base = drawable(frames[index]);
+      if (!base) return; // frame not decoded yet — keep the last paint
       const t0 = performance.now();
       drawFrame(ctx!, base, fit, edges, next ? { img: next, alpha: frac } : undefined);
       debug?.paint(performance.now() - t0, index, base instanceof HTMLImageElement);
