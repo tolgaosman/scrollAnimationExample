@@ -14,7 +14,7 @@
  */
 import { motion, useMotionValueEvent, useReducedMotion, useScroll, useSpring, useTransform } from "motion/react";
 import { useLocale, useTranslations } from "next-intl";
-import { useMemo, useRef, useState } from "react";
+import { useLayoutEffect, useMemo, useRef, useState } from "react";
 import { signatureBeans } from "@/content/beans";
 import { ArrowLink } from "@/components/ui/ArrowLink";
 import { CoffeeBeanSwatch } from "@/components/ui/CoffeeBeanSwatch";
@@ -63,13 +63,33 @@ export function ScrollMachine({ sequence }: { sequence: FrameSequenceProps }) {
 
   // Desktop (lg+): `stageTrackRef` spans all 3 rows in the right column alongside
   // the editorial spine.
-  // Mobile (< lg): `mobileRunwayRef` is a short 185svh pinned Hero runway so the
+  // Mobile (< lg): `mobileRunwayRef` is a 360svh pinned Hero runway so the
   // entire mobile Hero (headline + machine + CTAs) stays on screen while the
   // scroll-driven animation plays 0 -> 1, then unpins cleanly into Manifesto.
   // Passing `scrollYProgress` directly into `useSpring` keeps Motion's native
   // scroll-to-spring frame pipeline intact with zero extra JS indirection.
   const activeTrackRef = isMobile ? mobileRunwayRef : stageTrackRef;
-  const { scrollYProgress } = useScroll({ target: activeTrackRef, offset: ["start start", "end end"] });
+
+  // Mobile: the runway sits a little below the top of the page (section padding),
+  // so "start start" left a dead zone where scrolling did nothing. Start tracking
+  // at the runway's own page offset so progress is 0 at scrollY=0 and moves with
+  // the very first pixel of scroll.
+  const [runwayTop, setRunwayTop] = useState(0);
+  useLayoutEffect(() => {
+    if (!isMobile) return;
+    const measure = () => {
+      const el = mobileRunwayRef.current;
+      if (el) setRunwayTop(Math.max(0, Math.round(el.getBoundingClientRect().top + window.scrollY)));
+    };
+    measure();
+    window.addEventListener("resize", measure);
+    return () => window.removeEventListener("resize", measure);
+  }, [isMobile]);
+
+  const { scrollYProgress } = useScroll({
+    target: activeTrackRef,
+    offset: [isMobile ? `start ${runwayTop}px` : "start start", "end end"],
+  });
   const smoothed = useSpring(scrollYProgress, coarse ? scrubTouchSpring : scrubSpring);
   const progress = reduceMotion ? scrollYProgress : smoothed;
 
@@ -97,7 +117,10 @@ export function ScrollMachine({ sequence }: { sequence: FrameSequenceProps }) {
     const clamped = Math.min(1, Math.max(0, target));
     const top = el.getBoundingClientRect().top + window.scrollY;
     const travel = Math.max(0, el.offsetHeight - window.innerHeight);
-    window.scrollTo({ top: top + travel * clamped, behavior: smooth ? "smooth" : "auto" });
+    // Mobile progress runs from scrollY = 0 (not from the runway's top edge).
+    const start = isMobile ? top - runwayTop : top;
+    const span = isMobile ? travel + runwayTop : travel;
+    window.scrollTo({ top: start + span * clamped, behavior: smooth ? "smooth" : "auto" });
   };
 
   const scrubFromPointer = (clientX: number, smooth = false) => {
@@ -135,7 +158,7 @@ export function ScrollMachine({ sequence }: { sequence: FrameSequenceProps }) {
             Desktop (lg+): `lg:contents` dissolves both wrappers so Children 1–3
             participate directly in the 12-column architectural grid.
            ============================================================ */}
-          <div ref={mobileRunwayRef} className="relative h-[185svh] lg:contents">
+          <div ref={mobileRunwayRef} className="relative h-[360svh] lg:contents">
             <div className="sticky top-14 z-10 flex flex-col gap-3 pb-3 pt-1 lg:contents">
               {/* CHILD 1 — HERO HEADER (Eyebrow, Title, Subtitle) */}
               <div className="flex flex-col justify-end pt-1 lg:col-span-5 lg:col-start-1 lg:row-start-1 lg:min-h-[52svh] lg:pt-20">
