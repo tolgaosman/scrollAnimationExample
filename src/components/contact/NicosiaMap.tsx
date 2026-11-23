@@ -109,7 +109,7 @@ export function NicosiaMap() {
       </div>
 
       {/* Interactive SVG Map Stage */}
-      <div className="relative aspect-[132/116] w-full overflow-hidden bg-gradient-to-b from-paper-deep/70 via-paper-deep/45 to-stone-light/40">
+      <div className="relative aspect-[132/116] w-full overflow-hidden lg:aspect-auto lg:h-[min(46svh,28rem)] bg-gradient-to-b from-paper-deep/70 via-paper-deep/45 to-stone-light/40">
         <svg
           viewBox={`${VB_X} ${VB_Y} ${VB_W} ${VB_H}`}
           className="h-full w-full select-none"

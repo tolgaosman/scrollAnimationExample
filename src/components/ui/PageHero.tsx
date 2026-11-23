@@ -14,7 +14,7 @@ export function PageHero({
   aside?: ReactNode;
 }) {
   return (
-    <header className="shell grid-arch gap-y-5 pb-10 pt-24 md:pb-12 md:pt-30">
+    <header className="shell grid-arch gap-y-5 pb-10 pt-24 md:pb-8 md:pt-26">
       <div className="col-span-12 flex items-baseline border-b border-ink/15 pb-3.5">
         <Reveal y={8}>
           <p className="eyebrow flex items-center gap-2.5">

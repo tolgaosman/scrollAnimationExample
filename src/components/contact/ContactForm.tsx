@@ -128,7 +128,7 @@ export function ContactForm() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0, y: -12, transition: { duration: 0.3 } }}
-            className="space-y-8"
+            className="space-y-8 lg:space-y-5"
             aria-describedby="form-privacy"
           >
             <h3 className="eyebrow">{t("title")}</h3>
@@ -160,7 +160,7 @@ export function ContactForm() {
             </LayoutGroup>
 
             {/* Wholesale toggle */}
-            <div className="flex items-start gap-4 border-y border-ink/12 py-5">
+            <div className="flex items-start gap-4 border-y border-ink/12 py-4 lg:py-3.5">
               <button
                 type="button"
                 role="switch"
@@ -181,7 +181,7 @@ export function ContactForm() {
               </div>
             </div>
 
-            <div className="grid gap-x-6 gap-y-8 sm:grid-cols-2">
+            <div className="grid gap-x-6 gap-y-8 sm:grid-cols-2 lg:gap-y-5">
               <Field label={t("name")} error={err("name")}>
                 {(id, describedBy) => (
                   <input id={id} aria-describedby={describedBy} aria-invalid={!!err("name")} autoComplete="name" maxLength={80}
