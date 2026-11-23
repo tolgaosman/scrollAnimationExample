@@ -29,9 +29,11 @@ interface SocialLinksProps {
   tone?: "dark" | "light";
   compact?: boolean;
   className?: string;
+  /** Marks the WhatsApp button as the dock target of the floating WhatsApp button. */
+  waTarget?: boolean;
 }
 
-export function SocialLinks({ tone = "light", compact = false, className = "" }: SocialLinksProps) {
+export function SocialLinks({ tone = "light", compact = false, className = "", waTarget = false }: SocialLinksProps) {
   const baseBtn =
     tone === "dark"
       ? "border-paper/20 text-paper/85 hover:border-copper-light hover:bg-copper hover:text-paper"
@@ -52,6 +54,7 @@ export function SocialLinks({ tone = "light", compact = false, className = "" }:
           target="_blank"
           rel="noopener noreferrer"
           aria-label={name}
+          data-wa-target={waTarget && name === "WhatsApp" ? "" : undefined}
           className={`inline-flex items-center gap-2 rounded-full border transition-all duration-300 active:scale-95 ${
             compact ? "size-9 justify-center" : "h-9 px-3.5 text-xs tracking-wide"
           } ${baseBtn}`}

@@ -47,7 +47,7 @@ export async function Footer() {
 
         <div className="col-span-12 md:col-span-3">
           <p className="eyebrow mb-3.5 text-paper/45">{t("follow")}</p>
-          <SocialLinks tone="dark" className="mb-4" />
+          <SocialLinks tone="dark" className="mb-4" waTarget />
           <ul className="space-y-1.5 text-sm text-paper/75">
             <li>
               <a className="link-underline" href={`mailto:${tc("reach.email")}`}>
@@ -73,7 +73,7 @@ export async function Footer() {
         </p>
       </div>
 
-      <div className="shell flex flex-col gap-2 border-t border-paper/10 pb-24 pt-5 text-xs text-paper/45 md:flex-row md:justify-between md:pb-5">
+      <div className="shell flex flex-col gap-2 border-t border-paper/10 py-5 text-xs text-paper/45 md:flex-row md:justify-between">
         <p>
           © {year} Cyprus Roasters — {tb("footerSub")}. {t("rights")}
         </p>
