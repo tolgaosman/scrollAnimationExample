@@ -5,7 +5,7 @@ type Variant = "solid" | "ghost" | "light";
 
 const styles: Record<Variant, string> = {
   solid: "bg-ink text-paper hover:bg-copper",
-  ghost: "border border-ink/25 text-ink hover:border-ink hover:bg-ink hover:text-paper",
+  ghost: "border border-ink/25 text-ink hover:border-copper hover:bg-copper hover:text-paper",
   light: "bg-paper text-ink hover:bg-copper hover:text-paper",
 };
 
