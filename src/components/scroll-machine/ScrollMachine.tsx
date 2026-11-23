@@ -51,12 +51,17 @@ export function ScrollMachine({ sequence }: { sequence: FrameSequenceProps }) {
   const locale = useLocale() as "tr" | "en";
 
   const rootRef = useRef<HTMLElement>(null);
+  const stageTrackRef = useRef<HTMLDivElement>(null);
+  const scrubTrackRef = useRef<HTMLDivElement>(null);
   const { store } = useFramePreloader(sequence.urls);
   const [studio, setStudio] = useState<string | null>(null);
 
   const reduceMotion = useReducedMotion();
   const coarse = useMediaQuery("(pointer: coarse)");
-  const { scrollYProgress } = useScroll({ target: rootRef, offset: ["start start", "end end"] });
+  // On desktop (lg+), stageTrackRef spans the entire 2-row grid alongside the
+  // editorial spine. On mobile (< lg), stageTrackRef is a self-contained 235svh
+  // runway so the animation finishes cleanly and unpins before Acts 01–03.
+  const { scrollYProgress } = useScroll({ target: stageTrackRef, offset: ["start start", "end end"] });
   const smoothed = useSpring(scrollYProgress, coarse ? scrubTouchSpring : scrubSpring);
   const progress = reduceMotion ? scrollYProgress : smoothed;
 
@@ -78,13 +83,24 @@ export function ScrollMachine({ sequence }: { sequence: FrameSequenceProps }) {
     [sequence.width, sequence.height],
   );
 
-  const jumpToAct = (target: number) => {
-    const el = rootRef.current;
+  const jumpToAct = (target: number, smooth = true) => {
+    const el = stageTrackRef.current;
     if (!el) return;
+    const clamped = Math.min(1, Math.max(0, target));
     const top = el.getBoundingClientRect().top + window.scrollY;
     const travel = Math.max(0, el.offsetHeight - window.innerHeight);
-    window.scrollTo({ top: top + travel * target, behavior: "smooth" });
+    window.scrollTo({ top: top + travel * clamped, behavior: smooth ? "smooth" : "auto" });
   };
+
+  const scrubFromPointer = (clientX: number, smooth = false) => {
+    const track = scrubTrackRef.current;
+    if (!track) return;
+    const rect = track.getBoundingClientRect();
+    if (rect.width <= 0) return;
+    jumpToAct((clientX - rect.left) / rect.width, smooth);
+  };
+
+  const activeActIndex = RITUAL_ACTS.find((a) => a.id === activeAct)?.index ?? "01";
 
   const manifestoStats = [
     [tm("stat1"), tm("stat1Label")],
@@ -101,19 +117,66 @@ export function ScrollMachine({ sequence }: { sequence: FrameSequenceProps }) {
       className="relative bg-studio pt-16 lg:pt-0"
       style={sectionStyle}
     >
-        <div className="shell relative grid grid-cols-1 gap-4 pb-8 lg:grid-cols-12 lg:items-start lg:gap-10 lg:pb-0">
+        <div className="shell relative grid grid-cols-1 gap-6 pb-8 lg:grid-cols-12 lg:items-stretch lg:gap-x-10 lg:gap-y-0 lg:pb-0">
           {/* ============================================================
-            FRAMELESS STICKY ESPRESSO STAGE
-            Desktop: `lg:sticky lg:top-0 lg:h-svh` locks at 0px from scrollY=0
-            all the way to the end of the section — zero shift at start or end.
-            Mobile: starts immediately at `top-16` with 0px initial offset.
+            CHILD 1 — OPENING ATELIER HERO
+            Mobile: sits cleanly at the very top in normal flow (never covered
+            or sliced by a sticky animation block).
+            Desktop: left column Row 1 alongside the pinned right stage.
+           ============================================================ */}
+          <div className="flex flex-col justify-center pb-2 pt-4 lg:col-span-5 lg:col-start-1 lg:row-start-1 lg:min-h-svh lg:pb-0 lg:pt-16">
+            <p className="eyebrow flex items-center gap-2.5 text-copper">
+              <span className="block size-1.5 rounded-full bg-copper" aria-hidden="true" />
+              {th("eyebrow")}
+            </p>
+
+            <h1 className="mt-3.5">
+              <span className="display -mt-[0.28em] block pb-[0.1em] pt-[0.28em] text-[clamp(2.85rem,11.5vw,5.2rem)] tracking-[-0.015em] text-ink lg:text-[clamp(3.6rem,5.2vw,5.5rem)]">
+                {th("titleA")}
+              </span>
+              <span className="eyebrow mt-1.5 block text-xs text-ink-soft">
+                {th("titleB")} · {tc("address.line2")}
+              </span>
+            </h1>
+
+            <p className="mt-4 font-display text-xl italic leading-snug text-ink md:text-2xl">
+              {th("subtitle")}
+            </p>
+            <p className="mt-3 max-w-[44ch] text-sm leading-relaxed text-ink-soft md:text-[0.95rem]">
+              {t("heroLede")}
+            </p>
+
+            <div className="mt-6 flex flex-wrap items-center gap-2.5 sm:gap-3">
+              <ArrowLink href="/menu">{t("ctaMenu")}</ArrowLink>
+              <ArrowLink href="/cekirdekler" variant="ghost">
+                {t("ctaBeans")}
+              </ArrowLink>
+            </div>
+
+            <div className="mt-7 flex flex-wrap items-center justify-between gap-3 border-t border-ink/15 pt-4">
+              <span className="eyebrow text-xs text-copper">{tc("hours.roastDay")}</span>
+              <span className="eyebrow text-[0.62rem] text-ink-soft lg:hidden">{t("scrollCue")} ↓</span>
+            </div>
+          </div>
+
+          {/* ============================================================
+            CHILD 2 — FRAMELESS ESPRESSO STAGE TRACK
+            Mobile (< lg): dedicated 235svh self-contained ritual runway right
+            below the Hero. Nothing scrolls behind it; once Frame 240 finishes,
+            it unpins cleanly before Acts 01–03 begin.
+            Desktop (lg+): right 7 columns spanning Row 1 + Row 2, locked at
+            `lg:sticky lg:top-0 lg:h-svh` with zero shift from start to end.
            ============================================================ */}
           <div
-            data-stage-pin
-            className="sticky top-16 z-20 order-first -mx-[clamp(1.25rem,4vw,4rem)] bg-[var(--stage-bg,var(--color-studio))] px-[clamp(1.25rem,4vw,4rem)] pb-3 pt-1 lg:top-0 lg:z-10 lg:order-last lg:col-span-7 lg:mx-0 lg:flex lg:h-svh lg:flex-col lg:justify-center lg:bg-transparent lg:px-0 lg:pb-6 lg:pt-16"
+            ref={stageTrackRef}
+            className="relative h-[235svh] lg:col-span-7 lg:col-start-6 lg:row-span-2 lg:row-start-1 lg:h-auto"
           >
+            <div
+              data-stage-pin
+              className="sticky top-14 z-10 flex h-[calc(100svh-3.5rem)] flex-col justify-start pt-4 lg:top-0 lg:h-svh lg:justify-center lg:py-6 lg:pt-16"
+            >
               {/* Razor-sharp, completely unframed 16:9 canvas with true 4-side edge fade */}
-              <div className="stage-fade relative mx-auto aspect-video max-h-[34svh] w-full overflow-hidden lg:max-h-[68svh]">
+              <div className="stage-fade relative mx-auto aspect-video max-h-[46svh] w-full overflow-hidden sm:max-h-[52svh] lg:max-h-[68svh]">
                 {/* Instant frame-0 poster: visible at 0ms before JS hydrates */}
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
@@ -137,15 +200,29 @@ export function ScrollMachine({ sequence }: { sequence: FrameSequenceProps }) {
                 )}
               </div>
 
-              {/* Quiet Editorial Telemetry & 4-Act Scrubber (frameless, native ink palette) */}
-              <div className="mt-2 border-t border-ink/15 pt-2.5 lg:mt-4 lg:pt-3">
+              {/* Mobile-only synced live story caption card (fills the stage cleanly with zero overlap) */}
+              <div className="mt-3 rounded-2xl border border-ink/12 bg-paper/65 px-4 py-3 backdrop-blur-sm lg:hidden">
+                <div className="flex items-center justify-between gap-2">
+                  <span className="eyebrow flex items-center gap-2 text-[0.68rem] text-ink">
+                    <span className="block size-1.5 rounded-full bg-copper" aria-hidden="true" />
+                    {t(`acts.${activeAct}.short`)}
+                  </span>
+                  <span className="num text-[0.65rem] text-copper">{activeActIndex} / 04</span>
+                </div>
+                <p className="mt-1.5 text-xs leading-relaxed text-ink-soft sm:text-sm">
+                  {t(`acts.${activeAct}.caption`)}
+                </p>
+              </div>
+
+              {/* Quiet Editorial Telemetry & Interactive 4-Act Scrubber */}
+              <div className="mt-2.5 border-t border-ink/15 pt-2.5 lg:mt-4 lg:pt-3">
                 <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-1">
-                  <span className="eyebrow flex items-center gap-2 text-xs text-ink">
+                  <span className="eyebrow hidden items-center gap-2 text-xs text-ink lg:flex">
                     <span className="block size-1.5 rounded-full bg-copper" aria-hidden="true" />
                     {t(`acts.${activeAct}.short`)}
                   </span>
 
-                  <div className="flex items-center gap-3 font-mono text-[0.68rem] tabular-nums text-ink-soft sm:gap-4">
+                  <div className="flex w-full items-center justify-between gap-3 font-mono text-[0.68rem] tabular-nums text-ink-soft sm:gap-4 lg:w-auto lg:justify-end">
                     <span className="whitespace-nowrap">
                       <span className="mr-1 text-[0.58rem] opacity-60">BAR</span>
                       <motion.span className="font-medium text-copper">{barText}</motion.span>
@@ -153,21 +230,37 @@ export function ScrollMachine({ sequence }: { sequence: FrameSequenceProps }) {
                     <span className="whitespace-nowrap">
                       <motion.span className="text-ink">{tempText}</motion.span>
                     </span>
-                    <span className="hidden whitespace-nowrap sm:inline">
+                    <span className="whitespace-nowrap">
                       <motion.span>{timeText}</motion.span>
                     </span>
-                    <span className="hidden whitespace-nowrap sm:inline">
+                    <span className="whitespace-nowrap">
                       <motion.span>{yieldText}</motion.span>
                     </span>
                   </div>
                 </div>
 
-                {/* Thin copper progress hairline */}
-                <div className="relative my-2 h-px w-full bg-ink/15">
-                  <motion.div
-                    className="absolute inset-0 origin-left bg-copper"
-                    style={{ scaleX: progress }}
-                  />
+                {/* Touch-draggable copper progress hairline */}
+                <div
+                  ref={scrubTrackRef}
+                  onPointerDown={(e) => {
+                    e.currentTarget.setPointerCapture(e.pointerId);
+                    scrubFromPointer(e.clientX, false);
+                  }}
+                  onPointerMove={(e) => {
+                    if (e.buttons === 1 || e.pointerType === "touch") {
+                      if (e.currentTarget.hasPointerCapture(e.pointerId)) {
+                        scrubFromPointer(e.clientX, false);
+                      }
+                    }
+                  }}
+                  className="relative my-1.5 flex h-5 cursor-ew-resize touch-none items-center lg:my-2 lg:h-3"
+                >
+                  <div className="relative h-px w-full bg-ink/15">
+                    <motion.div
+                      className="absolute inset-0 origin-left bg-copper"
+                      style={{ scaleX: progress }}
+                    />
+                  </div>
                 </div>
 
                 {/* Minimalist clickable 4-phase tabs */}
@@ -195,45 +288,15 @@ export function ScrollMachine({ sequence }: { sequence: FrameSequenceProps }) {
                 </div>
               </div>
             </div>
+          </div>
 
-            {/* ============================================================
-            SCROLLING EDITORIAL SPINE (4 CHOREOGRAPHED ACTS)
+          {/* ============================================================
+            CHILD 3 — EDITORIAL ARTICLES (ACTS 01–03)
+            Mobile (< lg): starts cleanly AFTER the 235svh ritual stage unpins,
+            occupying 100% of the screen with nothing floating in front of it.
+            Desktop (lg+): left column Row 2, directly under the Hero.
            ============================================================ */}
-              <div className="space-y-8 lg:col-span-5 lg:space-y-14 lg:pb-16 lg:pt-0">
-                {/* ACT 00: OPENING ATELIER HERO */}
-                <div className="flex flex-col justify-center pt-2 lg:min-h-svh lg:pt-16">
-                  <p className="eyebrow flex items-center gap-2.5 text-copper">
-                    <span className="block size-1.5 rounded-full bg-copper" aria-hidden="true" />
-                    {th("eyebrow")}
-                  </p>
-
-                  <h1 className="mt-3.5">
-                    <span className="display -mt-[0.28em] block pb-[0.1em] pt-[0.28em] text-[clamp(2.85rem,11.5vw,5.2rem)] tracking-[-0.015em] text-ink lg:text-[clamp(3.6rem,5.2vw,5.5rem)]">
-                      {th("titleA")}
-                    </span>
-                    <span className="eyebrow mt-1.5 block text-xs text-ink-soft">
-                      {th("titleB")} · {tc("address.line2")}
-                    </span>
-                  </h1>
-
-                  <p className="mt-4 font-display text-xl italic leading-snug text-ink md:text-2xl">
-                    {th("subtitle")}
-                  </p>
-                  <p className="mt-3 max-w-[44ch] text-sm leading-relaxed text-ink-soft md:text-[0.95rem]">
-                    {t("heroLede")}
-                  </p>
-
-                  <div className="mt-6 flex flex-wrap items-center gap-2.5 sm:gap-3">
-                    <ArrowLink href="/menu">{t("ctaMenu")}</ArrowLink>
-                    <ArrowLink href="/cekirdekler" variant="ghost">
-                      {t("ctaBeans")}
-                    </ArrowLink>
-                  </div>
-
-                  <div className="mt-7 flex flex-wrap items-center justify-between gap-3 border-t border-ink/15 pt-4">
-                    <span className="eyebrow text-xs text-copper">{tc("hours.roastDay")}</span>
-                  </div>
-                </div>
+          <div className="space-y-10 pt-2 lg:col-span-5 lg:col-start-1 lg:row-start-2 lg:space-y-14 lg:pb-16 lg:pt-0">
 
                 {/* ACT 01: 9-BAR EXTRACTION & STONE/WALNUT/STEEL MANIFESTO */}
                 <article className="border-t border-ink/15 pt-6 lg:min-h-[62svh] lg:pt-8" aria-labelledby="manifesto-title">

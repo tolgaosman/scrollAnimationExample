@@ -71,10 +71,26 @@
     "walnutLabel": "Amerikan Cevizi · 304 Çelik",
     "originsLede": "Baristanın elindeki o taze fincanın arkasında, mevsimin en seçkin üç kökeni var.",
     "acts": {
-      "ready": { "short": "Makine hazır · 93 °C", "tab": "Hazırlık" },
-      "extraction": { "short": "9 bar ekstraksiyon", "tab": "Akış" },
-      "craft": { "short": "Usta eli · taze shot", "tab": "Usta Eli" },
-      "pour": { "short": "Buzla buluşma", "tab": "Döküş" }
+      "ready": {
+        "short": "Makine hazır · 93 °C",
+        "tab": "Hazırlık",
+        "caption": "PID kontrolüyle 93,0 °C'de sabitlenen pirinç başlık ve el tornası ceviz portafiltre ilk damla için hazır."
+      },
+      "extraction": {
+        "short": "9 bar ekstraksiyon",
+        "tab": "Akış",
+        "caption": "9 bar basınç altında 18 g taze çekirdekten yoğun, fındık rengi krema katmanı fincana süzülüyor."
+      },
+      "craft": {
+        "short": "Usta eli · taze shot",
+        "tab": "Usta Eli",
+        "caption": "28 saniyede tamamlanan 36 g çift ristretto, aroması uçmadan baristanın eliyle kristal buzlu bardağa taşınıyor."
+      },
+      "pour": {
+        "short": "Buzla buluşma",
+        "tab": "Döküş",
+        "caption": "93 °C'den 4 °C'ye ani termal şok: bitter çikolata ve narenciye notaları buz üzerinde kehribar bulutlarına dönüşüyor."
+      }
     },
     "specBar": "9 BAR · 93 °C · 28 SN",
     "secUnit": "sn",

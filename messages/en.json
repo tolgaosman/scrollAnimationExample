@@ -71,10 +71,26 @@
     "walnutLabel": "American Walnut · 304 Steel",
     "originsLede": "Behind the fresh glass lifted from the group head stand three seasonal signature origins.",
     "acts": {
-      "ready": { "short": "Machine ready · 93 °C", "tab": "Ready" },
-      "extraction": { "short": "9 bar extraction", "tab": "Extract" },
-      "craft": { "short": "The barista's hand", "tab": "Craft" },
-      "pour": { "short": "The ice pour", "tab": "Pour" }
+      "ready": {
+        "short": "Machine ready · 93 °C",
+        "tab": "Ready",
+        "caption": "PID-locked at 93.0 °C, the brass group head and hand-turned walnut portafilter stand ready for the first drop."
+      },
+      "extraction": {
+        "short": "9 bar extraction",
+        "tab": "Extract",
+        "caption": "Under 9 bars of pressure, 18 g of freshly roasted coffee yields a dense, hazelnut-striped crema."
+      },
+      "craft": {
+        "short": "The barista's hand",
+        "tab": "Craft",
+        "caption": "At 28 seconds and 36 g yield, the double ristretto is lifted warm toward crystal-clear ice."
+      },
+      "pour": {
+        "short": "The ice pour",
+        "tab": "Pour",
+        "caption": "93 °C meets 4 °C in an instant thermal shift — locking dark chocolate and citrus into ribbons of amber."
+      }
     },
     "specBar": "9 BAR · 93 °C · 28 S",
     "secUnit": "s",
