@@ -105,6 +105,8 @@ export function ScrollMachine({ sequence }: { sequence: FrameSequenceProps }) {
   const tempText = useTransform(progress, (p) => `${cupTempAt(p).toFixed(1)}°C`);
   const timeText = useTransform(progress, (p) => `${timerAt(p).toFixed(1)}${secUnit}`);
   const yieldText = useTransform(progress, (p) => `${Math.round(yieldAt(p))}g`);
+  // Smoothly fades the café bar counter & arched window scene back into studio grey as animation completes.
+  const cafeOpacity = useTransform(progress, (p) => Math.pow(Math.max(0, 1 - p / 0.88), 2.0));
 
   const imageSize = useMemo(
     () => ({ width: sequence.width, height: sequence.height }),
@@ -191,28 +193,51 @@ export function ScrollMachine({ sequence }: { sequence: FrameSequenceProps }) {
                   className="relative z-10 flex flex-col justify-start lg:sticky lg:top-0 lg:h-svh lg:justify-center lg:py-6 lg:pt-16"
                 >
                   {/* Razor-sharp, completely unframed 16:9 canvas with true 4-side edge fade */}
-                  <div className="stage-fade relative mx-auto aspect-video max-h-[34svh] w-full overflow-hidden sm:max-h-[44svh] lg:max-h-[68svh]">
-                    {/* Instant frame-0 poster: visible at 0ms before JS hydrates */}
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src={sequence.urls[0]}
-                      alt={th("canvasLabel")}
-                      fetchPriority="high"
-                      decoding="async"
-                      className="absolute inset-0 z-0 h-full w-full object-cover"
-                    />
-                    {store && (
-                      <FrameCanvas
-                        store={store}
-                        imageSize={imageSize}
-                        shiftX={sequence.shiftX}
-                        shiftY={sequence.shiftY}
-                        progress={progress}
-                        label={th("canvasLabel")}
-                        blend={false}
-                        onBackground={setStudio}
+                  <div className="relative mx-auto w-full">
+                    <div className="stage-fade relative mx-auto aspect-video max-h-[34svh] w-full overflow-hidden sm:max-h-[44svh] lg:max-h-[68svh]">
+                      {/* Instant frame-0 poster + café counter/window overlay: visible at 0ms before JS hydrates */}
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src={sequence.urls[0]}
+                        alt={th("canvasLabel")}
+                        fetchPriority="high"
+                        decoding="async"
+                        className="absolute inset-0 z-0 h-full w-full object-cover"
                       />
-                    )}
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src="/frames/cafe-overlay.webp"
+                        alt=""
+                        aria-hidden="true"
+                        fetchPriority="high"
+                        decoding="async"
+                        className="pointer-events-none absolute inset-0 z-[5] h-full w-full object-cover"
+                      />
+                      {store && (
+                        <FrameCanvas
+                          store={store}
+                          imageSize={imageSize}
+                          shiftX={sequence.shiftX}
+                          shiftY={sequence.shiftY}
+                          progress={progress}
+                          label={th("canvasLabel")}
+                          blend={false}
+                          cafeOverlaySrc="/frames/cafe-overlay.webp"
+                          onBackground={setStudio}
+                        />
+                      )}
+                    </div>
+
+                    {/* Subtle limestone counter lip + walnut bar front fascia beneath the machine;
+                        fades smoothly out with scroll as the right side returns to studio grey. */}
+                    <motion.div
+                      aria-hidden="true"
+                      style={{ opacity: cafeOpacity }}
+                      className="pointer-events-none relative mx-auto -mt-px w-[92%] overflow-hidden rounded-b-md sm:w-[94%]"
+                    >
+                      <div className="h-[3px] w-full bg-gradient-to-r from-transparent via-stone-deep/75 to-transparent" />
+                      <div className="walnut-grain h-2 w-full opacity-80 [mask-image:linear-gradient(to_right,transparent_0%,black_12%,black_88%,transparent_100%)] lg:h-2.5" />
+                    </motion.div>
                   </div>
 
                   {/* Mobile-only synced live story caption card */}

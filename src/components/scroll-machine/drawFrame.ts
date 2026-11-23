@@ -100,6 +100,7 @@ export function drawFrame(
   fit: Fit,
   edges: EdgeTextures | null,
   next?: { img: Drawable; alpha: number },
+  cafeScene?: { img: Drawable; alpha: number },
 ) {
   const { dx, dy, dw, dh, viewport } = fit;
   const { width: W, height: H } = viewport;
@@ -134,6 +135,11 @@ export function drawFrame(
   if (next && next.alpha > 0) {
     ctx.globalAlpha = next.alpha;
     ctx.drawImage(next.img, dx, dy, dw, dh);
+    ctx.globalAlpha = 1;
+  }
+  if (cafeScene && cafeScene.alpha > 0.004) {
+    ctx.globalAlpha = cafeScene.alpha;
+    ctx.drawImage(cafeScene.img, dx, dy, dw, dh);
     ctx.globalAlpha = 1;
   }
 }
