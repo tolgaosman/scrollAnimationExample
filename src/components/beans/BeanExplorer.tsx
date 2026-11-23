@@ -9,28 +9,56 @@
  */
 import { AnimatePresence, LayoutGroup, motion } from "motion/react";
 import { useLocale, useTranslations } from "next-intl";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useId, useMemo, useRef, useState } from "react";
 import { beans, type Bean, type BeanCategory } from "@/content/beans";
+import { CustomSelect } from "@/components/ui/CustomSelect";
 import { Meter } from "@/components/ui/Meter";
 import { ease, spring } from "@/lib/motion";
 import { RoastCurve } from "./RoastCurve";
 
 type Filter = "all" | BeanCategory;
+type SortKey = "featured" | "altitudeDesc" | "roastAsc";
 const FILTERS: Filter[] = ["all", "espresso", "filter", "micro"];
+const ROAST_ORDER = { light: 0, medium: 1, mediumDark: 2 } as const;
 
 export function BeanExplorer() {
   const t = useTranslations("beans");
   const locale = useLocale();
+  const sortId = useId();
   const [filter, setFilter] = useState<Filter>("all");
+  const [sort, setSort] = useState<SortKey>("featured");
   const [openId, setOpenId] = useState<string | null>(null);
-  const visible = beans.filter((b) => filter === "all" || b.category === filter);
+
+  const visible = useMemo(() => {
+    const list = beans.filter((b) => filter === "all" || b.category === filter);
+    if (sort === "altitudeDesc") return [...list].sort((a, b) => b.altitude - a.altitude);
+    if (sort === "roastAsc") return [...list].sort((a, b) => ROAST_ORDER[a.roast] - ROAST_ORDER[b.roast]);
+    return list;
+  }, [filter, sort]);
+
   const open = beans.find((b) => b.id === openId) ?? null;
 
   return (
     <LayoutGroup>
-      <section className="shell pb-28 md:pb-40" aria-label={t("title")}>
-        <div className="flex flex-wrap items-end justify-between gap-6 border-b border-ink/15">
-          <div role="group" aria-label={t("filters.label")} className="-mb-px flex flex-wrap gap-x-6 gap-y-2">
+      <section className="shell pb-18 md:pb-24" aria-label={t("title")}>
+        {/* Roastery lot telemetry bar */}
+        <dl className="mb-8 grid grid-cols-3 divide-x divide-ink/15 border border-ink/15 bg-paper-deep/45">
+          <div className="px-4 py-3.5 md:px-6">
+            <dt className="eyebrow text-[0.58rem] text-ink-soft">{t("summary.lots")}</dt>
+            <dd className="mt-1 font-mono text-sm tabular-nums md:text-base">{beans.length}</dd>
+          </div>
+          <div className="px-4 py-3.5 md:px-6">
+            <dt className="eyebrow text-[0.58rem] text-ink-soft">{t("summary.altitude")}</dt>
+            <dd className="mt-1 font-mono text-sm tabular-nums md:text-base">1,250 – 2,100 m</dd>
+          </div>
+          <div className="px-4 py-3.5 md:px-6">
+            <dt className="eyebrow text-[0.58rem] text-ink-soft">{t("summary.schedule")}</dt>
+            <dd className="mt-1 font-mono text-sm md:text-base">{t("summary.scheduleValue")}</dd>
+          </div>
+        </dl>
+
+        <div className="flex flex-wrap items-end justify-between gap-4 border-b border-ink/15 pb-3">
+          <div role="group" aria-label={t("filters.label")} className="-mb-3 flex flex-wrap gap-x-6 gap-y-2">
             {FILTERS.map((f) => {
               const active = f === filter;
               return (
@@ -39,7 +67,7 @@ export function BeanExplorer() {
                   type="button"
                   aria-pressed={active}
                   onClick={() => setFilter(f)}
-                  className={`relative pb-4 text-sm transition-opacity md:text-base ${active ? "opacity-100" : "opacity-55 hover:opacity-100"}`}
+                  className={`relative pb-3 text-sm transition-opacity md:text-base ${active ? "opacity-100" : "opacity-55 hover:opacity-100"}`}
                 >
                   {t(`filters.${f}`)}
                   {active && (
@@ -49,9 +77,23 @@ export function BeanExplorer() {
               );
             })}
           </div>
-          <p className="eyebrow pb-4 text-ink-soft" aria-live="polite">
-            {t("count", { count: visible.length })}
-          </p>
+          <div className="flex items-center gap-4">
+            <CustomSelect
+              id={sortId}
+              variant="pill"
+              ariaLabel={t("sort.label")}
+              value={sort}
+              onChange={(v) => setSort(v as SortKey)}
+              options={[
+                { value: "featured", label: t("sort.featured") },
+                { value: "altitudeDesc", label: t("sort.altitudeDesc") },
+                { value: "roastAsc", label: t("sort.roastAsc") },
+              ]}
+            />
+            <p className="eyebrow hidden text-ink-soft sm:block" aria-live="polite">
+              {t("count", { count: visible.length })}
+            </p>
+          </div>
         </div>
 
         <motion.ul layout className="relative">

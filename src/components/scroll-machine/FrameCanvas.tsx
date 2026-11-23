@@ -190,8 +190,7 @@ export function FrameCanvas({
       // Draw in CSS pixels from here on; the transform handles DPR.
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       ctx.imageSmoothingEnabled = true;
-      // "medium" is plenty for ≤2.5× scaling; "high" is several times slower per frame.
-      ctx.imageSmoothingQuality = "medium";
+      ctx.imageSmoothingQuality = "high";
 
       onLayoutRef.current?.(fit);
       dirty = true;
@@ -267,7 +266,7 @@ export function FrameCanvas({
   return (
     <canvas
       ref={canvasRef}
-      className="absolute inset-0 block h-full w-full"
+      className="absolute inset-0 z-0 block h-full w-full contrast-[1.04] saturate-[1.03]"
       role="img"
       aria-label={label}
     />

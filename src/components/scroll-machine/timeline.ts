@@ -25,9 +25,9 @@ import { clamp } from "./geometry";
  */
 export const FRAME_KEYS: ReadonlyArray<readonly [scroll: number, frame: number]> = [
   [0, 0],
-  [0.16, 0.1], // hold: hero typography reads over the assembled machine
-  [0.45, 0.335], // boiler fully out
-  [0.72, 0.54], // portafilters dropped, right block open
+  [0.09, 0.1], // brief hold so the machine responds immediately on first scroll
+  [0.42, 0.35], // boiler fully out
+  [0.71, 0.58], // portafilters dropped, right block open
   [1, 1], // settle into the full teardown
 ];
 
@@ -65,9 +65,9 @@ export function framePositionAt(scroll: number, count: number): number {
  * (fraction of viewport height) to leave room for the type underneath.
  */
 export const FIT: Record<"landscape" | "portrait", { mode: FitMode; zoom: number; offsetY: number }> = {
-  landscape: { mode: "cover", zoom: 0.88, offsetY: -0.065 },
-  // Portrait crops the outermost side panels so the machine itself reads at phone size.
-  portrait: { mode: "contain", zoom: 1.38, offsetY: -0.06 },
+  landscape: { mode: "cover", zoom: 0.94, offsetY: -0.08 },
+  // Portrait crops the outermost side panels so the machine itself reads boldly at phone size.
+  portrait: { mode: "contain", zoom: 1.42, offsetY: -0.075 },
 };
 
 export type PhaseId = "hero" | "boiler" | "groups" | "pump";
@@ -110,13 +110,13 @@ export interface CalloutPhase {
   label: { x: number; y: number; align: "start" | "center" | "end" };
 }
 
-export const HERO_RANGE = [0, 0.2] as const;
+export const HERO_RANGE = [0, 0.16] as const;
 
 export const CALLOUTS: readonly CalloutPhase[] = [
   {
     // Copper boiler, sliding out to the left of the chassis.
     id: "boiler",
-    range: [0.25, 0.45],
+    range: [0.22, 0.43],
     track: [
       [70, 392, 395],
       [85, 362, 395],
@@ -129,7 +129,7 @@ export const CALLOUTS: readonly CalloutPhase[] = [
   {
     // Centre portafilter: drops away beneath its E61 group head.
     id: "groups",
-    range: [0.5, 0.72],
+    range: [0.48, 0.69],
     track: [
       [100, 640, 462],
       [150, 640, 488],
@@ -140,7 +140,7 @@ export const CALLOUTS: readonly CalloutPhase[] = [
   {
     // Pump / heat-exchanger block opening on the right.
     id: "pump",
-    range: [0.75, 0.95],
+    range: [0.74, 0.94],
     track: [
       [110, 985, 382],
       [160, 1000, 386],
@@ -151,7 +151,7 @@ export const CALLOUTS: readonly CalloutPhase[] = [
 ];
 
 /** Scroll window of the closing line once the machine is fully apart. */
-export const OUTRO_RANGE = [0.95, 1] as const;
+export const OUTRO_RANGE = [0.955, 1] as const;
 
 /** Fade distance (in scroll progress) used at the edges of every window. */
-export const FADE = 0.035;
+export const FADE = 0.024;

@@ -84,6 +84,16 @@
     "outro": "Parçaların toplamı değil; parçaların arasındaki özen."
   },
   "home": {
+    "strip": {
+      "locLabel": "Konum",
+      "locValue": "Arasta · Zahra Sk. No. 11",
+      "batchLabel": "Kavurma",
+      "batchValue": "12 kg Küçük Parti",
+      "roastLabel": "Kavurma Günü",
+      "roastValue": "Her Perşembe · 07:30",
+      "waterLabel": "Su Profili",
+      "waterValue": "85 ppm · 93 °C PID"
+    },
     "manifesto": {
       "eyebrow": "Manifesto",
       "titleA": "Taş sabırla,",
@@ -114,26 +124,35 @@
       "eyebrow": "Demleme Barı",
       "title": "Duyular için dört istasyon.",
       "hint": "Üzerine gelin ya da dokunun",
+      "specs": {
+        "temp": "Sıcaklık",
+        "ratio": "Oran",
+        "method": "Ekipman"
+      },
       "items": {
         "espresso": {
           "name": "Espresso",
           "tag": "Yoğun · 30 sn",
-          "body": "Dokuz bar, on sekiz gram, otuz saniye. Krema kızıl kahve, bitiş bitter çikolata."
+          "body": "Dokuz bar, on sekiz gram, otuz saniye. Krema kızıl kahve, bitiş bitter çikolata.",
+          "note": "House Blend No. 01"
         },
         "pourover": {
           "name": "Pour-Over",
           "tag": "Berrak · 3 dk",
-          "body": "V60 ve Kalita Wave ile yavaş döküm. Çiçeksi, çay gibi, katman katman açılan bir fincan."
+          "body": "V60 ve Kalita Wave ile yavaş döküm. Çiçeksi, çay gibi, katman katman açılan bir fincan.",
+          "note": "Yirgacheffe · Mikro-Lot"
         },
         "coldbrew": {
           "name": "Soğuk Demleme",
           "tag": "Sabırlı · 16 sa",
-          "body": "On altı saat soğuk suda bekleyen çekirdek; ağustos öğlesinde Lefkoşa'nın en serin gölgesi."
+          "body": "On altı saat soğuk suda bekleyen çekirdek; ağustos öğlesinde Lefkoşa'nın en serin gölgesi.",
+          "note": "Guatemala Antigua"
         },
         "cezve": {
           "name": "Kıbrıs Kahvesi",
           "tag": "Köklü · Kül ateşi",
-          "body": "Bakır cezvede, kum ocağında, köpüğü sabırla toplanmış. Atölyenin en eski tarifi."
+          "body": "Bakır cezvede, kum ocağında, köpüğü sabırla toplanmış. Atölyenin en eski tarifi.",
+          "note": "Orta-Koyu · İnce Öğütüm"
         }
       }
     },
@@ -153,6 +172,18 @@
       "espresso": "Espresso Harmanları",
       "filter": "Filtre & Pour-Over",
       "micro": "Mikro-Lot"
+    },
+    "summary": {
+      "lots": "Aktif Lot",
+      "altitude": "Rakım Aralığı",
+      "schedule": "Kavurma Programı",
+      "scheduleValue": "Her Perşembe"
+    },
+    "sort": {
+      "label": "Sıralama",
+      "featured": "Önerilen Sıra",
+      "altitudeDesc": "Rakım: Yüksek → Düşük",
+      "roastAsc": "Kavurma: Açık → Koyu"
     },
     "count": "{count, plural, one {# çekirdek} other {# çekirdek}}",
     "labels": {
@@ -231,6 +262,23 @@
       "cold": "Soğuk Demlemeler",
       "pastry": "Atölye Pastaneleri"
     },
+    "spotlight": {
+      "eyebrow": "Atölye İmzaları",
+      "note": "Lefkoşa'ya özgü üç tarif"
+    },
+    "filters": {
+      "categories": "Menü kategorileri",
+      "serve": "Servis türü",
+      "all": "Tümü"
+    },
+    "serve": {
+      "all": "Tümü",
+      "hot": "Sıcak",
+      "iced": "Soğuk",
+      "baked": "Fırından"
+    },
+    "empty": "Bu seçime uyan ürün bulunamadı.",
+    "resetFilters": "Filtreleri sıfırla",
     "currency": "₺",
     "seasonal": "Mevsimlik",
     "house": "Atölyeden"
@@ -308,6 +356,7 @@
       "phone": "+90 392 000 00 00",
       "email": "atolye@surlarici.coffee"
     },
+    "socialLabel": "Sosyal & Hızlı İletişim",
     "map": {
       "title": "Lefkoşa Surlariçi haritası",
       "walls": "Venedik Surları · 1567",
@@ -335,6 +384,7 @@
       "volume": "Aylık tahmini tüketim (kg)",
       "date": "Tarih",
       "guests": "Kişi sayısı",
+      "guestCount": "{count} kişi",
       "message": "Mesajınız",
       "submit": "Gönder",
       "submitting": "Gönderiliyor…",
@@ -367,6 +417,21 @@
     "rights": "Tüm hakları saklıdır.",
     "coords": "35°10′34″K · 33°21′49″D",
     "credits": "Lefkoşa'da tasarlandı ve kavruldu."
+  },
+  "ui": {
+    "calendar": {
+      "placeholder": "Tarih seçin",
+      "dialogLabel": "Takvim seçici",
+      "prevMonth": "Önceki ay",
+      "nextMonth": "Sonraki ay",
+      "today": "Bugün",
+      "clear": "Temizle"
+    },
+    "whatsapp": {
+      "label": "WhatsApp",
+      "aria": "WhatsApp ile bize yazın",
+      "prefill": "Merhaba SURLARİÇİ, atölyeniz hakkında bilgi almak istiyorum."
+    }
   },
   "notFound": {
     "title": "Bu sokak çıkmaz.",

@@ -53,11 +53,11 @@ export function SignatureRoasts() {
     <section
       ref={sectionRef}
       className={`relative bg-paper-deep ${swipe ? "pb-10" : ""}`}
-      style={swipe ? undefined : { height: `${signatureBeans.length * 100 + 60}vh` }}
+      style={swipe ? undefined : { height: `${signatureBeans.length * 78 + 45}vh` }}
       aria-labelledby="roasts-title"
     >
       <div className={swipe ? "flex flex-col" : "sticky top-0 flex h-svh flex-col overflow-hidden"}>
-        <div className="shell flex items-end justify-between gap-6 pb-4 pt-20 md:pb-6 md:pt-28">
+        <div className="shell flex items-end justify-between gap-6 pb-3 pt-18 md:pb-5 md:pt-22">
           <div>
             <p className="eyebrow">{t("eyebrow")}</p>
             <h2 id="roasts-title" className="display mt-3 text-headline">
@@ -107,23 +107,24 @@ function RoastPanel({ bean, index }: { bean: Bean; index: number }) {
     // story paragraph so the whole card fits the pinned stage without clipping.
     // gap-x only from md: below it every cell spans all 12 columns, and eleven
     // 24px column gaps alone would be wider than a 320px phone's card.
-    <article className="grid w-[86vw] shrink-0 snap-start grid-cols-12 gap-x-0 gap-y-6 border md:gap-x-6 border-ink/12 bg-paper p-5 md:w-[64vw] md:p-8 lg:w-[56vw] [@media(max-height:760px)]:gap-y-4">
+    <article className="relative grid w-[86vw] shrink-0 snap-start grid-cols-12 gap-x-0 gap-y-5 overflow-hidden border border-ink/15 bg-paper p-5 shadow-[0_20px_44px_-30px_rgb(28_24_20/0.3)] md:w-[60vw] md:gap-x-6 md:p-7 lg:w-[52vw] [@media(max-height:760px)]:gap-y-4">
       <div className="col-span-12 flex items-start justify-between md:col-span-5 md:flex-col">
-        <span className="display text-[clamp(4rem,9vw,8rem)] text-ink/15 [@media(max-height:760px)]:text-[clamp(3rem,9vw,8rem)]">
+        <span className="display text-[clamp(3.25rem,7vw,6.25rem)] text-ink/15 [@media(max-height:760px)]:text-[clamp(2.75rem,7vw,6rem)]">
           {String(index + 1).padStart(2, "0")}
         </span>
-        {/* Roast colour chip, like an Agtron reference card. */}
+        {/* Roast colour chip with topographic altitude rings */}
         <div
-          className="relative aspect-square w-24 md:w-full md:max-w-[15rem] max-md:[@media(max-height:760px)]:w-16 md:[@media(max-height:760px)]:max-w-[9rem]"
+          className="relative aspect-square w-24 md:w-full md:max-w-[13rem] max-md:[@media(max-height:760px)]:w-16 md:[@media(max-height:760px)]:max-w-[8.5rem]"
           aria-hidden="true"
         >
+          <span className="absolute -inset-2.5 rounded-full border border-dashed border-ink/15" />
           <div
-            className="absolute inset-0 rounded-full"
+            className="absolute inset-0 rounded-full shadow-[0_18px_36px_-18px_rgb(28_24_20/0.45)]"
             style={{
               background: `radial-gradient(circle at 32% 28%, color-mix(in oklab, ${bean.tone} 55%, white) 0%, ${bean.tone} 45%, color-mix(in oklab, ${bean.tone} 60%, black) 100%)`,
             }}
           />
-          <svg viewBox="0 0 100 100" className="absolute inset-0 text-paper/40">
+          <svg viewBox="0 0 100 100" className="absolute inset-0 text-paper/45">
             <path d="M50 12 C 38 35, 62 65, 50 88" stroke="currentColor" strokeWidth="1.2" fill="none" />
           </svg>
         </div>

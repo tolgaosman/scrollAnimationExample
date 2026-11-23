@@ -3,6 +3,7 @@ import { IBM_Plex_Mono, Newsreader, Schibsted_Grotesk } from "next/font/google";
 import { notFound } from "next/navigation";
 import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { getTranslations, setRequestLocale } from "next-intl/server";
+import { FloatingWhatsApp } from "@/components/layout/FloatingWhatsApp";
 import { Footer } from "@/components/layout/Footer";
 import { Nav } from "@/components/layout/Nav";
 import { routing } from "@/i18n/routing";
@@ -75,6 +76,7 @@ export default async function LocaleLayout({ children, params }: LayoutProps<"/[
           <Nav />
           <main id="main">{children}</main>
           <Footer />
+          <FloatingWhatsApp />
         </NextIntlClientProvider>
       </body>
     </html>

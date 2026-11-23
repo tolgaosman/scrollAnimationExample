@@ -1,22 +1,66 @@
 "use client";
 
 /**
- * Brew Bar teaser — four stations in a row. The focused station grows
- * (flex-grow is layout-animated by Motion) and reveals its description;
- * the others compress to slim vertical spines. Works with hover, keyboard
- * focus and tap.
+ * BrewBar — four sensory stations with locked 60/120fps GPU transitions.
+ * Avoids animating `font-size` or `width`/`height` (which previously forced
+ * variable-font glyph re-rasterization every frame). Instead, flex-grow expands
+ * smoothly via CSS while separate fixed-size title/detail layers cross-fade and
+ * transform on the compositor, enriched with extraction telemetry.
  */
-import { AnimatePresence, motion } from "motion/react";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
-import { ease, spring } from "@/lib/motion";
 import { BrewIcons, type BrewKey } from "./BrewIcons";
 
-const STATIONS: { key: BrewKey; surface: string; fg: string }[] = [
-  { key: "espresso", surface: "bg-ink", fg: "text-paper" },
-  { key: "pourover", surface: "bg-stone-light", fg: "text-ink" },
-  { key: "coldbrew", surface: "brushed-steel", fg: "text-ink" },
-  { key: "cezve", surface: "copper-sheen", fg: "text-paper" },
+const STATIONS: {
+  key: BrewKey;
+  surface: string;
+  fg: string;
+  badgeCls: string;
+  specBorder: string;
+  temp: string;
+  ratio: string;
+  pressure: string;
+}[] = [
+  {
+    key: "espresso",
+    surface: "bg-ink",
+    fg: "text-paper",
+    badgeCls: "border-paper/20 text-paper/85",
+    specBorder: "border-paper/15",
+    temp: "93 °C",
+    ratio: "1:2",
+    pressure: "9 bar",
+  },
+  {
+    key: "pourover",
+    surface: "bg-stone-light",
+    fg: "text-ink",
+    badgeCls: "border-ink/20 text-ink/85",
+    specBorder: "border-ink/15",
+    temp: "92 °C",
+    ratio: "1:16",
+    pressure: "V60 / Kalita",
+  },
+  {
+    key: "coldbrew",
+    surface: "brushed-steel",
+    fg: "text-ink",
+    badgeCls: "border-ink/25 bg-paper/35 text-ink",
+    specBorder: "border-ink/20",
+    temp: "4 °C",
+    ratio: "1:10",
+    pressure: "16 h steep",
+  },
+  {
+    key: "cezve",
+    surface: "copper-sheen",
+    fg: "text-paper",
+    badgeCls: "border-paper/25 text-paper/90",
+    specBorder: "border-paper/20",
+    temp: "96 °C",
+    ratio: "1:10",
+    pressure: "Sand-fired",
+  },
 ];
 
 export function BrewBar() {
@@ -24,66 +68,114 @@ export function BrewBar() {
   const [active, setActive] = useState<BrewKey>("espresso");
 
   return (
-    <section className="bg-paper py-24 md:py-36" aria-labelledby="brewbar-title">
+    <section className="bg-paper py-16 md:py-24" aria-labelledby="brewbar-title">
       <div className="shell">
-        <div className="flex flex-wrap items-end justify-between gap-6 border-b border-ink/15 pb-6">
+        <div className="flex flex-wrap items-end justify-between gap-4 border-b border-ink/15 pb-5">
           <div>
             <p className="eyebrow">{t("eyebrow")}</p>
-            <h2 id="brewbar-title" className="display mt-3 text-headline">
+            <h2 id="brewbar-title" className="display mt-2.5 text-headline">
               {t("title")}
             </h2>
           </div>
           <p className="eyebrow text-ink-soft">{t("hint")}</p>
         </div>
 
-        <div className="mt-10 flex h-auto flex-col gap-2 md:h-[34rem] md:flex-row">
-          {STATIONS.map(({ key, surface, fg }, i) => {
+        <div className="mt-7 flex flex-col gap-2 md:h-[26rem] md:flex-row">
+          {STATIONS.map(({ key, surface, fg, badgeCls, specBorder, temp, ratio, pressure }, i) => {
             const isActive = active === key;
             const Icon = BrewIcons[key];
             return (
-              <motion.button
+              <button
                 key={key}
                 type="button"
-                layout
                 onMouseEnter={() => setActive(key)}
                 onFocus={() => setActive(key)}
                 onClick={() => setActive(key)}
                 aria-expanded={isActive}
-                transition={spring.soft}
-                style={{ flexGrow: isActive ? 4 : 1 }}
-                className={`relative flex min-h-24 basis-auto flex-col md:basis-0 overflow-hidden p-5 text-left md:min-h-0 md:p-7 ${surface} ${fg}`}
+                style={{ flexGrow: isActive ? 3.8 : 1 }}
+                className={`group relative flex basis-auto flex-col overflow-hidden p-5 text-left transition-[flex-grow] duration-500 ease-[var(--ease-out-quint)] will-change-[flex-grow] md:basis-0 md:p-6 ${surface} ${fg}`}
               >
-                <motion.div layout="position" className="flex w-full items-start justify-between gap-4">
-                  <span className="eyebrow opacity-70">{String(i + 1).padStart(2, "0")}</span>
-                  <Icon className={`shrink-0 transition-all duration-700 ${isActive ? "size-16 md:size-20" : "size-10"}`} />
-                </motion.div>
+                {/* Decorative oversized watermark icon inside active card */}
+                <span
+                  aria-hidden="true"
+                  className={`pointer-events-none absolute bottom-2 right-2 transition-[opacity,transform] duration-500 ease-[var(--ease-out-quint)] ${
+                    isActive ? "scale-100 opacity-[0.09]" : "scale-75 opacity-0"
+                  }`}
+                >
+                  <Icon className="size-36 md:size-44" />
+                </span>
 
-                <motion.div layout="position" className="mt-auto">
-                  <h3
-                    className={`font-display leading-none tracking-tight transition-[font-size] duration-500 ${
-                      isActive ? "text-4xl md:text-6xl" : "text-2xl md:[writing-mode:vertical-rl] md:rotate-180 md:text-3xl"
+                {/* Top row: index + GPU-scaled icon */}
+                <div className="relative z-10 flex w-full items-start justify-between gap-3">
+                  <span className="eyebrow opacity-70">{String(i + 1).padStart(2, "0")}</span>
+                  <span
+                    className={`block origin-top-right transition-transform duration-500 ease-[var(--ease-out-quint)] will-change-transform ${
+                      isActive ? "scale-100" : "scale-[0.65]"
                     }`}
                   >
+                    <Icon className="size-12 md:size-14" />
+                  </span>
+                </div>
+
+                {/* Desktop collapsed vertical spine label (GPU opacity + translate only) */}
+                <span
+                  aria-hidden={isActive}
+                  className={`pointer-events-none absolute bottom-6 left-6 hidden font-display text-2xl leading-none tracking-tight [writing-mode:vertical-rl] rotate-180 transition-[opacity,transform] duration-300 ease-[var(--ease-out-quint)] md:block ${
+                    isActive ? "translate-y-3 opacity-0" : "translate-y-0 opacity-95"
+                  }`}
+                >
+                  {t(`items.${key}.name`)}
+                </span>
+
+                {/* Mobile collapsed header */}
+                {!isActive && (
+                  <span className="relative z-10 mt-3 block font-display text-2xl leading-none tracking-tight md:hidden">
+                    {t(`items.${key}.name`)}
+                  </span>
+                )}
+
+                {/* Active expanded content (fixed font size — zero font-size animation!) */}
+                <div
+                  className={`relative z-10 mt-auto transition-[opacity,transform] duration-400 ease-[var(--ease-out-quint)] will-change-[opacity,transform] ${
+                    isActive
+                      ? "pointer-events-auto translate-y-0 opacity-100 delay-100"
+                      : "pointer-events-none hidden translate-y-3 opacity-0 md:block md:h-0 md:overflow-hidden"
+                  }`}
+                >
+                  <p className="eyebrow opacity-75">{t(`items.${key}.tag`)}</p>
+                  <h3 className="mt-1.5 font-display text-3xl leading-none tracking-tight md:text-5xl">
                     {t(`items.${key}.name`)}
                   </h3>
-                  <AnimatePresence initial={false}>
-                    {isActive && (
-                      <motion.div
-                        key="body"
-                        initial={{ opacity: 0, y: 12 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: 6 }}
-                        transition={{ duration: 0.5, ease: ease.outQuint, delay: 0.12 }}
-                      >
-                        <p className="eyebrow mt-4 opacity-75">{t(`items.${key}.tag`)}</p>
-                        <p className="mt-3 max-w-[38ch] text-sm leading-relaxed opacity-90 md:text-base">
-                          {t(`items.${key}.body`)}
-                        </p>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                </motion.div>
-              </motion.button>
+                  <p className="mt-3 max-w-[44ch] text-sm leading-relaxed opacity-90">
+                    {t(`items.${key}.body`)}
+                  </p>
+
+                  {/* Extraction telemetry bar filling the card purposefully */}
+                  <dl className={`mt-5 grid max-w-md grid-cols-3 gap-3 border-t pt-3.5 ${specBorder}`}>
+                    <div>
+                      <dt className="eyebrow text-[0.58rem] opacity-65">{t("specs.temp")}</dt>
+                      <dd className="mt-0.5 font-mono text-xs tabular-nums md:text-sm">{temp}</dd>
+                    </div>
+                    <div>
+                      <dt className="eyebrow text-[0.58rem] opacity-65">{t("specs.ratio")}</dt>
+                      <dd className="mt-0.5 font-mono text-xs tabular-nums md:text-sm">{ratio}</dd>
+                    </div>
+                    <div>
+                      <dt className="eyebrow text-[0.58rem] opacity-65">{t("specs.method")}</dt>
+                      <dd className="mt-0.5 font-mono text-xs md:text-sm">{pressure}</dd>
+                    </div>
+                  </dl>
+
+                  <div className="mt-4 flex flex-wrap items-center gap-2">
+                    <span className={`rounded-full border px-2.5 py-0.5 font-mono text-[0.65rem] ${badgeCls}`}>
+                      {t(`items.${key}.note`)}
+                    </span>
+                    <span className="eyebrow ml-auto text-[0.6rem] opacity-65">
+                      0{i + 1} / 04
+                    </span>
+                  </div>
+                </div>
+              </button>
             );
           })}
         </div>

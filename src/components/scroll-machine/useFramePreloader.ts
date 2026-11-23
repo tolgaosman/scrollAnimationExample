@@ -1,35 +1,23 @@
 "use client";
 
 /**
- * useFramePreloader — fetch + decode an image sequence before scrubbing.
+ * useFramePreloader — fast two-stage progressive image-sequence loader.
  * ------------------------------------------------------------------
- * Each frame is kept as its compressed bytes (a Blob, ~48 KB) plus an <img>
- * made from them — no second download. FrameCanvas decodes the frames around
- * the scroll position from the Blobs into ImageBitmaps (off the main thread;
- * note createImageBitmap(<img>) is NOT — it decodes on the main thread in
- * Chrome) and paints those. If a bitmap isn't ready, it paints the <img>, so
- * the exact frame is always on screen. Memory stays modest: 240 decoded
- * 1280×720 frames would be ~880 MB, the bytes are ~11 MB.
+ * Stage 1 (Boot): fetches a sparse keyframe pass (stride 10 → ~25 frames,
+ * always including frame 0 and the final frame) with high concurrency (16).
+ * As soon as those ~25 keyframes decode (~300–600 ms), `fillHoles()` maps
+ * every slot to its nearest loaded keyframe and unlocks the hero immediately.
  *
- * Loading strategy:
- *   - A small concurrency pool (6) — enough to saturate HTTP/1.1 per-host
- *     limits without starving the main thread with decode callbacks.
- *   - Narrow screens load every 2nd frame first; the hero unlocks as soon as
- *     that half is in, then the remaining frames stream in the background and
- *     slot into place. Until a frame arrives, its slot borrows the nearest
- *     loaded neighbour, so the animation is never missing a frame.
- *     Save-Data users only ever get the half set.
- *   - Failed frames retry twice, then keep borrowing their neighbour.
- *   - Results are memoised per URL list at module level: navigating away and
- *     back to the homepage is instant, with no second preloader.
+ * Stage 2 (Background refinement): streams the remaining frames in
+ * progressively finer passes (stride 5 → stride 2 → remaining) without
+ * blocking the UI, bumping `store.version` as each frame arrives.
  */
 import { useEffect, useState } from "react";
 
-const CONCURRENCY = 6;
-const BACKFILL_CONCURRENCY = 3;
+const BOOT_CONCURRENCY = 16;
+const BACKFILL_CONCURRENCY = 8;
 const RETRIES = 2;
 
-/** One loaded frame: its compressed bytes and an <img> made from them. */
 export interface Frame {
   /** Decoded off the main thread into an ImageBitmap by FrameCanvas. */
   blob: Blob;
@@ -53,20 +41,41 @@ interface PreloadState {
 
 const cache = new Map<string, FrameStore>();
 
-function pickStride(): { stride: number; backfill: boolean } {
-  if (typeof window === "undefined") return { stride: 1, backfill: false };
+function pickStrategy(): { bootStride: number; backfill: boolean } {
+  if (typeof window === "undefined") return { bootStride: 10, backfill: true };
   const conn = (navigator as Navigator & { connection?: { saveData?: boolean } }).connection;
-  if (conn?.saveData) return { stride: 2, backfill: false };
-  return window.matchMedia("(max-width: 767px)").matches
-    ? { stride: 2, backfill: true }
-    : { stride: 1, backfill: false };
+  if (conn?.saveData) return { bootStride: 6, backfill: false };
+  return { bootStride: 10, backfill: true };
 }
 
-/** Indices for the first pass: every `stride`-th frame, always including the last one. */
-function firstPass(count: number, stride: number): number[] {
+/** Indices for the boot pass: frame 0, last frame, then every `stride`-th frame. */
+function bootIndices(count: number, stride: number): number[] {
   const out: number[] = [];
-  for (let i = 0; i < count; i += stride) out.push(i);
-  if (out[out.length - 1] !== count - 1) out.push(count - 1);
+  const seen = new Set<number>();
+  const add = (i: number) => {
+    if (i >= 0 && i < count && !seen.has(i)) {
+      seen.add(i);
+      out.push(i);
+    }
+  };
+  add(0);
+  add(count - 1);
+  for (let i = 0; i < count; i += stride) add(i);
+  return out;
+}
+
+/** Order remaining indices in progressively finer stride waves (5 → 2 → 1). */
+function refinementOrder(count: number, loadedSet: Set<number>): number[] {
+  const out: number[] = [];
+  const seen = new Set(loadedSet);
+  for (const step of [5, 2, 1]) {
+    for (let i = 0; i < count; i += step) {
+      if (!seen.has(i)) {
+        seen.add(i);
+        out.push(i);
+      }
+    }
+  }
   return out;
 }
 
@@ -79,9 +88,8 @@ async function loadFrame(src: string): Promise<Frame> {
       const blob = await res.blob();
       const img = new Image();
       img.decoding = "async";
-      // Lives as long as the cached store (i.e. the page session).
       img.src = URL.createObjectURL(blob);
-      await img.decode(); // validates the file and warms the decode cache
+      await img.decode();
       return { blob, img };
     } catch (err) {
       lastError = err;
@@ -90,18 +98,23 @@ async function loadFrame(src: string): Promise<Frame> {
   throw lastError;
 }
 
-/** Point every empty slot at the nearest loaded frame. */
+/**
+ * Point every empty slot at the nearest loaded frame. Uses Array.from rather
+ * than .map so that holes in a sparse array are visited (and filled) too —
+ * .map skips them and would leave `undefined` slots for the canvas to paint.
+ */
 function fillHoles(loaded: (Frame | undefined)[]): Frame[] {
-  const have = loaded.map((frame, i) => (frame ? i : -1)).filter((i) => i >= 0);
+  const have: number[] = [];
+  for (let i = 0; i < loaded.length; i++) if (loaded[i]) have.push(i);
   if (have.length === 0) return [];
-  return loaded.map((frame, i) => {
+  return Array.from({ length: loaded.length }, (_, i) => {
+    const frame = loaded[i];
     if (frame) return frame;
     const nearest = have.reduce((a, c) => (Math.abs(c - i) < Math.abs(a - i) ? c : a));
     return loaded[nearest]!;
   });
 }
 
-/** Run `job` over `items` with at most `limit` in flight. */
 async function pool<T>(items: T[], limit: number, job: (item: T) => Promise<void>, cancelled: () => boolean) {
   let next = 0;
   const worker = async () => {
@@ -110,7 +123,6 @@ async function pool<T>(items: T[], limit: number, job: (item: T) => Promise<void
   await Promise.all(Array.from({ length: Math.min(limit, items.length) }, worker));
 }
 
-/** Stream the frames skipped by the first pass into an existing store. */
 function backfill(urls: string[], store: FrameStore, loaded: (Frame | undefined)[], indices: number[]) {
   void pool(
     indices,
@@ -119,13 +131,13 @@ function backfill(urls: string[], store: FrameStore, loaded: (Frame | undefined)
       try {
         loaded[i] = await loadFrame(urls[i]);
       } catch {
-        return; // keeps borrowing its neighbour
+        return;
       }
       const filled = fillHoles(loaded);
       for (let k = 0; k < filled.length; k++) store.frames[k] = filled[k];
       store.version++;
     },
-    () => false, // keep going after unmount: the store is cached for next time
+    () => false,
   );
 }
 
@@ -140,14 +152,13 @@ export function useFramePreloader(urls: string[]): PreloadState {
     if (cache.has(key)) return;
 
     let cancelled = false;
-    const { stride, backfill: wantsBackfill } = pickStride();
-    const first = firstPass(urls.length, stride);
-    const loaded: (Frame | undefined)[] = new Array(urls.length);
+    const { bootStride, backfill: wantsBackfill } = pickStrategy();
+    const first = bootIndices(urls.length, bootStride);
+    const loaded: (Frame | undefined)[] = new Array<Frame | undefined>(urls.length).fill(undefined);
     let done = 0;
     let lastReported = -1;
 
     const report = () => {
-      // Only push a React update when the visible percentage changes.
       const pct = Math.floor((done / first.length) * 100);
       if (pct !== lastReported && !cancelled) {
         lastReported = pct;
@@ -158,12 +169,12 @@ export function useFramePreloader(urls: string[]): PreloadState {
     void (async () => {
       await pool(
         first,
-        CONCURRENCY,
+        BOOT_CONCURRENCY,
         async (i) => {
           try {
             loaded[i] = await loadFrame(urls[i]);
           } catch {
-            loaded[i] = undefined; // patched by fillHoles()
+            loaded[i] = undefined;
           }
           done++;
           report();
@@ -182,8 +193,7 @@ export function useFramePreloader(urls: string[]): PreloadState {
       setState({ store, progress: 1, ready: true });
 
       if (wantsBackfill) {
-        const firstSet = new Set(first);
-        const rest = urls.map((_, i) => i).filter((i) => !firstSet.has(i));
+        const rest = refinementOrder(urls.length, new Set(first));
         backfill(urls, store, loaded, rest);
       }
     })();
@@ -191,7 +201,6 @@ export function useFramePreloader(urls: string[]): PreloadState {
     return () => {
       cancelled = true;
     };
-    // `key` is a stable fingerprint of `urls`.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [key]);
 

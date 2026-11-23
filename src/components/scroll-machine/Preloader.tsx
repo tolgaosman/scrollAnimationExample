@@ -23,7 +23,7 @@ export function Preloader({ progress, ready, total }: PreloaderProps) {
   const t = useTranslations("preloader");
   const [visible, setVisible] = useState(!ready);
 
-  const value = useSpring(0, { stiffness: 70, damping: 20, restDelta: 0.01 });
+  const value = useSpring(0, { stiffness: 200, damping: 26, restDelta: 0.05 });
   const counter = useTransform(value, (v) => String(Math.min(100, Math.round(v))).padStart(3, "0"));
   const bar = useTransform(value, [0, 100], [0, 1]);
   const rotate = useTransform(value, [0, 100], [0, 360 / 11]);
@@ -33,10 +33,10 @@ export function Preloader({ progress, ready, total }: PreloaderProps) {
     value.set(progress * 100);
   }, [progress, value]);
 
-  // Hold briefly on 100 before the curtain lifts.
+  // Brief beat on 100 before lifting so the site opens fast.
   useEffect(() => {
     if (!ready || !visible) return;
-    const id = window.setTimeout(() => setVisible(false), 900);
+    const id = window.setTimeout(() => setVisible(false), 120);
     return () => window.clearTimeout(id);
   }, [ready, visible]);
 
@@ -64,7 +64,7 @@ export function Preloader({ progress, ready, total }: PreloaderProps) {
           className="fixed inset-0 z-[80] flex flex-col justify-between bg-studio text-ink shell py-6 md:py-8"
           initial={{ clipPath: "inset(0% 0% 0% 0%)" }}
           exit={{ clipPath: "inset(0% 0% 100% 0%)" }}
-          transition={{ duration: 1.05, ease: ease.drawer }}
+          transition={{ duration: 0.55, ease: ease.drawer }}
         >
           <div className="flex items-start justify-between">
             <span className="eyebrow">SURLARİÇİ // Lefkon Roasters</span>

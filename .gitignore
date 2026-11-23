@@ -20,3 +20,4 @@ verify-output/
 Thumbs.db
 npm-debug.log*
 .vercel
+node_modules

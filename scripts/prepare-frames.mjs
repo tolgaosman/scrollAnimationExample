@@ -37,19 +37,17 @@ const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const OUT_DIR = path.join(ROOT, "public", "frames");
 const PAD = 4;
 
-// q:v 4 ≈ 48 KB per 720p frame. The splitter's ~20 KB frames showed heavy 8×8
-// block artefacts once scaled up on 3× phone screens.
+// q:v 4 at 1600×900 gives crisp studio detail while keeping individual frames
+// light enough for progressive streaming.
 const QUALITY = process.env.FRAME_QUALITY ?? "4";
 
-// Temporal smoothing. The source is AI-generated: its slow "drift" passages
-// (the assembled machine at the start, the settled teardown at the end) move
-// in steps every 4th frame — ~6 updates per second inside a 24 fps file —
-// with near-identical frames between. Scrubbed slowly, that reads as the
-// machine twitching. atadenoise averages each pixel over ±7 frames when the
-// change is small (noise, sub-pixel drift) and leaves real motion alone, so
-// the drift becomes continuous while the fast teardown stays sharp.
+// Crisp 1600×900 Lanczos upscale + gentle temporal stabilization (s=5 instead
+// of s=15 so fine metallic edges stay sharp) + luminance unsharp masking +
+// subtle micro-contrast so the espresso machine reads sharply in the foreground.
 // Set FRAME_FILTER="" to disable, or pass any ffmpeg -vf chain.
-const FILTER = process.env.FRAME_FILTER ?? "atadenoise=s=15:0a=0.04:0b=0.08";
+const FILTER =
+  process.env.FRAME_FILTER ??
+  "scale=1600:900:flags=lanczos,atadenoise=s=5:0a=0.015:0b=0.03,unsharp=5:5:0.85:3:3:0.0,eq=contrast=1.07:brightness=-0.012:saturation=1.06";
 
 function findSource() {
   if (process.argv[2]) return path.resolve(process.argv[2]);

@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
+import { preload } from "react-dom";
 import { getTranslations, setRequestLocale } from "next-intl/server";
+import { AtelierStrip } from "@/components/home/AtelierStrip";
 import { BrewBar } from "@/components/home/BrewBar";
 import { ClosingCta } from "@/components/home/ClosingCta";
 import { Manifesto } from "@/components/home/Manifesto";
@@ -20,9 +22,15 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
   setRequestLocale(locale as Locale);
   const sequence = await getFrameSequence();
 
+  // Start downloading the hero's opening frame in the HTML head before hydration.
+  if (sequence.urls[0]) {
+    preload(sequence.urls[0], { as: "image", fetchPriority: "high" });
+  }
+
   return (
     <>
       <ScrollMachine sequence={sequence} />
+      <AtelierStrip />
       <Manifesto />
       <SignatureRoasts />
       <BrewBar />

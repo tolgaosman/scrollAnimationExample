@@ -62,9 +62,13 @@ export function computeFit(viewport: Size, image: Size, mode: FitMode, zoom = 1,
   };
 }
 
-/** Map a point measured on the source JPEG (e.g. 1280×720 space) into CSS pixels. */
+/** Reference dimensions in which anchor tracks in timeline.ts were measured. */
+const REF_W = 1280;
+const REF_H = 720;
+
+/** Map a point measured on the 1280×720 reference space into CSS pixels (resolution-independent). */
 export function imageToScreen(pt: Point, fit: Fit): Point {
-  return { x: fit.dx + pt.x * fit.scale, y: fit.dy + pt.y * fit.scale };
+  return { x: fit.dx + (pt.x / REF_W) * fit.dw, y: fit.dy + (pt.y / REF_H) * fit.dh };
 }
 
 export const clamp = (v: number, min: number, max: number) => Math.min(max, Math.max(min, v));

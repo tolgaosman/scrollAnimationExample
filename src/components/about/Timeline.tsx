@@ -25,11 +25,11 @@ export function Timeline() {
   });
 
   return (
-    <section className="shell grid-arch gap-y-10 py-24 md:py-36" aria-labelledby="timeline-title">
+    <section className="shell grid-arch gap-y-8 py-14 md:py-20" aria-labelledby="timeline-title">
       <div className="col-span-12 md:col-span-4">
-        <div className="md:sticky md:top-32">
+        <div className="md:sticky md:top-28">
           <p className="eyebrow">{t("eyebrow")}</p>
-          <h2 id="timeline-title" className="display mt-4 text-headline">
+          <h2 id="timeline-title" className="display mt-3 text-headline">
             {t("title")}
           </h2>
         </div>
@@ -48,7 +48,7 @@ export function Timeline() {
           const isOpen = open === i;
           const lit = i <= reached;
           return (
-            <li key={m.year} className="relative pb-10 pl-10 last:pb-0 md:pl-14">
+            <li key={m.year} className="relative pb-7 pl-9 last:pb-0 md:pl-12">
               <span
                 aria-hidden="true"
                 className={`absolute left-0 top-2 block size-[0.95rem] rounded-full border transition-colors duration-500 ${

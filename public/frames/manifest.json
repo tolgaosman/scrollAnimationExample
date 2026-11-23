@@ -1,11 +1,11 @@
 {
-  "version": "e1d3d061fd50",
+  "version": "0e3eeca5f5fb",
   "count": 240,
-  "width": 1280,
-  "height": 720,
+  "width": 1600,
+  "height": 900,
   "padding": 4,
   "prefix": "frame_",
   "extension": ".jpg",
   "basePath": "/frames/",
-  "generatedAt": "2026-11-22T18:08:52.568Z"
+  "generatedAt": "2026-11-22T23:53:21.634Z"
 }

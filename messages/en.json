@@ -84,6 +84,16 @@
     "outro": "Not the sum of the parts — the care between them."
   },
   "home": {
+    "strip": {
+      "locLabel": "Location",
+      "locValue": "Arasta · Zahra St. No. 11",
+      "batchLabel": "Roasting",
+      "batchValue": "12 kg Small Batch",
+      "roastLabel": "Roast Day",
+      "roastValue": "Every Thursday · 07:30",
+      "waterLabel": "Water Profile",
+      "waterValue": "85 ppm · 93 °C PID"
+    },
     "manifesto": {
       "eyebrow": "Manifesto",
       "titleA": "Patient as stone,",
@@ -114,26 +124,35 @@
       "eyebrow": "Brew Bar",
       "title": "Four stations for the senses.",
       "hint": "Hover or tap",
+      "specs": {
+        "temp": "Temp",
+        "ratio": "Ratio",
+        "method": "Setup"
+      },
       "items": {
         "espresso": {
           "name": "Espresso",
           "tag": "Intense · 30 s",
-          "body": "Nine bar, eighteen grams, thirty seconds. Russet crema, a finish of dark chocolate."
+          "body": "Nine bar, eighteen grams, thirty seconds. Russet crema, a finish of dark chocolate.",
+          "note": "House Blend No. 01"
         },
         "pourover": {
           "name": "Pour-Over",
           "tag": "Clear · 3 min",
-          "body": "Slow pours through V60 and Kalita Wave. Floral, tea-like, a cup that opens in layers."
+          "body": "Slow pours through V60 and Kalita Wave. Floral, tea-like, a cup that opens in layers.",
+          "note": "Yirgacheffe · Micro-Lot"
         },
         "coldbrew": {
           "name": "Cold Brew",
           "tag": "Patient · 16 hrs",
-          "body": "Sixteen hours steeped in cold water — the coolest shade in Nicosia on an August afternoon."
+          "body": "Sixteen hours steeped in cold water — the coolest shade in Nicosia on an August afternoon.",
+          "note": "Guatemala Antigua"
         },
         "cezve": {
           "name": "Cypriot Coffee",
           "tag": "Rooted · Sand-fired",
-          "body": "Brewed in a copper cezve over hot sand, its foam gathered with patience. The workshop's oldest recipe."
+          "body": "Brewed in a copper cezve over hot sand, its foam gathered with patience. The workshop's oldest recipe.",
+          "note": "Medium-Dark · Extra Fine"
         }
       }
     },
@@ -153,6 +172,18 @@
       "espresso": "Espresso Blends",
       "filter": "Filter & Pour-Over",
       "micro": "Micro-Lot"
+    },
+    "summary": {
+      "lots": "Active Lots",
+      "altitude": "Elevation Range",
+      "schedule": "Roast Schedule",
+      "scheduleValue": "Every Thursday"
+    },
+    "sort": {
+      "label": "Sort beans",
+      "featured": "Featured Order",
+      "altitudeDesc": "Altitude: High → Low",
+      "roastAsc": "Roast: Light → Dark"
     },
     "count": "{count, plural, one {# coffee} other {# coffees}}",
     "labels": {
@@ -231,6 +262,23 @@
       "cold": "Cold Brews",
       "pastry": "Atelier Pastries"
     },
+    "spotlight": {
+      "eyebrow": "Atelier Signatures",
+      "note": "Three recipes crafted in Nicosia"
+    },
+    "filters": {
+      "categories": "Menu categories",
+      "serve": "Serving style",
+      "all": "All"
+    },
+    "serve": {
+      "all": "All",
+      "hot": "Hot",
+      "iced": "Iced",
+      "baked": "Baked"
+    },
+    "empty": "No items match this filter.",
+    "resetFilters": "Reset filters",
     "currency": "₺",
     "seasonal": "Seasonal",
     "house": "House-made"
@@ -308,6 +356,7 @@
       "phone": "+90 392 000 00 00",
       "email": "atolye@surlarici.coffee"
     },
+    "socialLabel": "Social & Direct Message",
     "map": {
       "title": "Map of walled Nicosia",
       "walls": "Venetian Walls · 1567",
@@ -335,6 +384,7 @@
       "volume": "Estimated monthly volume (kg)",
       "date": "Date",
       "guests": "Guests",
+      "guestCount": "{count, plural, one {# guest} other {# guests}}",
       "message": "Your message",
       "submit": "Send",
       "submitting": "Sending…",
@@ -367,6 +417,21 @@
     "rights": "All rights reserved.",
     "coords": "35°10′34″N · 33°21′49″E",
     "credits": "Designed and roasted in Nicosia."
+  },
+  "ui": {
+    "calendar": {
+      "placeholder": "Select a date",
+      "dialogLabel": "Calendar date picker",
+      "prevMonth": "Previous month",
+      "nextMonth": "Next month",
+      "today": "Today",
+      "clear": "Clear"
+    },
+    "whatsapp": {
+      "label": "WhatsApp",
+      "aria": "Message us on WhatsApp",
+      "prefill": "Hello SURLARİÇİ, I would like to ask about the atelier."
+    }
   },
   "notFound": {
     "title": "This street is a dead end.",

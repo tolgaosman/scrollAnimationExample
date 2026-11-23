@@ -11,6 +11,7 @@ import { AnimatePresence, motion } from "motion/react";
 import { useTranslations } from "next-intl";
 import { useEffect, useRef } from "react";
 import { WallMark } from "@/components/brand/WallMark";
+import { SocialLinks } from "@/components/ui/SocialLinks";
 import { Link, usePathname } from "@/i18n/navigation";
 import { ease } from "@/lib/motion";
 import { LocaleSwitcher } from "./LocaleSwitcher";
@@ -174,6 +175,7 @@ export function MenuDrawer({ open, onClose }: { open: boolean; onClose: () => vo
                   {tc("hours.sunday")} · {tc("hours.sundayTime")}
                 </p>
               </div>
+              <SocialLinks tone="dark" compact className="pt-2" />
             </motion.aside>
           </div>
         </motion.div>

@@ -49,9 +49,9 @@ export function MaskedLines({
       {lines.map((line, i) => (
         <motion.span
           key={i}
-          // Headroom inside the mask (pt) so caps, accents and Turkish dots aren't
-          // shaved off by tight display leading; -mt cancels it out in the layout.
-          className="-mt-[0.12em] block overflow-hidden pb-[0.1em] pt-[0.12em]"
+          // Generous headroom inside the mask (pt) so uppercase Turkish İ, Ö, Ü, Ğ
+          // dots and Ç/Ş cedillas are never shaved off by tight display leading.
+          className="-mt-[0.26em] block overflow-hidden pb-[0.14em] pt-[0.26em]"
           initial="hidden"
           whileInView="shown"
           viewport={{ once: true, margin: "0px 0px -8% 0px" }}

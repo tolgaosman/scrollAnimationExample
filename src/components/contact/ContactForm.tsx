@@ -9,8 +9,10 @@
  */
 import { AnimatePresence, LayoutGroup, motion } from "motion/react";
 import { useTranslations } from "next-intl";
-import { useId, useState, type ReactNode } from "react";
+import { useId, useMemo, useState, type ReactNode } from "react";
 import { submitContact } from "@/app/[locale]/iletisim/actions";
+import { CustomDatePicker } from "@/components/ui/CustomDatePicker";
+import { CustomSelect } from "@/components/ui/CustomSelect";
 import {
   contactSchema,
   emptyContact,
@@ -79,9 +81,18 @@ export function ContactForm() {
   };
 
   const err = (f: ContactField) => (touched[f] && errors[f] ? t(`errors.${errors[f]!}`) : undefined);
+  const guestOptions = useMemo(
+    () =>
+      Array.from({ length: 12 }, (_, i) => ({
+        value: String(i + 1),
+        label: t("guestCount", { count: i + 1 }),
+        meta: String(i + 1).padStart(2, "0"),
+      })),
+    [t],
+  );
 
   return (
-    <div className="relative">
+    <div className="relative border border-ink/15 bg-paper-deep/35 p-6 md:p-8">
       <AnimatePresence mode="wait" initial={false}>
         {status === "success" ? (
           <motion.div
@@ -193,21 +204,30 @@ export function ContactForm() {
               <AnimatePresence mode="popLayout" initial={false}>
                 {values.intent === "reservation" && (
                   <Reveal key="reservation">
-                    <div className="grid grid-cols-2 gap-6">
+                    <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
                       <Field label={t("date")} error={err("date")}>
                         {(id, describedBy) => (
-                          <input id={id} type="date" aria-describedby={describedBy} aria-invalid={!!err("date")}
-                            value={values.date} onChange={(e) => update("date", e.target.value)} onBlur={() => blur("date")} className={inputCls} />
+                          <CustomDatePicker
+                            id={id}
+                            value={values.date}
+                            onChange={(v) => update("date", v)}
+                            onBlur={() => blur("date")}
+                            describedBy={describedBy}
+                            invalid={!!err("date")}
+                          />
                         )}
                       </Field>
                       <Field label={t("guests")} error={err("guests")}>
                         {(id, describedBy) => (
-                          <select id={id} aria-describedby={describedBy} aria-invalid={!!err("guests")}
-                            value={values.guests} onChange={(e) => update("guests", e.target.value)} onBlur={() => blur("guests")} className={inputCls}>
-                            {Array.from({ length: 12 }, (_, i) => (
-                              <option key={i + 1} value={String(i + 1)}>{i + 1}</option>
-                            ))}
-                          </select>
+                          <CustomSelect
+                            id={id}
+                            value={values.guests}
+                            options={guestOptions}
+                            onChange={(v) => update("guests", v)}
+                            onBlur={() => blur("guests")}
+                            describedBy={describedBy}
+                            invalid={!!err("guests")}
+                          />
                         )}
                       </Field>
                     </div>
@@ -357,11 +377,10 @@ function Reveal({ children }: { children: ReactNode }) {
   return (
     <motion.div
       className="sm:col-span-2"
-      initial={{ opacity: 0, height: 0 }}
-      animate={{ opacity: 1, height: "auto" }}
-      exit={{ opacity: 0, height: 0 }}
-      transition={{ duration: 0.45, ease: ease.outQuint }}
-      style={{ overflow: "hidden" }}
+      initial={{ opacity: 0, y: -8 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -8 }}
+      transition={{ duration: 0.35, ease: ease.outQuint }}
     >
       <div className="pt-1">{children}</div>
     </motion.div>

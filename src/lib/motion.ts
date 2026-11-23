@@ -32,7 +32,9 @@ export const spring = {
  * Lower stiffness + moderate damping = the frame index "trails" the
  * scrollbar slightly, like a heavy flywheel, then settles without bounce.
  */
-export const scrubSpring = { stiffness: 110, damping: 26, mass: 0.55, restDelta: 0.0001 };
+export const scrubSpring = { stiffness: 135, damping: 28, mass: 0.45, restDelta: 0.0002 };
+/** Snappier, lighter spring for mobile touch scrolling. */
+export const scrubTouchSpring = { stiffness: 210, damping: 28, mass: 0.28, restDelta: 0.0005 };
 export const duration = { fast: 0.25, base: 0.6, slow: 1.1 };
 
 /** Stagger helper for children of a revealed container. */

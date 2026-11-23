@@ -43,7 +43,7 @@ function useWindow(progress: MotionValue<number>, [a, b]: readonly [number, numb
 export function PhaseOverlays({ progress, layout, revealed }: OverlayProps) {
   const portrait = layout ? layout.viewport.width < layout.viewport.height : false;
   return (
-    <div className="pointer-events-none absolute inset-0 text-ink">
+    <div className="pointer-events-none absolute inset-0 z-20 text-ink">
       <HeroPhase progress={progress} revealed={revealed} />
       {CALLOUTS.map((phase) => (
         <Callout
@@ -86,10 +86,9 @@ function HeroPhase({ progress, revealed }: { progress: MotionValue<number>; reve
         </div>
         <h1 className="flex flex-wrap items-end justify-between gap-x-6 gap-y-2">
           <span
-            // pt makes room for the dots on İ inside the overflow mask; tracking is
-            // looser than .display so L and A don't fuse into a ligature-like "Ł".
-            // Min size is low enough that the word (≈5em wide) still fits a 320px phone.
-            className="display -mb-[0.06em] flex overflow-hidden pt-[0.14em] text-[clamp(2.75rem,16.5vw,9rem)] tracking-[-0.012em] md:text-[clamp(6rem,10.5vw,12.5rem)] short:text-[4.5rem]"
+            // Generous top headroom (pt-[0.34em]) ensures the dots above Turkish İ
+            // are never clipped by the reveal mask, and pb-[0.14em] protects Ç's cedilla.
+            className="display -mb-[0.14em] -mt-[0.34em] flex overflow-hidden pb-[0.14em] pt-[0.34em] text-[clamp(2.65rem,15.5vw,8rem)] tracking-[-0.012em] md:text-[clamp(4.75rem,9vw,9.75rem)] short:text-[4.25rem]"
             aria-label={t("titleA")}
           >
             {letters.map((ch, i) => (

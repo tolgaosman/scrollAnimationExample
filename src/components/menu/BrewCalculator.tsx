@@ -45,7 +45,7 @@ export function BrewCalculator() {
 
   return (
     <section id="calculator" className="bg-ink text-paper" aria-labelledby="calc-title">
-      <div className="shell grid-arch gap-y-12 py-24 md:py-32">
+      <div className="shell grid-arch gap-y-10 py-16 md:py-22">
         <div className="col-span-12 lg:col-span-5">
           <p className="eyebrow text-copper-light">{t("eyebrow")}</p>
           <h2 id="calc-title" className="display mt-4 text-headline">

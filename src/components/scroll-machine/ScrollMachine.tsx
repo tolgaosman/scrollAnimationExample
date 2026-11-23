@@ -28,7 +28,7 @@ import { Hud } from "./Hud";
 import { PhaseOverlays } from "./PhaseOverlays";
 import { Preloader } from "./Preloader";
 import { useFramePreloader } from "./useFramePreloader";
-import { scrubSpring } from "@/lib/motion";
+import { scrubSpring, scrubTouchSpring } from "@/lib/motion";
 import { useMediaQuery } from "@/lib/useMediaQuery";
 
 export interface FrameSequenceProps {
@@ -45,7 +45,7 @@ export function ScrollMachine({ sequence }: { sequence: FrameSequenceProps }) {
   const reduceMotion = useReducedMotion();
   const coarse = useMediaQuery("(pointer: coarse)");
   const { scrollYProgress } = useScroll({ target: sectionRef, offset: ["start start", "end end"] });
-  const smoothed = useSpring(scrollYProgress, scrubSpring);
+  const smoothed = useSpring(scrollYProgress, coarse ? scrubTouchSpring : scrubSpring);
   const progress = reduceMotion ? scrollYProgress : smoothed;
 
   const [layout, setLayout] = useState<Fit | null>(null);
@@ -63,7 +63,7 @@ export function ScrollMachine({ sequence }: { sequence: FrameSequenceProps }) {
       <Preloader progress={loadProgress} ready={ready} total={sequence.urls.length} />
       <section
         ref={sectionRef}
-        className="relative h-[500vh] bg-studio"
+        className="relative h-[250svh] touch-pan-y bg-studio md:h-[390vh]"
         style={studio ? { backgroundColor: studio } : undefined}
         aria-label={t("subtitle")}
       >
@@ -74,9 +74,8 @@ export function ScrollMachine({ sequence }: { sequence: FrameSequenceProps }) {
               imageSize={imageSize}
               progress={progress}
               label={t("canvasLabel")}
-              // Cross-fading two 24-fps frames ghosts fast-moving parts and doubles
-              // the paint cost; touch devices show whole frames instead.
-              blend={!reduceMotion && !coarse}
+              // Single crisp frames eliminate double-image ghosting on moving parts.
+              blend={false}
               onLayout={onLayout}
               onBackground={setStudio}
             />
