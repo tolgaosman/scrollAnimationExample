@@ -44,15 +44,24 @@
 
 @layer base {
   html {
-    /* Proportional fluid scaling: tighter on narrow phones (~13.5px @360px),
-       16px at 1440px, and gently scales up on large monitors (up to 18px). */
-    font-size: clamp(13.5px, 0.25vw + 12.4px, 18px);
+    /* True proportional scaling: the mobile layout is designed at 390px and
+       the desktop layout at 1440×900, where 1rem = 16px. Every screen sees the
+       same composition, just bigger or smaller. 12px floor for legibility. */
+    font-size: max(12px, calc(100vw * 16 / 390));
     background: var(--color-paper);
     color: var(--color-ink);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
     scrollbar-gutter: stable;
+  }
+
+  /* Desktop layout (Tailwind md). Scale by the smaller of width/height ratio
+     so short-but-wide windows still fit the hero. No upper cap. */
+  @media (min-width: 48rem) {
+    html {
+      font-size: max(12px, min(calc(100vw * 16 / 1440), calc(100vh * 16 / 900)));
+    }
   }
 
   body {
