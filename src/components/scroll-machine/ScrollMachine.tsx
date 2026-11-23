@@ -159,7 +159,7 @@ export function ScrollMachine({ sequence }: { sequence: FrameSequenceProps }) {
             participate directly in the 12-column architectural grid.
            ============================================================ */}
           <div ref={mobileRunwayRef} data-hero-runway className="relative h-[360svh] lg:contents">
-            <div className="sticky top-14 z-10 flex flex-col gap-3 pb-3 pt-1 lg:contents">
+            <div className="sticky top-16 z-10 flex flex-col gap-3 pb-3 pt-1 lg:contents">
               {/* CHILD 1 — HERO HEADER (Eyebrow, Title, Subtitle) */}
               <div className="flex flex-col justify-end pt-1 lg:col-span-5 lg:col-start-1 lg:row-start-1 lg:min-h-[52svh] lg:pt-20">
                 <p className="eyebrow flex items-center gap-2.5 text-copper">
