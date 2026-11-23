@@ -175,15 +175,6 @@ export function BrewCalculator() {
           </div>
         </div>
       </div>
-
-      {/* Architectural divider separating the dark calculator from the dark footer */}
-      <div className="shell" aria-hidden="true">
-        <div className="relative flex items-center justify-center py-1">
-          <div className="h-px w-full bg-paper/15" />
-          <span className="mx-4 block size-1.5 shrink-0 rotate-45 bg-copper-light" />
-          <div className="h-px w-full bg-paper/15" />
-        </div>
-      </div>
     </section>
   );
 }

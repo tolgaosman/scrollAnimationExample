@@ -6,6 +6,7 @@ import { NAV_ITEMS } from "./nav-items";
 
 export async function Footer() {
   const t = await getTranslations("footer");
+  const tb = await getTranslations("brand");
   const tn = await getTranslations("nav");
   const tc = await getTranslations("contact");
   const year = new Date().getFullYear();
@@ -60,14 +61,22 @@ export async function Footer() {
       </div>
 
       <div className="shell" aria-hidden="true">
-        <p className="display select-none whitespace-nowrap text-[17.5vw] leading-[0.8] text-paper/[0.06]">
-          SURLARİÇİ
+        <div className="flex items-center justify-center py-1">
+          <div className="h-px w-full bg-paper/15" />
+          <span className="mx-4 block size-1.5 shrink-0 rotate-45 bg-copper-light" />
+          <div className="h-px w-full bg-paper/15" />
+        </div>
+      </div>
+
+      <div className="shell" aria-hidden="true">
+        <p className="display select-none whitespace-nowrap text-[10.4vw] leading-[0.86] text-paper/[0.06]">
+          CYPRUS ROASTERS
         </p>
       </div>
 
       <div className="shell flex flex-col gap-2 border-t border-paper/10 py-5 text-xs text-paper/45 md:flex-row md:justify-between">
         <p>
-          © {year} SURLARİÇİ // Lefkon Roasters & Atelier. {t("rights")}
+          © {year} Cyprus Roasters — {tb("footerSub")}. {t("rights")}
         </p>
         <p>{t("credits")}</p>
       </div>
