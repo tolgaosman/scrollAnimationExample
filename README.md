@@ -42,13 +42,12 @@ Everything lives in [`src/components/scroll-machine/`](src/components/scroll-mac
 | [`src/lib/frames.ts`](src/lib/frames.ts) | Reads the manifest at build time and hands the client a URL list, so no filename is hard-coded. |
 | `useFramePreloader.ts` | Loads and `decode()`s the frames with a concurrency pool. Phones unlock after every 2nd frame, then the rest stream in behind. Failed frames retry, then borrow a neighbour. |
 | `Preloader.tsx` | The 000 → 100 counter; it locks scroll until the frames are ready. |
-| `ScrollMachine.tsx` | The machine is a sticky 100svh canvas pinned *behind* normal flowing content (`HeroIntro` + the café cards). The page scrolls like any other; a `useScroll` → `useSpring` chain over the section produces one `progress` value that drives the canvas and HUD. |
-| `timeline.ts` | **The choreography, as data:** scroll→frame keyframes and fit/zoom per orientation. |
-| `geometry.ts` | Pure cover/contain fit math used by the canvas. |
+| `ScrollMachine.tsx` | A 500vh section with a sticky 100svh stage. Its `useScroll` → `useSpring` chain produces one `progress` value that drives everything else. |
+| `timeline.ts` | **The choreography, as data:** scroll→frame keyframes, phase windows, per-part anchor tracks, and fit/zoom per orientation. |
+| `geometry.ts` | Pure cover/contain fit math plus `imageToScreen()`, shared by the canvas and the HTML overlays. |
 | `FrameCanvas.tsx` | The render loop. It sizes the backing store for devicePixelRatio (capped at the footage's own resolution), always paints the exact frame for the scroll position at most once per animation frame, and keeps the frames ahead pre-decoded. On desktop it cross-fades neighbouring frames. It never triggers a React render while scrolling. Add `?debug` to the URL for a live fps / paint-cost readout. |
 | `drawFrame.ts` | Edge extension: the frame's own border pixels are stretched to fill any gap, so the studio background has no visible edge at any aspect ratio. |
-| `HeroIntro.tsx` | The opening screen: one viewport of title and lede, in normal flow, that scrolls away. |
-| `CafeStops.tsx` | Three paper cards (where / when / what) that scroll past the machine while it comes apart. |
+| `PhaseOverlays.tsx` | The four story phases. Callout leader lines follow their part frame by frame (see `anchorAt`). |
 | `Hud.tsx` | Frame counter and progress rail. |
 
 ### Ideas worth stealing
@@ -58,7 +57,7 @@ Everything lives in [`src/components/scroll-machine/`](src/components/scroll-mac
 - **Check the footage for cadence before blaming the code.** This AI-generated source moves in steps every 4th frame during its slow passages (near-identical frames in between). Scrubbed slowly that looks like the machine twitching. `prepare-frames.mjs` runs a temporal `atadenoise` pass that turns those steps into continuous drift while leaving fast motion sharp.
 - **Don't paint finer than the footage.** A canvas at 3× DPR showing 1280-px frames costs fill-rate on every frame and shows no extra detail.
 - **Remap scroll to frames with keyframes, not a straight line.** The source footage spends half its length on slow drift. `FRAME_KEYS` spreads out the dramatic part.
-- **Backdrop, not gate.** The animation is a sticky background (`-mb-[100svh]` gives it zero flow height) behind content that scrolls normally, so every scroll tick delivers real information instead of making the visitor wait out an effect.
+- **One source of truth for layout.** The canvas and the overlays both call `computeFit()`, so callouts can point at real pixels.
 - **Observe the mask, not the masked element.** A line clipped by `overflow: hidden` never intersects the viewport, so put `whileInView` on its wrapper. The comment in `src/components/ui/Reveal.tsx` explains this.
 
 ## Contact form and security

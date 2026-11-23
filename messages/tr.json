@@ -58,30 +58,41 @@
     "titleB": "ROASTERS",
     "subtitle": "Lefkoşa'nın Kalbinde Mühendislik ve Zanaat",
     "lede": "Venedik surlarının içinde, sarı taştan bir atölyede; her fincanın arkasındaki makineyi parça parça açıyoruz.",
-    "scroll": "Kaydırın — atölyeye girin",
-    "progress": "Atölye turu",
+    "scroll": "Kaydırın — makine açılsın",
+    "progress": "Sökülme",
     "canvasLabel": "Üç gruplu espresso makinesi; kaydırdıkça parçalarına ayrılıyor."
   },
+  "callouts": {
+    "boiler": {
+      "index": "01 / Isı",
+      "title": "Bakır Isı Eşanjörlü Kazan & PID Termal Kararlılık",
+      "body": "Kalın cidarlı bakır kazan, ısıyı bir taş duvar gibi tutar. PID kontrolcüsü saniyede onlarca kez ölçer; sıcaklık, fincandan fincana sapmadan kalır.",
+      "spec": "±0,1 °C · PID · 1,8 L bakır"
+    },
+    "groups": {
+      "index": "02 / Akış",
+      "title": "3 Gruplu E61 Pirinç Başlıklar & Ceviz Portafiltreler",
+      "body": "Termosifonla ısınan dört kilo pirinç, suyu ilk damladan itibaren dengeli taşır. Ceviz saplar ise Lefkoşa'lı bir ustanın torna tezgâhından, tek tek.",
+      "spec": "E61 · 3 grup · el tornası ceviz"
+    },
+    "pump": {
+      "index": "03 / Basınç",
+      "title": "Döner Kanatlı Pompa & Dijital Basınç Profilleme",
+      "body": "Sessiz döner kanatlı pompa, ön demlemeden doruğa ve geri çekilişe kadar basıncı bir nefes gibi yönetir. Her çekirdeğin kendi eğrisi vardır.",
+      "spec": "9 bar · ön demleme 3 bar · 25–30 sn"
+    },
+    "outro": "Parçaların toplamı değil; parçaların arasındaki özen."
+  },
   "home": {
-    "stops": {
-      "location": {
-        "index": "01 / Konum",
-        "title": "Surların içinde, sarı taştan bir kapı.",
-        "body": "Arasta'da, Zahra Sokak No. 11. Selimiye'den yürüyün; kavurma kokusu yolu gösterir.",
-        "cta": "Yol tarifi"
-      },
-      "roast": {
-        "index": "02 / Kavurma",
-        "title": "Her perşembe sabahı, 07:30'da.",
-        "body": "Küçük partiler halinde, kavurmanın hemen ardından; fincana en geç 72 saatte ulaşır.",
-        "cta": "Çekirdekleri keşfedin"
-      },
-      "bar": {
-        "index": "03 / Bar",
-        "title": "Dört yöntem, tek tezgâh.",
-        "body": "Espresso, pour-over, soğuk demleme ve kum ocağında Kıbrıs kahvesi. Hangisi olursa olsun, kahve sizin için taze.",
-        "cta": "Menüye göz atın"
-      }
+    "strip": {
+      "locLabel": "Konum",
+      "locValue": "Arasta · Zahra Sk. No. 11",
+      "batchLabel": "Kavurma",
+      "batchValue": "12 kg Küçük Parti",
+      "roastLabel": "Kavurma Günü",
+      "roastValue": "Her Perşembe · 07:30",
+      "waterLabel": "Su Profili",
+      "waterValue": "85 ppm · 93 °C PID"
     },
     "manifesto": {
       "eyebrow": "Manifesto",
@@ -123,29 +134,25 @@
           "name": "Espresso",
           "tag": "Yoğun · 30 sn",
           "body": "Dokuz bar, on sekiz gram, otuz saniye. Krema kızıl kahve, bitiş bitter çikolata.",
-          "note": "House Blend No. 01",
-          "setup": "9 bar"
+          "note": "House Blend No. 01"
         },
         "pourover": {
           "name": "Pour-Over",
           "tag": "Berrak · 3 dk",
           "body": "V60 ve Kalita Wave ile yavaş döküm. Çiçeksi, çay gibi, katman katman açılan bir fincan.",
-          "note": "Yirgacheffe · Mikro-Lot",
-          "setup": "V60 / Kalita"
+          "note": "Yirgacheffe · Mikro-Lot"
         },
         "coldbrew": {
           "name": "Soğuk Demleme",
           "tag": "Sabırlı · 16 sa",
           "body": "On altı saat soğuk suda bekleyen çekirdek; ağustos öğlesinde Lefkoşa'nın en serin gölgesi.",
-          "note": "Guatemala Antigua",
-          "setup": "16 sa demleme"
+          "note": "Guatemala Antigua"
         },
         "cezve": {
           "name": "Kıbrıs Kahvesi",
-          "tag": "Köklü · Kum ocağı",
+          "tag": "Köklü · Kül ateşi",
           "body": "Bakır cezvede, kum ocağında, köpüğü sabırla toplanmış. Atölyenin en eski tarifi.",
-          "note": "Orta-Koyu · İnce Öğütüm",
-          "setup": "Kum ocağı"
+          "note": "Orta-Koyu · İnce Öğütüm"
         }
       }
     },
@@ -253,7 +260,7 @@
       "signature": "İmza İçecekler",
       "classics": "Klasikler",
       "cold": "Soğuk Demlemeler",
-      "pastry": "Atölye Fırınından"
+      "pastry": "Atölye Pastaneleri"
     },
     "spotlight": {
       "eyebrow": "Atölye İmzaları",

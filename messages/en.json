@@ -58,30 +58,41 @@
     "titleB": "ROASTERS",
     "subtitle": "Engineering & Craft in the Heart of Nicosia",
     "lede": "Inside the Venetian walls, in a workshop of golden sandstone, we take apart the machine behind every cup — piece by piece.",
-    "scroll": "Scroll — step into the atelier",
-    "progress": "Atelier tour",
+    "scroll": "Scroll — open the machine",
+    "progress": "Teardown",
     "canvasLabel": "A three-group espresso machine that comes apart into its components as you scroll."
   },
+  "callouts": {
+    "boiler": {
+      "index": "01 / Heat",
+      "title": "Copper Heat-Exchange Boiler & PID Thermal Precision",
+      "body": "A thick-walled copper boiler holds heat the way old stone does. A PID controller samples dozens of times a second, so temperature never drifts from one cup to the next.",
+      "spec": "±0.1 °C · PID · 1.8 L copper"
+    },
+    "groups": {
+      "index": "02 / Flow",
+      "title": "Triple E61 Brass Group Heads & Hand-Turned Walnut Portafilters",
+      "body": "Four kilos of thermosiphon-heated brass carry water evenly from the very first drop. The walnut handles are turned one by one on a Nicosia craftsman's lathe.",
+      "spec": "E61 · 3 groups · hand-turned walnut"
+    },
+    "pump": {
+      "index": "03 / Pressure",
+      "title": "Rotary Vane Pump & 9‑Bar Extraction Profiling",
+      "body": "A near-silent rotary vane pump shapes pressure like a breath — pre-infusion, peak, decline. Every coffee gets its own curve.",
+      "spec": "9 bar · 3 bar pre-infusion · 25–30 s"
+    },
+    "outro": "Not the sum of the parts — the care between them."
+  },
   "home": {
-    "stops": {
-      "location": {
-        "index": "01 / Find us",
-        "title": "A golden-stone doorway inside the walls.",
-        "body": "In the Arasta, at Zahra Street No. 11. Walk from Selimiye; the scent of roasting points the way.",
-        "cta": "Get directions"
-      },
-      "roast": {
-        "index": "02 / Roast",
-        "title": "Every Thursday morning, 07:30.",
-        "body": "Small batches, roasted and bagged straight away, in your cup within 72 hours at most.",
-        "cta": "Explore the beans"
-      },
-      "bar": {
-        "index": "03 / Bar",
-        "title": "Four methods, one counter.",
-        "body": "Espresso, pour-over, cold brew and Cypriot coffee on a sand stove. Whichever you choose, it is fresh for you.",
-        "cta": "Browse the menu"
-      }
+    "strip": {
+      "locLabel": "Location",
+      "locValue": "Arasta · Zahra St. No. 11",
+      "batchLabel": "Roasting",
+      "batchValue": "12 kg Small Batch",
+      "roastLabel": "Roast Day",
+      "roastValue": "Every Thursday · 07:30",
+      "waterLabel": "Water Profile",
+      "waterValue": "85 ppm · 93 °C PID"
     },
     "manifesto": {
       "eyebrow": "Manifesto",
@@ -123,29 +134,25 @@
           "name": "Espresso",
           "tag": "Intense · 30 s",
           "body": "Nine bar, eighteen grams, thirty seconds. Russet crema, a finish of dark chocolate.",
-          "note": "House Blend No. 01",
-          "setup": "9 bar"
+          "note": "House Blend No. 01"
         },
         "pourover": {
           "name": "Pour-Over",
           "tag": "Clear · 3 min",
           "body": "Slow pours through V60 and Kalita Wave. Floral, tea-like, a cup that opens in layers.",
-          "note": "Yirgacheffe · Micro-Lot",
-          "setup": "V60 / Kalita"
+          "note": "Yirgacheffe · Micro-Lot"
         },
         "coldbrew": {
           "name": "Cold Brew",
           "tag": "Patient · 16 hrs",
           "body": "Sixteen hours steeped in cold water — the coolest shade in Nicosia on an August afternoon.",
-          "note": "Guatemala Antigua",
-          "setup": "16 h steep"
+          "note": "Guatemala Antigua"
         },
         "cezve": {
           "name": "Cypriot Coffee",
           "tag": "Rooted · Sand-fired",
           "body": "Brewed in a copper cezve over hot sand, its foam gathered with patience. The workshop's oldest recipe.",
-          "note": "Medium-Dark · Extra Fine",
-          "setup": "Sand-fired"
+          "note": "Medium-Dark · Extra Fine"
         }
       }
     },

@@ -7,7 +7,7 @@
  *
  * Checks every route in both locales for HTTP 200, correct <html lang>, an
  * <h1>, zero console errors / page errors / failed requests; then exercises
- * the canvas hero (preload, non-blank paint, the three café cards scrolling past the machine), the
+ * the canvas hero (preload, non-blank paint, all four scroll phases), the
  * locale switcher, the menu drawer, the brew calculator and the contact form.
  * A mobile pass (touch, @3x) at 320–844 px checks the hero at full DPR, every
  * scroll phase's copy staying on screen, fixed header/drawer overflow, clipped
@@ -113,37 +113,27 @@ for (const locale of ["tr", "en"]) {
   check(stats.range > 60, `canvas painted a frame (luma range ${stats.range.toFixed(0)})`);
   check(stats.darkestBorder > 120, `canvas edges blend into studio grey (darkest border luma ${stats.darkestBorder.toFixed(0)})`);
 
-  // The page scrolls normally: bring each café card's heading into view and
-  // check it is readable, while the machine behind it advances frame by frame.
-  const STOPS = locale === "tr"
-    ? [["location", "Surların içinde"], ["roast", "Her perşembe sabahı"], ["bar", "Dört yöntem"]]
-    : [["location", "golden-stone doorway"], ["roast", "Every Thursday morning"], ["bar", "Four methods"]];
-  const frameAt = () => page.evaluate(() => Number(document.querySelector("canvas").dataset.frame ?? 0));
-  const frames = [await frameAt()];
-  await page.screenshot({ path: path.join(OUT, `hero-${locale}-hero.png`) });
-  for (const [name, text] of STOPS) {
-    await page.evaluate((txt) => {
-      const el = [...document.querySelectorAll("h2")].find((n) => n.textContent?.includes(txt));
-      const r = el.getBoundingClientRect();
-      window.scrollBy(0, r.top - innerHeight * 0.3);
-    }, text);
-    await page.waitForTimeout(1500);
+  const sectionHeight = await page.evaluate(() => document.querySelector("section").getBoundingClientRect().height);
+  const vh = 900;
+  const phases = [
+    { p: 0.05, name: "hero", text: locale === "tr" ? "SURLARİÇİ" : "SURLARİÇİ" },
+    { p: 0.36, name: "boiler", text: locale === "tr" ? "Bakır Isı Eşanjörlü Kazan" : "Copper Heat-Exchange Boiler" },
+    { p: 0.61, name: "groups", text: locale === "tr" ? "3 Gruplu E61" : "Triple E61" },
+    { p: 0.85, name: "pump", text: locale === "tr" ? "Döner Kanatlı Pompa" : "Rotary Vane Pump" },
+  ];
+  for (const ph of phases) {
+    await page.evaluate((y) => window.scrollTo(0, y), ph.p * (sectionHeight - vh));
+    await page.waitForTimeout(1400); // let the scrub spring settle
     const visible = await page.evaluate((txt) => {
-      const el = [...document.querySelectorAll("h2")].find((n) => n.textContent?.includes(txt));
-      if (!el) return null;
+      const el = [...document.querySelectorAll("h1, h2")].find((n) => n.textContent?.includes(txt));
+      if (!el) return 0;
       let o = 1;
       for (let n = el; n; n = n.parentElement) o *= Number(getComputedStyle(n).opacity);
-      const b = el.getBoundingClientRect();
-      return { o, inside: b.top >= 0 && b.bottom <= innerHeight };
-    }, text);
-    check(visible && visible.o > 0.6 && visible.inside, `stop "${name}" card visible and on screen`);
-    frames.push(await frameAt());
-    await page.screenshot({ path: path.join(OUT, `hero-${locale}-${name}.png`) });
+      return o;
+    }, ph.text);
+    check(visible > 0.6, `phase "${ph.name}" overlay visible (opacity ${visible.toFixed(2)})`);
+    await page.screenshot({ path: path.join(OUT, `hero-${locale}-${ph.name}.png`) });
   }
-  check(
-    frames.every((f, i) => i === 0 || f > frames[i - 1]),
-    `machine keeps coming apart while the page scrolls (frames ${frames.join(" → ")})`,
-  );
   check(problems.length === 0, `hero no errors${problems.length ? `\n      ${problems.join("\n      ")}` : ""}`);
   await context.close();
 }
@@ -169,12 +159,13 @@ console.log("\n■ Interactions");
   await page.keyboard.press("Escape");
   await page.waitForTimeout(800);
 
-  // Desktop primary navigation. (The nav auto-hides while scrolled down; scrolling up reveals it.)
+  // Drawer navigation. (The nav auto-hides while scrolled down; scrolling up reveals it.)
   await page.evaluate(() => window.scrollTo(0, 0));
   await page.waitForTimeout(700);
-  await page.locator("header nav").getByRole("link", { name: "Team" }).click();
+  await page.locator("header button[aria-controls='menu-drawer']").click();
+  await page.locator("#menu-drawer").getByRole("link", { name: "Team" }).click();
   await page.waitForURL("**/en/team", { timeout: 15_000 });
-  check(page.url().endsWith("/en/team"), "desktop nav link navigates to /en/team");
+  check(page.url().endsWith("/en/team"), "drawer link navigates to /en/team");
 
   // Brew calculator.
   await page.goto(BASE + "/menu", { waitUntil: "networkidle" });
@@ -204,10 +195,11 @@ console.log("\n■ Interactions");
 // Real phone emulation: touch, @3x, overlay scrollbars. Covers the narrowest
 // phones, a tablet and a phone held sideways.
 const MOBILE = [[320, 568], [360, 740], [390, 844], [768, 1024], [844, 390]];
-const STOPS_TR = [
-  ["location", "Surların içinde"],
-  ["roast", "Her perşembe sabahı"],
-  ["bar", "Dört yöntem"],
+const HERO_PHASES_TR = [
+  { p: 0.05, name: "hero", text: "SURLARİÇİ" },
+  { p: 0.36, name: "boiler", text: "Bakır Isı Eşanjörlü Kazan" },
+  { p: 0.61, name: "groups", text: "3 Gruplu E61" },
+  { p: 0.85, name: "pump", text: "Döner Kanatlı Pompa" },
 ];
 
 /** Every visible element inside `selector` must end within the viewport. */
@@ -254,26 +246,24 @@ for (const [w, h] of MOBILE) {
   const headerOver = await fixedOverflow(page, "header");
   check(headerOver <= 1, `${tag} header fits the viewport (${headerOver}px over)`);
 
-  await page.screenshot({ path: path.join(OUT, `hero-${w}x${h}-hero.png`) });
-  for (const [name, text] of STOPS_TR) {
-    await page.evaluate((txt) => {
-      const el = [...document.querySelectorAll("h2")].find((n) => n.textContent?.includes(txt));
-      window.scrollBy(0, el.getBoundingClientRect().top - innerHeight * 0.2);
-    }, text);
+  const sectionHeight = await page.evaluate(() => document.querySelector("section").getBoundingClientRect().height);
+  for (const ph of HERO_PHASES_TR) {
+    await page.evaluate((y) => window.scrollTo(0, y), ph.p * (sectionHeight - h));
     await page.waitForTimeout(1400);
     const r = await page.evaluate((txt) => {
-      const el = [...document.querySelectorAll("h2")].find((n) => n.textContent?.includes(txt));
+      const el = [...document.querySelectorAll("h1, h2")].find((n) => n.textContent?.includes(txt));
       if (!el) return null;
       let o = 1;
       for (let n = el; n; n = n.parentElement) o *= Number(getComputedStyle(n).opacity);
-      // The whole card (eyebrow → button) must be reachable on screen, not just the heading.
-      const b = el.parentElement.getBoundingClientRect();
-      const out = Math.max(-b.left, b.right - innerWidth, 0);
+      // The whole copy block (eyebrow → spec line) must be on screen, not just the heading.
+      const block = el.closest("h1") ? el : el.parentElement;
+      const b = block.getBoundingClientRect();
+      const out = Math.max(-b.top, b.bottom - innerHeight, -b.left, b.right - innerWidth, 0);
       return { o, out: Math.round(out) };
-    }, text);
-    check(r && r.o > 0.6, `${tag} stop "${name}" visible (opacity ${r?.o.toFixed(2)})`);
-    check(r && r.out <= 1, `${tag} stop "${name}" card inside viewport width (${r?.out}px out)`);
-    await page.screenshot({ path: path.join(OUT, `hero-${w}x${h}-${name}.png`) });
+    }, ph.text);
+    check(r && r.o > 0.6, `${tag} phase "${ph.name}" visible (opacity ${r?.o.toFixed(2)})`);
+    check(r && r.out <= 1, `${tag} phase "${ph.name}" copy inside viewport (${r?.out}px out)`);
+    await page.screenshot({ path: path.join(OUT, `hero-${w}x${h}-${ph.name}.png`) });
   }
 
   // --- menu drawer header

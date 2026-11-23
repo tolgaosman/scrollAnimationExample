@@ -3,21 +3,16 @@
 /**
  * ScrollMachine — composition root of the scroll-scrubbed hero.
  * ------------------------------------------------------------------
- *   <section>                          ← as tall as its content
- *     <div sticky 100svh, -mb-100svh>  ← the machine, pinned behind everything
- *       <FrameCanvas/> <Hud/>
- *     <HeroIntro/>                     ← one viewport of title, scrolls away
- *     {children}                       ← café cards (CafeStops) scrolling past
- *
- * The page scrolls like any other: nothing is "locked" waiting for an
- * animation. The machine is simply the backdrop; as the visitor reads about
- * the café it comes apart behind the cards, and once the section ends the
- * canvas scrolls away with it.
+ *   <section 500vh>                ← provides scroll distance
+ *     <div sticky 100svh>          ← pinned stage
+ *       <FrameCanvas/>             ← paints frames
+ *       <PhaseOverlays/>           ← typography + callouts
+ *       <Hud/>                     ← frame counter / progress rail
  *
  * Data flow (one direction, no React state per tick):
  *   window scroll → useScroll() → scrollYProgress (0–1, raw)
  *                 → useSpring()  → progress (weighted, mechanical feel)
- *                 → canvas + HUD read `progress`
+ *                 → canvas + overlays + HUD all read `progress`
  *
  * With prefers-reduced-motion we skip the spring entirely and scrub 1:1
  * (and the canvas shows whole frames, no cross-fade). The same spring is used
@@ -26,10 +21,11 @@
  */
 import { useReducedMotion, useScroll, useSpring } from "motion/react";
 import { useTranslations } from "next-intl";
-import { useMemo, useRef, useState } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
+import type { Fit } from "./geometry";
 import { FrameCanvas } from "./FrameCanvas";
 import { Hud } from "./Hud";
-import { HeroIntro } from "./HeroIntro";
+import { PhaseOverlays } from "./PhaseOverlays";
 import { Preloader } from "./Preloader";
 import { useFramePreloader } from "./useFramePreloader";
 import { scrubSpring, scrubTouchSpring } from "@/lib/motion";
@@ -41,13 +37,7 @@ export interface FrameSequenceProps {
   height: number;
 }
 
-export function ScrollMachine({
-  sequence,
-  children,
-}: {
-  sequence: FrameSequenceProps;
-  children?: React.ReactNode;
-}) {
+export function ScrollMachine({ sequence }: { sequence: FrameSequenceProps }) {
   const t = useTranslations("hero");
   const sectionRef = useRef<HTMLElement>(null);
   const { store, progress: loadProgress, ready } = useFramePreloader(sequence.urls);
@@ -58,7 +48,9 @@ export function ScrollMachine({
   const smoothed = useSpring(scrollYProgress, coarse ? scrubTouchSpring : scrubSpring);
   const progress = reduceMotion ? scrollYProgress : smoothed;
 
+  const [layout, setLayout] = useState<Fit | null>(null);
   const [studio, setStudio] = useState<string | null>(null);
+  const onLayout = useCallback((fit: Fit) => setLayout(fit), []);
 
   // Stable identity matters: FrameCanvas re-initialises when this changes.
   const imageSize = useMemo(
@@ -71,12 +63,11 @@ export function ScrollMachine({
       <Preloader progress={loadProgress} ready={ready} total={sequence.urls.length} />
       <section
         ref={sectionRef}
-        className="relative bg-studio"
+        className="relative h-[250svh] touch-pan-y bg-studio md:h-[390vh]"
         style={studio ? { backgroundColor: studio } : undefined}
         aria-label={t("subtitle")}
       >
-        {/* Zero flow height (-mb) so the intro and cards sit on top of the pinned machine. */}
-        <div className="sticky top-0 z-0 -mb-[100svh] h-svh w-full overflow-hidden">
+        <div className="sticky top-0 h-svh w-full overflow-hidden">
           {store && (
             <FrameCanvas
               store={store}
@@ -85,14 +76,12 @@ export function ScrollMachine({
               label={t("canvasLabel")}
               // Single crisp frames eliminate double-image ghosting on moving parts.
               blend={false}
+              onLayout={onLayout}
               onBackground={setStudio}
             />
           )}
+          <PhaseOverlays progress={progress} layout={layout} revealed={ready} />
           <Hud progress={progress} frameCount={sequence.urls.length} />
-        </div>
-        <div className="relative z-20 text-ink">
-          <HeroIntro revealed={ready} />
-          {children}
         </div>
       </section>
     </>
