@@ -443,30 +443,30 @@ export function ScrollMachine({ sequence }: { sequence: FrameSequenceProps }) {
                   <p className="mt-3 text-sm leading-relaxed text-ink-soft md:text-[0.95rem]">{t("pour.body")}</p>
 
                   {/* Architectural Glass Spec Card */}
-                  <div className="mt-6 border border-ink/15 bg-ink p-4 text-paper sm:p-5">
-                    <div className="flex items-baseline justify-between gap-2 border-b border-paper/15 pb-3">
-                      <span className="eyebrow text-xs text-crema">{t("pour.recipeLabel")}</span>
-                      <span className="shrink-0 whitespace-nowrap num text-xs text-paper/75">240 ML · 1:2</span>
+                  <div className="mt-6 rounded-[1.75rem] bg-paper/55 p-4 text-ink sm:p-5">
+                    <div className="flex items-baseline justify-between gap-2 border-b border-ink/12 pb-3">
+                      <span className="eyebrow text-xs text-copper">{t("pour.recipeLabel")}</span>
+                      <span className="shrink-0 whitespace-nowrap num text-xs text-ink-soft">240 ML · 1:2</span>
                     </div>
                     <dl className="mt-4 grid grid-cols-3 gap-2 sm:gap-3">
                       <div>
-                        <dt className="eyebrow text-xs text-paper/50">{t("pour.spec1Label")}</dt>
-                        <dd className="mt-1 whitespace-nowrap num text-xs text-paper sm:text-sm">{t("pour.spec1Value")}</dd>
+                        <dt className="eyebrow text-xs text-ink-soft">{t("pour.spec1Label")}</dt>
+                        <dd className="mt-1 whitespace-nowrap num text-xs text-ink sm:text-sm">{t("pour.spec1Value")}</dd>
                       </div>
                       <div>
-                        <dt className="eyebrow text-xs text-paper/50">{t("pour.spec2Label")}</dt>
-                        <dd className="mt-1 whitespace-nowrap num text-xs text-crema sm:text-sm">{t("pour.spec2Value")}</dd>
+                        <dt className="eyebrow text-xs text-ink-soft">{t("pour.spec2Label")}</dt>
+                        <dd className="mt-1 whitespace-nowrap num text-xs text-copper sm:text-sm">{t("pour.spec2Value")}</dd>
                       </div>
                       <div>
-                        <dt className="eyebrow text-xs text-paper/50">{t("pour.spec3Label")}</dt>
-                        <dd className="mt-1 whitespace-nowrap num text-xs text-paper sm:text-sm">{t("pour.spec3Value")}</dd>
+                        <dt className="eyebrow text-xs text-ink-soft">{t("pour.spec3Label")}</dt>
+                        <dd className="mt-1 whitespace-nowrap num text-xs text-ink sm:text-sm">{t("pour.spec3Value")}</dd>
                       </div>
                     </dl>
-                    <div className="mt-5 flex flex-wrap gap-2.5 border-t border-paper/12 pt-4">
-                      <ArrowLink href={{ pathname: "/menu", hash: "calculator" }} variant="light">
+                    <div className="mt-5 flex flex-wrap gap-2.5 border-t border-ink/12 pt-4">
+                      <ArrowLink href={{ pathname: "/menu", hash: "calculator" }} variant="solid">
                         {t("pour.ctaCalc")}
                       </ArrowLink>
-                      <ArrowLink href="/iletisim" variant="ghost" className="!border-paper/25 !text-paper hover:!bg-paper hover:!text-ink">
+                      <ArrowLink href="/iletisim" variant="ghost">
                         {t("pour.ctaVisit")}
                       </ArrowLink>
                     </div>
