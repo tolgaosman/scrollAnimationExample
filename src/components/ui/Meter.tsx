@@ -30,16 +30,19 @@ export function Meter({
       className="grid grid-cols-[6.5rem_1fr_1.5rem] items-center gap-3"
     >
       <span className="eyebrow opacity-70">{label}</span>
-      <span className={`relative h-[5px] overflow-hidden rounded-full ${off}`}>
+      <motion.span
+        className={`relative h-[5px] overflow-hidden rounded-full ${off}`}
+        initial="off"
+        whileInView="on"
+        viewport={{ once: true, margin: "0px 0px -10% 0px" }}
+      >
         <motion.span
-          className={`absolute inset-y-0 left-0 w-full origin-left rounded-full ${on}`}
+          className={`absolute inset-y-0 left-0 origin-left rounded-full ${on}`}
           style={{ width: `${(value / max) * 100}%` }}
-          initial={{ scaleX: 0 }}
-          whileInView={{ scaleX: 1 }}
-          viewport={{ once: true, margin: "0px 0px -10% 0px" }}
+          variants={{ off: { scaleX: 0 }, on: { scaleX: 1 } }}
           transition={{ duration: 0.9, ease: ease.outExpo }}
         />
-      </span>
+      </motion.span>
       <span className="eyebrow text-right tabular-nums">{value}</span>
     </div>
   );

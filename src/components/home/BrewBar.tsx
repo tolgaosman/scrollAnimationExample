@@ -63,7 +63,7 @@ export function BrewBar() {
   const [active, setActive] = useState<BrewKey>("espresso");
 
   return (
-    <section className="bg-paper py-16 md:py-24" aria-labelledby="brewbar-title">
+    <section className="bg-paper py-10 md:py-24" aria-labelledby="brewbar-title">
       <div className="shell">
         <div className="flex flex-wrap items-end justify-between gap-4 border-b border-ink/15 pb-5">
           <div>
