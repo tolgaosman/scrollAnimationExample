@@ -45,8 +45,6 @@ interface FrameCanvasProps {
   label: string;
   /** Cross-fade between frames. */
   blend: boolean;
-  /** Optional RGBA café counter & window overlay that fades out to studio grey as scroll completes. */
-  cafeOverlaySrc?: string;
   onLayout?: (fit: Fit) => void;
   /** Called once with the sampled studio colour (for CSS fallbacks). */
   onBackground?: (color: string) => void;
@@ -74,7 +72,6 @@ export function FrameCanvas({
   progress,
   label,
   blend,
-  cafeOverlaySrc,
   onLayout,
   onBackground,
 }: FrameCanvasProps) {
@@ -124,38 +121,6 @@ export function FrameCanvas({
     let queue: Blob[] = [];
     let disposed = false;
     const canBitmap = typeof createImageBitmap === "function";
-
-    // Optional café counter & arched window RGBA overlay (fades 1 -> 0 over scroll).
-    let cafeOverlay: HTMLImageElement | ImageBitmap | null = null;
-    if (cafeOverlaySrc) {
-      void (async () => {
-        try {
-          const res = await fetch(cafeOverlaySrc);
-          if (!res.ok || disposed) return;
-          const blob = await res.blob();
-          if (disposed) return;
-          let decoded: HTMLImageElement | ImageBitmap;
-          if (canBitmap) {
-            decoded = await createImageBitmap(blob);
-          } else {
-            const im = new Image();
-            im.decoding = "async";
-            im.src = URL.createObjectURL(blob);
-            await im.decode();
-            decoded = im;
-          }
-          if (disposed) {
-            if ("close" in decoded) decoded.close();
-            return;
-          }
-          cafeOverlay = decoded;
-          dirty = true;
-          schedule();
-        } catch {
-          // Graceful fallback to original studio backdrop
-        }
-      })();
-    }
 
     const pump = () => {
       while (inFlight.size < MAX_IN_FLIGHT && queue.length > 0) {
@@ -284,8 +249,7 @@ export function FrameCanvas({
       const frames = store.frames;
       const count = frames.length;
       if (count === 0) return;
-      const p = progress.get();
-      const pos = framePositionAt(p, count);
+      const pos = framePositionAt(progress.get(), count);
       // Only flip direction on real movement, so the spring's tiny settling
       // wobble doesn't keep flipping which side we pre-decode.
       if (Math.abs(pos - lastPos) > 0.5) {
@@ -310,12 +274,8 @@ export function FrameCanvas({
         warmedVersion = store.version;
       }
 
-      const rawCafeAlpha = cafeOverlay ? Math.pow(Math.max(0, 1 - p / 0.88), 2.0) : 0;
-      const cafeStep = Math.round(rawCafeAlpha * 64);
-      const cafeAlpha = cafeStep / 64;
-
       const next = frac > 0 ? drawable(frames[index + 1]) : undefined;
-      const key = (index * (BLEND_STEPS + 1) + (next ? frac * BLEND_STEPS : 0)) * 65 + cafeStep;
+      const key = index * (BLEND_STEPS + 1) + (next ? frac * BLEND_STEPS : 0);
       if (key === drawnKey && !dirty) return; // nothing new to paint
 
       const base = bestBaseDrawable(frames, index);
@@ -328,14 +288,7 @@ export function FrameCanvas({
         return next ? a + ((arr?.[index + 1] ?? 0) * k - a) * frac : a;
       };
       const shiftedFit = { ...fit, dx: fit.dx - mix(shiftX), dy: fit.dy - mix(shiftY) };
-      drawFrame(
-        ctx!,
-        base,
-        shiftedFit,
-        edges,
-        next ? { img: next, alpha: frac } : undefined,
-        cafeOverlay && cafeAlpha > 0 ? { img: cafeOverlay, alpha: cafeAlpha } : undefined,
-      );
+      drawFrame(ctx!, base, shiftedFit, edges, next ? { img: next, alpha: frac } : undefined);
       debug?.paint(performance.now() - t0, index, base instanceof HTMLImageElement);
       drawnKey = key;
       dirty = false;
@@ -362,10 +315,9 @@ export function FrameCanvas({
       disposed = true;
       for (const bmp of bitmaps.values()) bmp.close();
       bitmaps.clear();
-      if (cafeOverlay && "close" in cafeOverlay) cafeOverlay.close();
       debug?.dispose();
     };
-  }, [store, imageSize, shiftX, shiftY, progress, blend, cafeOverlaySrc]);
+  }, [store, imageSize, shiftX, shiftY, progress, blend]);
 
   return (
     <canvas
