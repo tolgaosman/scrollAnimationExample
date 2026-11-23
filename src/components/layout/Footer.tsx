@@ -68,12 +68,12 @@ export async function Footer() {
       </div>
 
       <div className="shell" aria-hidden="true">
-        <p className="display select-none whitespace-nowrap pt-[2vw] text-[10.4vw] leading-[0.86] text-paper/[0.06]">
+        <p className="display select-none whitespace-nowrap pt-[2vw] text-[9vw] leading-[0.86] md:text-[10.4vw] text-paper/[0.06]">
           CYPRUS ROASTERS
         </p>
       </div>
 
-      <div className="shell flex flex-col gap-2 border-t border-paper/10 py-5 text-xs text-paper/45 md:flex-row md:justify-between">
+      <div className="shell flex flex-col gap-2 border-t border-paper/10 pb-24 pt-5 text-xs text-paper/45 md:flex-row md:justify-between md:pb-5">
         <p>
           © {year} Cyprus Roasters — {tb("footerSub")}. {t("rights")}
         </p>

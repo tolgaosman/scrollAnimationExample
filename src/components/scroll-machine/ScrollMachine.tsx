@@ -462,11 +462,19 @@ export function ScrollMachine({ sequence }: { sequence: FrameSequenceProps }) {
                         <dd className="mt-1 whitespace-nowrap num text-xs text-ink sm:text-sm">{t("pour.spec3Value")}</dd>
                       </div>
                     </dl>
-                    <div className="mt-5 flex flex-wrap gap-2.5 border-t border-ink/12 pt-4">
-                      <ArrowLink href={{ pathname: "/menu", hash: "calculator" }} variant="solid">
+                    <div className="mt-5 flex flex-wrap gap-2 border-t border-ink/12 pt-4 sm:gap-2.5">
+                      <ArrowLink
+                        href={{ pathname: "/menu", hash: "calculator" }}
+                        variant="solid"
+                        className="!h-11 !gap-2 !pl-4 !pr-1.5 flex-1 justify-between whitespace-nowrap sm:!h-12 sm:!gap-4 sm:!pl-6 sm:!pr-2 sm:flex-none"
+                      >
                         {t("pour.ctaCalc")}
                       </ArrowLink>
-                      <ArrowLink href="/iletisim" variant="ghost">
+                      <ArrowLink
+                        href="/iletisim"
+                        variant="ghost"
+                        className="!h-11 !gap-2 !pl-4 !pr-1.5 flex-1 justify-between whitespace-nowrap sm:!h-12 sm:!gap-4 sm:!pl-6 sm:!pr-2 sm:flex-none"
+                      >
                         {t("pour.ctaVisit")}
                       </ArrowLink>
                     </div>
