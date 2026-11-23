@@ -2,28 +2,28 @@
   "meta": {
     "siteName": "Cyprus Roasters — Coffee & Atelier",
     "home": {
-      "title": "Cyprus Roasters — Engineering & Craft in the Heart of Nicosia",
-      "description": "Specialty coffee roasted in small batches inside a restored stone workshop in Nicosia, Cyprus. Roastery, brew bar and tasting room."
+      "title": "Cyprus Roasters — Small-batch coffee in Nicosia",
+      "description": "Coffee roasted in small batches in an old stone workshop in Nicosia, Cyprus. A roastery, a brew bar and a tasting room."
     },
     "beans": {
       "title": "Our Coffee Beans — Cyprus Roasters",
-      "description": "Direct-trade single origins from Ethiopia to Colombia, espresso blends and seasonal micro-lots."
+      "description": "Single origins bought straight from producers, from Ethiopia to Colombia, plus espresso blends and micro-lots."
     },
     "menu": {
       "title": "Menu & Brew Guide — Cyprus Roasters",
-      "description": "Signature cold brews, carob cortado, pistachio cremoso and an interactive brew ratio calculator for the perfect cup at home."
+      "description": "Cold brews, carob cortado, pistachio cremoso, and a calculator to help you brew a good cup at home."
     },
     "team": {
       "title": "Our Team — Cyprus Roasters",
-      "description": "Meet our head roaster, lead barista, Q-grader and pastry chef."
+      "description": "Meet our roaster, our lead barista, our Q-Grader and our pastry chef."
     },
     "about": {
       "title": "About Us — Cyprus Roasters",
-      "description": "How a forgotten stone workshop in Nicosia became a third-wave micro-roastery."
+      "description": "How a blacksmith's workshop that stood empty for decades became a small roastery."
     },
     "contact": {
       "title": "Contact — Cyprus Roasters",
-      "description": "Arasta, Nicosia, Cyprus. Opening hours, reservations and wholesale bean enquiries."
+      "description": "Arasta, Nicosia. Opening hours, reservations and wholesale questions."
     }
   },
   "brand": {
@@ -45,7 +45,7 @@
     "skip": "Skip to content",
     "language": "Language",
     "reserve": "Book a table",
-    "drawerNote": "Arasta, walled Nicosia — the scent of roasting from 07:30 every day.",
+    "drawerNote": "Arasta, Nicosia. Open every day from 07:30.",
     "primary": "Primary navigation"
   },
   "preloader": {
@@ -57,119 +57,119 @@
     "eyebrow": "Cyprus · Nicosia",
     "titleA": "CYPRUS",
     "titleB": "ROASTERS",
-    "subtitle": "Engineering & Craft in the Heart of Nicosia",
-    "lede": "Inside the Venetian walls, in a workshop of golden sandstone, we take apart the machine behind every cup — piece by piece.",
-    "scroll": "Scroll — open the machine",
-    "progress": "Teardown",
-    "canvasLabel": "A walnut-panelled espresso machine pulling a fresh golden shot and pouring it over crystal ice as you scroll."
+    "subtitle": "Coffee behind stone walls in Nicosia",
+    "lede": "We're in an old sandstone workshop inside the Venetian walls. Scroll, and we'll take apart the machine behind every cup.",
+    "scroll": "Scroll to open the machine",
+    "progress": "Progress",
+    "canvasLabel": "A walnut-panelled espresso machine. As you scroll, it pulls a shot and pours it over ice."
   },
   "ritual": {
-    "heroLede": "Inside Nicosia's Venetian walls, in a workshop of golden limestone — scroll naturally to experience the entire ritual from 9-bar extraction to the amber pour over crystal ice.",
+    "heroLede": "We're in an old limestone workshop inside Nicosia's Venetian walls. Scroll down to follow a cup from the first drop of espresso to the pour over ice.",
     "ctaMenu": "Menu & Brewing",
-    "ctaBeans": "Explore Beans",
+    "ctaBeans": "See the beans",
     "scrollCue": "Scroll to pull the shot",
-    "walnutLabel": "American Walnut · 304 Steel",
-    "originsLede": "Behind the fresh glass lifted from the group head stand three seasonal signature origins.",
+    "walnutLabel": "American walnut · 304 steel",
+    "originsLede": "Behind the cup in the barista's hand are three coffees we're roasting this season.",
     "acts": {
       "ready": {
         "short": "Machine ready · 93 °C",
         "tab": "Ready",
-        "caption": "PID-locked at 93.0 °C, the brass group head and hand-turned walnut portafilter stand ready for the first drop."
+        "caption": "The brass group head is steady at 93 °C and the walnut portafilter is locked in. First drop soon."
       },
       "extraction": {
-        "short": "9 bar extraction",
+        "short": "9 bar",
         "tab": "Extract",
-        "caption": "Under 9 bars of pressure, 18 g of freshly roasted coffee yields a dense, hazelnut-striped crema."
+        "caption": "18 g of fresh coffee under 9 bar of pressure. A thick, hazelnut-coloured crema forms on top."
       },
       "craft": {
         "short": "The barista's hand",
-        "tab": "Craft",
-        "caption": "At 28 seconds and 36 g yield, the double ristretto is lifted warm toward crystal-clear ice."
+        "tab": "Barista",
+        "caption": "36 g of double ristretto in 28 seconds, carried over to the ice while it's still hot."
       },
       "pour": {
-        "short": "The ice pour",
+        "short": "Over ice",
         "tab": "Pour",
-        "caption": "93 °C meets 4 °C in an instant thermal shift — locking dark chocolate and citrus into ribbons of amber."
+        "caption": "A 93 °C shot hits ice at 4 °C. Dark chocolate and orange peel lock in straight away."
       }
     },
     "specBar": "9 BAR · 93 °C · 28 S",
     "secUnit": "s",
     "pour": {
-      "eyebrow": "The Ice Pour",
-      "title": "From 93 °C to 4 °C — alchemy over crystal ice.",
-      "body": "The instant a fresh double ristretto meets crystal ice, volatile aromatics lock in — cascading into ribbons of mahogany, dark chocolate and citrus.",
-      "recipeLabel": "Signature Iced Espresso Blueprint",
-      "spec1Label": "Dose & Yield",
+      "eyebrow": "Over Ice",
+      "title": "From 93 °C to 4 °C in one pour.",
+      "body": "The moment a fresh double ristretto hits the ice, the aroma locks in. What's left in the glass is dark chocolate and citrus.",
+      "recipeLabel": "Our iced espresso",
+      "spec1Label": "Dose & yield",
       "spec1Value": "18 g → 36 g",
-      "spec2Label": "Thermal Shift",
+      "spec2Label": "Temperature drop",
       "spec2Value": "93 °C → 4 °C",
-      "spec3Label": "Origin",
+      "spec3Label": "Coffee",
       "spec3Value": "House No. 01",
-      "ctaCalc": "Open Calculator",
-      "ctaVisit": "Book a Table"
+      "ctaCalc": "Open the calculator",
+      "ctaVisit": "Book a table"
     }
   },
   "callouts": {
     "boiler": {
       "index": "01 / Heat",
-      "title": "Copper Heat-Exchange Boiler & PID Thermal Precision",
-      "body": "A thick-walled copper boiler holds heat the way old stone does. A PID controller samples dozens of times a second, so temperature never drifts from one cup to the next.",
-      "spec": "±0.1 °C · PID · 1.8 L copper"
+      "title": "Copper boiler, PID control",
+      "body": "A thick copper boiler holds heat for a long time. The PID controller checks the water many times a second and corrects it, so the first cup and the last come out at the same temperature.",
+      "spec": "PID · 1.8 L copper boiler"
     },
     "groups": {
       "index": "02 / Flow",
-      "title": "Triple E61 Brass Group Heads & Hand-Turned Walnut Portafilters",
-      "body": "Four kilos of thermosiphon-heated brass carry water evenly from the very first drop. The walnut handles are turned one by one on a Nicosia craftsman's lathe.",
+      "title": "E61 brass groups, walnut handles",
+      "body": "E61 group heads carry water at one temperature from the first drop. The walnut handles were turned one by one by a craftsman here in Nicosia.",
       "spec": "E61 · 3 groups · hand-turned walnut"
     },
     "pump": {
       "index": "03 / Pressure",
-      "title": "Rotary Vane Pump & 9‑Bar Extraction Profiling",
-      "body": "A near-silent rotary vane pump shapes pressure like a breath — pre-infusion, peak, decline. Every coffee gets its own curve.",
+      "title": "Rotary vane pump",
+      "body": "The quiet pump manages pressure in three stages: pre-infusion, peak, decline. Every coffee has its own curve, and some like it gentler.",
       "spec": "9 bar · 3 bar pre-infusion · 25–30 s"
     },
-    "outro": "Not the sum of the parts — the care between them."
+    "outro": "The machine is lovely, but people still do the work."
   },
   "home": {
     "strip": {
       "locLabel": "Location",
       "locValue": "Arasta · Zahra St. No. 11",
       "batchLabel": "Roasting",
-      "batchValue": "12 kg Small Batch",
+      "batchValue": "12 kg small batches",
       "roastLabel": "Roast Day",
       "roastValue": "Every Thursday · 07:30",
-      "waterLabel": "Water Profile",
-      "waterValue": "85 ppm · 93 °C PID"
+      "waterLabel": "Water",
+      "waterValue": "85 ppm · 93 °C"
     },
     "manifesto": {
-      "eyebrow": "Manifesto",
-      "titleA": "Patient as stone,",
-      "titleB": "precise as steel.",
-      "p1": "The yellow sandstone of the walled city has been storing sunlight for centuries; at dusk it is still warm to the palm. That is how we like our coffee: unhurried, holding its heat.",
-      "p2": "In our workshop, stainless steel works beneath five-hundred-year-old arches. On one side: scales, probes, profile curves. On the other: scent, sound, intuition. They share the same bench.",
+      "eyebrow": "Who we are",
+      "titleA": "Patience first,",
+      "titleB": "then precision.",
+      "p1": "Nicosia's yellow stone soaks up the sun all day and is still warm under your hand at dusk. We like coffee the same way: unhurried, with the heat still in it.",
+      "p2": "Stainless steel machines run under 500-year-old arches. On one side, scales, probes and profile curves. On the other, smell and sound. They share a bench.",
       "stoneLabel": "Sarı Taş · Nicosia limestone",
       "steelLabel": "Brushed stainless · 304",
       "stat1": "12 kg",
-      "stat1Label": "maximum per batch",
-      "stat2": "72 hrs",
-      "stat2Label": "from roaster to cup",
+      "stat1Label": "max per batch",
+      "stat2": "7 days",
+      "stat2Label": "from roasting to last sale",
       "stat3": "11",
-      "stat3Label": "bastions, one neighbourhood"
+      "stat3Label": "bastions on the walls"
     },
     "roasts": {
       "eyebrow": "Signature Roasts",
-      "title": "Three origins, three temperaments.",
-      "lede": "Three signatures chosen from the season's finest lots. Keep scrolling to move through them.",
+      "title": "Three origins, three characters.",
+      "lede": "Three coffees from this season's lots. Keep scrolling to go through them.",
       "acidity": "Acidity",
       "body": "Body",
       "sweetness": "Sweetness",
-      "explore": "Explore all beans",
+      "explore": "See all the beans",
       "altitude": "Altitude",
       "process": "Process"
     },
     "brewbar": {
       "eyebrow": "Brew Bar",
-      "title": "Four stations for the senses.",
+      "title": "Four stations.",
       "hint": "Hover or tap",
       "specs": {
         "temp": "Temp",
@@ -180,43 +180,43 @@
         "espresso": {
           "name": "Espresso",
           "tag": "Intense · 30 s",
-          "body": "Nine bar, eighteen grams, thirty seconds. Russet crema, a finish of dark chocolate.",
+          "body": "Nine bar, eighteen grams, thirty seconds. Red-brown crema, dark chocolate at the end.",
           "note": "House Blend No. 01",
           "setup": "9 bar"
         },
         "pourover": {
           "name": "Pour-Over",
           "tag": "Clear · 3 min",
-          "body": "Slow pours through V60 and Kalita Wave. Floral, tea-like, a cup that opens in layers.",
+          "body": "Slow pours through a V60 or Kalita Wave. Floral, light like tea, and it changes as it cools.",
           "note": "Yirgacheffe · Micro-Lot",
           "setup": "V60 / Kalita"
         },
         "coldbrew": {
           "name": "Cold Brew",
           "tag": "Patient · 16 hrs",
-          "body": "Sixteen hours steeped in cold water — the coolest shade in Nicosia on an August afternoon.",
+          "body": "Sixteen hours in cold water. The coolest thing you can drink in Nicosia on an August afternoon.",
           "note": "Guatemala Antigua",
           "setup": "16 h steep"
         },
         "cezve": {
           "name": "Cypriot Coffee",
-          "tag": "Rooted · Sand-fired",
-          "body": "Brewed in a copper cezve over hot sand, its foam gathered with patience. The workshop's oldest recipe.",
+          "tag": "Traditional · Hot sand",
+          "body": "Brewed in a copper cezve on hot sand, with the foam skimmed off carefully. The oldest recipe we have.",
           "note": "Medium-Dark · Extra Fine",
-          "setup": "Sand-fired"
+          "setup": "Hot sand"
         }
       }
     },
     "cta": {
-      "title": "We roast on Thursdays. The scent drifts all the way to the Arasta.",
-      "button": "Visit the atelier",
-      "secondary": "Browse the menu"
+      "title": "We roast on Thursdays. You can smell it from the end of the Arasta.",
+      "button": "Come by",
+      "secondary": "See the menu"
     }
   },
   "beans": {
-    "eyebrow": "Bean Library",
-    "title": "The beans we roast",
-    "lede": "We know the name of every hand that grew these beans. Filter by origin, altitude and process; open a card to study its roast curve.",
+    "eyebrow": "Beans",
+    "title": "The coffees we roast",
+    "lede": "We know which farm every coffee comes from. Filter by origin, altitude or process, and open a card to look at its roast curve.",
     "filters": {
       "label": "Filter beans",
       "all": "All",
@@ -227,12 +227,12 @@
     "summary": {
       "lots": "Active Lots",
       "altitude": "Elevation Range",
-      "schedule": "Roast Schedule",
+      "schedule": "Roast Day",
       "scheduleValue": "Every Thursday"
     },
     "sort": {
       "label": "Sort beans",
-      "featured": "Featured Order",
+      "featured": "Our order",
       "altitudeDesc": "Altitude: High → Low",
       "roastAsc": "Roast: Light → Dark"
     },
@@ -254,9 +254,9 @@
       "acidity": "Acidity",
       "body": "Body",
       "sweetness": "Sweetness",
-      "details": "View details",
+      "details": "More details",
       "close": "Close",
-      "brewWith": "Recommended brew",
+      "brewWith": "How to brew",
       "harvest": "Harvest"
     },
     "roastLevels": {
@@ -268,10 +268,10 @@
   "menu": {
     "eyebrow": "Menu & Brew Guide",
     "title": "Nicosia in a glass",
-    "lede": "Carob from the island, pistachio from Antep, flowers from Ethiopia. Our menu is below — and beneath it, a calculator to build the same cup at home.",
+    "lede": "Carob from the island, pistachio from Antep, fruit and flowers from Ethiopia. The menu is below, and under it a calculator for making the same cups at home.",
     "calc": {
       "eyebrow": "Brew Calculator",
-      "title": "Find the ratio, build the cup.",
+      "title": "Work out the ratio.",
       "method": "Method",
       "methods": {
         "pourover": "Pour-Over",
@@ -292,30 +292,30 @@
       "time": "Target time",
       "grind": "Grind",
       "grinds": {
-        "pourover": "Medium-fine · sea salt",
-        "espresso": "Fine · close to icing sugar",
-        "coldbrew": "Coarse · rough gravel"
+        "pourover": "Medium-fine · like table salt",
+        "espresso": "Fine · like icing sugar",
+        "coldbrew": "Coarse · like gravel"
       },
       "cold": "Cold · 4–8 °C",
       "hours": "h",
       "seconds": "s",
       "minutes": "min",
-      "tip": "Roaster's note",
+      "tip": "Small tip",
       "tips": {
-        "pourover": "Bloom with the first 50 g of water for 40 seconds, then pour slowly in spirals from the centre outward.",
-        "espresso": "Flow should begin around seconds 6–8. If it arrives early, grind one step finer.",
-        "coldbrew": "Steep in the fridge, strain through paper, dilute 1:1 with water and serve over ice."
+        "pourover": "Bloom with the first 50 g of water for 40 seconds, then pour slowly in circles from the centre outwards.",
+        "espresso": "Flow should start around 6–8 seconds. If it starts earlier, grind a notch finer.",
+        "coldbrew": "Brew it in the fridge, filter through paper, cut 1:1 with water and serve over ice."
       }
     },
     "sections": {
       "signature": "Signature Drinks",
       "classics": "Classics",
       "cold": "Cold Brews",
-      "pastry": "Atelier Pastries"
+      "pastry": "Bakery"
     },
     "spotlight": {
-      "eyebrow": "Atelier Signatures",
-      "note": "Three recipes crafted in Nicosia"
+      "eyebrow": "From the atelier",
+      "note": "Three recipes from the island"
     },
     "filters": {
       "categories": "Menu categories",
@@ -328,64 +328,64 @@
       "iced": "Iced",
       "baked": "Baked"
     },
-    "empty": "No items match this filter.",
-    "resetFilters": "Reset filters",
+    "empty": "Nothing matches this filter.",
+    "resetFilters": "Clear filters",
     "currency": "₺",
     "seasonal": "Seasonal",
     "house": "House-made"
   },
   "team": {
     "eyebrow": "Our Team",
-    "title": "The hands behind the cup",
-    "lede": "Four people, one roaster, one stone counter. In the narrowest street of Nicosia we ask the same question every day: could this cup be better?",
+    "title": "The people behind the cup",
+    "lede": "There are four of us, one roaster and one stone counter. Every morning we ask the same thing: could this cup be a bit better?",
     "favorite": "Favourite method",
-    "philosophy": "Philosophy",
+    "philosophy": "In a line",
     "since": "At the atelier",
-    "hint": "Hover or tap to meet"
+    "hint": "Hover or tap to meet them"
   },
   "about": {
     "eyebrow": "About Us",
-    "title": "The second life of a stone workshop",
-    "lede": "In a back street of the Arasta stood a blacksmith's workshop, its door locked for decades. The arches were sound, the walls were yellow sandstone, the ceiling a home for swallows.",
+    "title": "A blacksmith's workshop, now a roastery",
+    "lede": "A blacksmith's workshop stood in a back street of the Arasta with its door locked for years. The arches were sound, the walls were yellow stone, and swallows nested in the ceiling.",
     "story": {
-      "p1": "When we took the key in the winter of 2019, we found an anvil, a bellows and fifty years of silence. It took eleven months to free the walls from plaster and let the stone show its own colour.",
-      "p2": "The blacksmith's hearth now houses the flue of our roaster. Same fire; we simply forge coffee instead of iron.",
-      "quote": "The walls were built to protect the city. We are here to protect the small things inside it: the first scent of morning, a neighbour's greeting, the quiet of a good cup.",
+      "p1": "When we got the key in the winter of 2019, we found an anvil, a bellows and fifty years of quiet. Stripping the plaster to get back to bare stone took eleven months.",
+      "p2": "The blacksmith's hearth is now where our roaster's flue goes. Same fire; we just work with coffee instead of iron.",
+      "quote": "The walls were built to protect the city. We look after the small things inside it: the first smell of morning, a neighbour's hello, a good cup.",
       "quoteBy": "From the founders' notebook"
     },
     "timeline": {
-      "eyebrow": "Milestones",
+      "eyebrow": "Over the years",
       "title": "Timeline",
-      "expand": "Show details",
-      "collapse": "Hide details"
+      "expand": "Show more",
+      "collapse": "Show less"
     },
     "philosophy": {
-      "eyebrow": "Roasting Philosophy",
+      "eyebrow": "Roasting",
       "title": "Small batches, close attention.",
-      "p1": "Every batch on our 12-kilo, Loring-style convection roaster gets its own profile. Our Probat drum carries the round, syrupy body of our espresso blends.",
-      "p2": "We log every batch, verify it with colour measurement and approve it in a blind cupping the next morning. A batch we don't love never goes on sale.",
+      "p1": "Every batch on our 12 kg, Loring-style hot-air roaster gets its own profile. The round, syrupy body of our espresso blends comes from the Probat drum roaster.",
+      "p2": "We log every batch, check it with a colour reading and approve it at a blind cupping the next morning. If we don't like a batch, it doesn't get sold.",
       "points": {
         "a": "12 kg maximum per batch",
-        "b": "Agtron colour reading for every batch",
-        "c": "Sold within 72 hours of roasting"
+        "b": "Agtron colour reading on every batch",
+        "c": "Sold within a week of roasting"
       }
     },
     "sustain": {
-      "eyebrow": "Direct Trade",
+      "eyebrow": "Buying direct",
       "title": "At the same table as the grower.",
-      "p1": "We buy 80% of our coffee directly from producers, with no intermediaries — paying for quality, not the commodity index. You can trace every sack back to its farm.",
-      "p2": "Spent grounds become compost for two community gardens in Nicosia; the jute sacks are sewn into bags by a local workshop.",
+      "p1": "We buy most of our coffee directly from producers, with no middlemen, and pay for quality rather than the commodity price. You can trace every sack back to its farm.",
+      "p2": "Spent grounds go to two community gardens in Nicosia as compost, and a local workshop sews the jute sacks into bags.",
       "stats": {
-        "direct": "direct trade",
-        "premium": "above Fair Trade minimum",
+        "direct": "bought direct",
+        "premium": "fair price",
         "waste": "grounds composted"
       }
     }
   },
   "contact": {
     "eyebrow": "Contact",
-    "title": "A stone door inside the walls.",
-    "lede": "Walk from the shadow of the Selimiye towards the Arasta; the scent of roasting will lead you the rest of the way.",
+    "title": "A stone doorway inside the walls.",
+    "lede": "Walk from the Selimiye towards the Arasta. You'll smell the roasting before you see the door.",
     "address": {
       "label": "Address",
       "line1": "Zahra Street No. 11",
@@ -407,7 +407,7 @@
       "phone": "+90 392 000 00 00",
       "email": "hello@cyprusroasters.coffee"
     },
-    "socialLabel": "Social & Direct Message",
+    "socialLabel": "Social & messages",
     "map": {
       "title": "Map of Nicosia atelier",
       "walls": "Venetian Walls · 1567",
@@ -427,7 +427,7 @@
         "wholesale": "Wholesale Beans"
       },
       "wholesaleToggle": "I'd like wholesale beans for my café or restaurant",
-      "wholesaleHint": "We ship fresh roasts weekly to partner venues across Cyprus.",
+      "wholesaleHint": "We send freshly roasted coffee every week to partner cafés across Cyprus.",
       "name": "Full name",
       "email": "Email",
       "phone": "Phone (optional)",
@@ -439,13 +439,13 @@
       "message": "Your message",
       "submit": "Send",
       "submitting": "Sending…",
-      "successTitle": "Your message has arrived.",
-      "successBody": "Thank you. We'll reply within one working day — most likely with a cup in hand.",
-      "again": "Write another message",
+      "successTitle": "We got your message.",
+      "successBody": "Thanks. We'll get back to you within a working day, probably with a cup in our hand.",
+      "again": "Write another",
       "errorTitle": "Something went wrong.",
-      "errorBody": "Please check the highlighted fields and try again.",
-      "rateLimited": "Too many attempts. Please try again in a minute.",
-      "privacy": "Your details are used only to reply to this request.",
+      "errorBody": "Have a look at the highlighted fields and try again.",
+      "rateLimited": "Too many attempts. Try again in a minute.",
+      "privacy": "We only use your details to reply to this message.",
       "errors": {
         "nameShort": "Please enter your name (at least 2 characters).",
         "nameLong": "Name is too long.",
@@ -461,13 +461,13 @@
     }
   },
   "footer": {
-    "tagline": "Roasted in the heart of Nicosia, between walls of yellow stone.",
+    "tagline": "Roasted in Nicosia, between yellow stone walls.",
     "visit": "Visit",
     "explore": "Explore",
     "follow": "Follow",
     "rights": "All rights reserved.",
     "coords": "35°10′34″N · 33°21′49″E",
-    "credits": "Designed and roasted in Nicosia."
+    "credits": "Designed in Nicosia."
   },
   "ui": {
     "calendar": {
@@ -481,12 +481,12 @@
     "whatsapp": {
       "label": "WhatsApp",
       "aria": "Message us on WhatsApp",
-      "prefill": "Hello Cyprus Roasters, I would like to ask about the atelier."
+      "prefill": "Hello, I'd like to ask about the atelier."
     }
   },
   "notFound": {
     "title": "This street is a dead end.",
-    "body": "The narrow lanes of the walled city can be disorienting. The page you're looking for isn't here.",
+    "body": "The lanes inside the walls can be confusing. The page you're after isn't here.",
     "back": "Back to home"
   }
 }

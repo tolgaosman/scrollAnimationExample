@@ -2,16 +2,16 @@
   "meta": {
     "siteName": "Cyprus Roasters — Coffee & Atelier",
     "home": {
-      "title": "Cyprus Roasters — Lefkoşa'nın Kalbinde Mühendislik ve Zanaat",
-      "description": "Lefkoşa'da, restore edilmiş bir taş atölyede küçük partilerle kavrulan nitelikli kahve. Kavurma atölyesi, demleme barı ve tadım odası."
+      "title": "Cyprus Roasters — Lefkoşa'da küçük parti kahve",
+      "description": "Lefkoşa'da eski bir taş atölyede, küçük partiler halinde kavrulan kahve. Kavurma, demleme barı ve tadım odası."
     },
     "beans": {
       "title": "Kahve Çekirdeklerimiz — Cyprus Roasters",
-      "description": "Etiyopya'dan Kolombiya'ya, doğrudan ticaretle getirdiğimiz tek kökenli çekirdekler, espresso harmanları ve mikro-lotlar."
+      "description": "Etiyopya'dan Kolombiya'ya, üreticiden doğrudan aldığımız tek kökenli çekirdekler, espresso harmanları ve mikro-lotlar."
     },
     "menu": {
       "title": "Menü & Demleme Rehberi — Cyprus Roasters",
-      "description": "İmza soğuk demlemeler, keçiboynuzlu kortado, fıstıklı cremoso ve evde mükemmel fincan için interaktif demleme hesaplayıcısı."
+      "description": "Soğuk demlemeler, keçiboynuzlu kortado, fıstıklı cremoso ve evde iyi bir fincan demlemenize yardım eden bir hesaplayıcı."
     },
     "team": {
       "title": "Ekibimiz — Cyprus Roasters",
@@ -19,11 +19,11 @@
     },
     "about": {
       "title": "Hakkımızda — Cyprus Roasters",
-      "description": "Lefkoşa'da unutulmuş bir taş atölyenin, üçüncü dalga bir mikro kavurma evine dönüşme hikâyesi."
+      "description": "Yıllarca kapalı kalan bir demirci atölyesinin küçük bir kavurmahaneye dönüşme hikâyesi."
     },
     "contact": {
       "title": "İletişim — Cyprus Roasters",
-      "description": "Arasta, Lefkoşa. Çalışma saatleri, rezervasyon ve toptan çekirdek talepleri."
+      "description": "Arasta, Lefkoşa. Çalışma saatleri, rezervasyon ve toptan çekirdek soruları."
     }
   },
   "brand": {
@@ -45,7 +45,7 @@
     "skip": "İçeriğe geç",
     "language": "Dil seçimi",
     "reserve": "Masa ayırt",
-    "drawerNote": "Arasta, Lefkoşa — her gün 07:30'dan itibaren taze kavurma kokusu.",
+    "drawerNote": "Arasta, Lefkoşa. Her gün 07:30'dan itibaren buradayız.",
     "primary": "Ana gezinme"
   },
   "preloader": {
@@ -57,119 +57,119 @@
     "eyebrow": "Kıbrıs · Lefkoşa",
     "titleA": "KIBRIS",
     "titleB": "KAVURMA ATÖLYESİ",
-    "subtitle": "Lefkoşa'nın Kalbinde Mühendislik ve Zanaat",
-    "lede": "Venedik surlarının içinde, sarı taştan bir atölyede; her fincanın arkasındaki makineyi parça parça açıyoruz.",
-    "scroll": "Kaydırın — makine açılsın",
-    "progress": "Sökülme",
-    "canvasLabel": "Ceviz yan panelli espresso makinesi; kaydırdıkça taze espresso çekiliyor ve kristal buzlu bardağa dökülüyor."
+    "subtitle": "Lefkoşa'da, taş duvarların arasında kahve",
+    "lede": "Venedik surlarının içinde, sarı taştan eski bir atölyedeyiz. Her fincanın arkasındaki makineyi sizin için parça parça açıyoruz.",
+    "scroll": "Kaydırın, makineyi birlikte açalım",
+    "progress": "İlerleme",
+    "canvasLabel": "Ceviz yan panelli bir espresso makinesi. Kaydırdıkça shot çekiliyor ve buzlu bardağa dökülüyor."
   },
   "ritual": {
-    "heroLede": "Venedik surlarının içinde, sarı taştan bir atölyede; aşağı kaydırdıkça 9 bar espresso akışından kristal buzla buluşmaya kadar bir fincanın bütün ritüelini yaşayın.",
+    "heroLede": "Venedik surlarının içinde, sarı taştan bir atölyedeyiz. Aşağı kaydırın; espresso akışından buzlu döküme kadar bir fincanın nasıl yapıldığını görün.",
     "ctaMenu": "Menü & Demleme",
     "ctaBeans": "Çekirdekler",
-    "scrollCue": "Kaydırın — akış başlasın",
-    "walnutLabel": "Amerikan Cevizi · 304 Çelik",
-    "originsLede": "Baristanın elindeki o taze fincanın arkasında, mevsimin en seçkin üç kökeni var.",
+    "scrollCue": "Kaydırın, shot çekilsin",
+    "walnutLabel": "Amerikan cevizi · 304 çelik",
+    "originsLede": "Baristanın elindeki fincanın arkasında, bu mevsim kavurduğumuz üç köken var.",
     "acts": {
       "ready": {
         "short": "Makine hazır · 93 °C",
         "tab": "Hazırlık",
-        "caption": "PID kontrolüyle 93,0 °C'de sabitlenen pirinç başlık ve el tornası ceviz portafiltre ilk damla için hazır."
+        "caption": "Pirinç grup başlığı 93 °C'de sabit, ceviz saplı portafiltre yerinde. İlk damla için hazırız."
       },
       "extraction": {
-        "short": "9 bar ekstraksiyon",
+        "short": "9 bar basınç",
         "tab": "Akış",
-        "caption": "9 bar basınç altında 18 g taze çekirdekten yoğun, fındık rengi krema katmanı fincana süzülüyor."
+        "caption": "18 gram taze kavrulmuş kahve 9 bar basınç altında süzülüyor. Üstünde fındık renginde, kalın bir krema oluşuyor."
       },
       "craft": {
-        "short": "Usta eli · taze shot",
-        "tab": "Usta Eli",
-        "caption": "28 saniyede tamamlanan 36 g çift ristretto, aroması uçmadan baristanın eliyle kristal buzlu bardağa taşınıyor."
+        "short": "Baristanın eli",
+        "tab": "Barista",
+        "caption": "28 saniyede 36 gram çift ristretto çekiliyor. Sıcakken, aroması uçmadan buzlu bardağa taşınıyor."
       },
       "pour": {
-        "short": "Buzla buluşma",
-        "tab": "Döküş",
-        "caption": "93 °C'den 4 °C'ye ani termal şok: bitter çikolata ve narenciye notaları buz üzerinde kehribar bulutlarına dönüşüyor."
+        "short": "Buza döküm",
+        "tab": "Döküm",
+        "caption": "93 derecelik shot, buzun üstüne düşüyor. Bitter çikolata ve portakal kabuğu tadı bir anda yerine kilitleniyor."
       }
     },
     "specBar": "9 BAR · 93 °C · 28 SN",
     "secUnit": "sn",
     "pour": {
-      "eyebrow": "Buzla Buluşma",
-      "title": "93 °C'den 4 °C'ye — kristal buzla simya.",
-      "body": "Taze çekilmiş çift ristretto, kristal buzların üzerine döküldüğü an aromalar kilitlenir; koyu çikolata ve narenciye katmanları bardakta kehribar bulutlarına dönüşür.",
-      "recipeLabel": "İmza Buzlu Espresso Reçetesi",
-      "spec1Label": "Doz & Verim",
+      "eyebrow": "Buza Döküm",
+      "title": "93 dereceden 4 dereceye, tek hamlede.",
+      "body": "Taze çekilmiş çift ristretto buzun üstüne düştüğü anda aroma yerine kilitleniyor. Bardakta bitter çikolata ve narenciye kalıyor.",
+      "recipeLabel": "Buzlu espresso tarifimiz",
+      "spec1Label": "Doz ve verim",
       "spec1Value": "18 g → 36 g",
-      "spec2Label": "Termal Şok",
+      "spec2Label": "Sıcaklık farkı",
       "spec2Value": "93 °C → 4 °C",
       "spec3Label": "Çekirdek",
       "spec3Value": "Ev Harmanı No. 01",
-      "ctaCalc": "Oranı Hesapla",
-      "ctaVisit": "Masa Ayırt"
+      "ctaCalc": "Oranı hesapla",
+      "ctaVisit": "Masa ayırt"
     }
   },
   "callouts": {
     "boiler": {
       "index": "01 / Isı",
-      "title": "Bakır Isı Eşanjörlü Kazan & PID Termal Kararlılık",
-      "body": "Kalın cidarlı bakır kazan, ısıyı bir taş duvar gibi tutar. PID kontrolcüsü saniyede onlarca kez ölçer; sıcaklık, fincandan fincana sapmadan kalır.",
-      "spec": "±0,1 °C · PID · 1,8 L bakır"
+      "title": "Bakır kazan, PID kontrol",
+      "body": "Kalın cidarlı bakır kazan ısıyı uzun süre tutar. PID denetleyici suyu saniyede defalarca ölçüp düzeltir; ilk fincan da sonuncusu da aynı sıcaklıkta çıkar.",
+      "spec": "PID · 1,8 L bakır kazan"
     },
     "groups": {
       "index": "02 / Akış",
-      "title": "3 Gruplu E61 Pirinç Başlıklar & Ceviz Portafiltreler",
-      "body": "Termosifonla ısınan dört kilo pirinç, suyu ilk damladan itibaren dengeli taşır. Ceviz saplar ise Lefkoşa'lı bir ustanın torna tezgâhından, tek tek.",
-      "spec": "E61 · 3 grup · el tornası ceviz"
+      "title": "E61 pirinç gruplar, ceviz saplar",
+      "body": "E61 grup başlıkları suyu ilk damladan itibaren aynı sıcaklıkta taşır. Ceviz saplar Lefkoşa'da bir ustanın tezgâhında tek tek tornalandı.",
+      "spec": "E61 · 3 grup · el yapımı ceviz sap"
     },
     "pump": {
       "index": "03 / Basınç",
-      "title": "Döner Kanatlı Pompa & Dijital Basınç Profilleme",
-      "body": "Sessiz döner kanatlı pompa, ön demlemeden doruğa ve geri çekilişe kadar basıncı bir nefes gibi yönetir. Her çekirdeğin kendi eğrisi vardır.",
-      "spec": "9 bar · ön demleme 3 bar · 25–30 sn"
+      "title": "Döner kanatlı pompa",
+      "body": "Sessiz çalışan pompa basıncı üç aşamada yönetiyor: ön ıslatma, tepe, düşüş. Her kahvenin kendi eğrisi var; kimi çekirdek daha yumuşak sever.",
+      "spec": "9 bar · 3 bar ön ıslatma · 25–30 sn"
     },
-    "outro": "Parçaların toplamı değil; parçaların arasındaki özen."
+    "outro": "Makine güzel ama işi yapan yine eller."
   },
   "home": {
     "strip": {
       "locLabel": "Konum",
       "locValue": "Arasta · Zahra Sk. No. 11",
       "batchLabel": "Kavurma",
-      "batchValue": "12 kg Küçük Parti",
+      "batchValue": "12 kg'lık küçük parti",
       "roastLabel": "Kavurma Günü",
       "roastValue": "Her Perşembe · 07:30",
-      "waterLabel": "Su Profili",
-      "waterValue": "85 ppm · 93 °C PID"
+      "waterLabel": "Su",
+      "waterValue": "85 ppm · 93 °C"
     },
     "manifesto": {
-      "eyebrow": "Manifesto",
-      "titleA": "Taş sabırla,",
-      "titleB": "çelik hassasiyetle.",
-      "p1": "Lefkoşa'nın sarı taşı yüzyıllardır güneşi biriktirir; akşamüstü avuç içine sıcak düşer. Biz de kahveyi böyle severiz: acele etmeden, ısıyı içinde tutarak.",
-      "p2": "Atölyemizde 500 yıllık kemerlerin altında paslanmaz çelik çalışır. Bir yanda ölçü, termometre, profil eğrisi; öbür yanda koku, ses, sezgi. İkisi aynı tezgâhı paylaşır.",
-      "stoneLabel": "Sarı Taş · Lefkoşa kireçtaşı",
+      "eyebrow": "Biz kimiz",
+      "titleA": "Önce sabır,",
+      "titleB": "sonra ölçü.",
+      "p1": "Lefkoşa'nın sarı taşı gün boyu güneşi emer, akşam elinizi koyduğunuzda hâlâ ılıktır. Kahveyi de öyle severiz: telaşsız, sıcaklığı üstünde.",
+      "p2": "Atölyede 500 yıllık kemerlerin altında paslanmaz çelik makineler çalışıyor. Bir yanda terazi, termometre, profil eğrisi; öbür yanda koku ve kulak. İkisi aynı tezgâhta.",
+      "stoneLabel": "Sarı taş · Lefkoşa kireçtaşı",
       "steelLabel": "Fırçalanmış paslanmaz · 304",
       "stat1": "12 kg",
-      "stat1Label": "parti başına en fazla",
-      "stat2": "72 saat",
-      "stat2Label": "kavurmadan fincana",
+      "stat1Label": "bir partide en fazla",
+      "stat2": "7 gün",
+      "stat2Label": "kavurmadan son satışa",
       "stat3": "11",
-      "stat3Label": "burç, tek bir mahalle"
+      "stat3Label": "burç, surların çevresinde"
     },
     "roasts": {
       "eyebrow": "İmza Kavrumlar",
-      "title": "Üç köken, üç mizaç.",
-      "lede": "Mevsimin en iyi lotlarından seçtiğimiz üç imza. Kaydırdıkça bir sonrakine geçin.",
+      "title": "Üç köken, üç ayrı karakter.",
+      "lede": "Bu mevsimin lotlarından seçtiğimiz üç kahve. Kaydırarak sırayla bakabilirsiniz.",
       "acidity": "Asidite",
       "body": "Gövde",
       "sweetness": "Tatlılık",
-      "explore": "Tüm çekirdekleri keşfedin",
+      "explore": "Bütün çekirdeklere bakın",
       "altitude": "Rakım",
       "process": "İşleme"
     },
     "brewbar": {
       "eyebrow": "Demleme Barı",
-      "title": "Duyular için dört istasyon.",
+      "title": "Dört istasyon.",
       "hint": "Üzerine gelin ya da dokunun",
       "specs": {
         "temp": "Sıcaklık",
@@ -180,43 +180,43 @@
         "espresso": {
           "name": "Espresso",
           "tag": "Yoğun · 30 sn",
-          "body": "Dokuz bar, on sekiz gram, otuz saniye. Krema kızıl kahve, bitiş bitter çikolata.",
+          "body": "Dokuz bar, on sekiz gram, otuz saniye. Kremada kızıl, bitişte bitter çikolata.",
           "note": "House Blend No. 01",
           "setup": "9 bar"
         },
         "pourover": {
           "name": "Pour-Over",
           "tag": "Berrak · 3 dk",
-          "body": "V60 ve Kalita Wave ile yavaş döküm. Çiçeksi, çay gibi, katman katman açılan bir fincan.",
+          "body": "V60 ve Kalita Wave ile yavaş döküm. Çiçeksi, çay gibi hafif; içtikçe değişen bir fincan.",
           "note": "Yirgacheffe · Mikro-Lot",
           "setup": "V60 / Kalita"
         },
         "coldbrew": {
           "name": "Soğuk Demleme",
           "tag": "Sabırlı · 16 sa",
-          "body": "On altı saat soğuk suda bekleyen çekirdek; ağustos öğlesinde Lefkoşa'nın en serin gölgesi.",
+          "body": "On altı saat soğuk suda bekliyor. Ağustos öğleninde Lefkoşa'da içilecek en serin şey.",
           "note": "Guatemala Antigua",
           "setup": "16 sa demleme"
         },
         "cezve": {
           "name": "Kıbrıs Kahvesi",
-          "tag": "Köklü · Kum ocağı",
-          "body": "Bakır cezvede, kum ocağında, köpüğü sabırla toplanmış. Atölyenin en eski tarifi.",
+          "tag": "Geleneksel · Kum",
+          "body": "Bakır cezvede, sıcak kumun üstünde pişiyor; köpüğü özenle toplanıyor. Atölyedeki en eski tarif.",
           "note": "Orta-Koyu · İnce Öğütüm",
-          "setup": "Kum ocağı"
+          "setup": "Sıcak kum"
         }
       }
     },
     "cta": {
-      "title": "Kavurma günü perşembe. Kokusu Arasta'ya kadar gelir.",
-      "button": "Bizi ziyaret edin",
-      "secondary": "Menüye göz atın"
+      "title": "Kavurma günümüz perşembe. Kokusu Arasta'nın ucuna kadar gider.",
+      "button": "Bize uğrayın",
+      "secondary": "Menüye bakın"
     }
   },
   "beans": {
-    "eyebrow": "Çekirdek Kütüphanesi",
-    "title": "Kullandığımız kahve çekirdekleri",
-    "lede": "Her çekirdeği yetiştiren elin adını biliyoruz. Kökene, rakıma ve işleme yöntemine göre süzün; bir kartı açıp kavurma eğrisini inceleyin.",
+    "eyebrow": "Çekirdekler",
+    "title": "Kavurduğumuz kahveler",
+    "lede": "Her kahvenin hangi çiftlikten geldiğini biliyoruz. Köken, rakım ya da işlemeye göre süzün; bir karta tıklayıp kavurma eğrisine bakın.",
     "filters": {
       "label": "Çekirdekleri süz",
       "all": "Tümü",
@@ -227,12 +227,12 @@
     "summary": {
       "lots": "Aktif Lot",
       "altitude": "Rakım Aralığı",
-      "schedule": "Kavurma Programı",
+      "schedule": "Kavurma Günü",
       "scheduleValue": "Her Perşembe"
     },
     "sort": {
       "label": "Sıralama",
-      "featured": "Önerilen Sıra",
+      "featured": "Bizim sıramız",
       "altitudeDesc": "Rakım: Yüksek → Düşük",
       "roastAsc": "Kavurma: Açık → Koyu"
     },
@@ -249,14 +249,14 @@
       "curveCaption": "Çekirdek sıcaklığı (°C) / süre (dk)",
       "turningPoint": "Dönüm noktası",
       "firstCrack": "Birinci çatlama",
-      "drop": "Döküm",
+      "drop": "Boşaltma",
       "development": "Gelişim",
       "acidity": "Asidite",
       "body": "Gövde",
       "sweetness": "Tatlılık",
-      "details": "Detayları gör",
+      "details": "Ayrıntılar",
       "close": "Kapat",
-      "brewWith": "Önerilen demleme",
+      "brewWith": "Nasıl demlenir",
       "harvest": "Hasat"
     },
     "roastLevels": {
@@ -268,10 +268,10 @@
   "menu": {
     "eyebrow": "Menü & Demleme Rehberi",
     "title": "Bardakta Lefkoşa",
-    "lede": "Adanın keçiboynuzu, Antep'in fıstığı, Etiyopya'nın çiçekleri. Aşağıda menümüz; altında ise evde aynı fincanı kurmanız için hesaplayıcımız.",
+    "lede": "Adanın keçiboynuzu, Antep'in fıstığı, Etiyopya'nın çiçeksi kahvesi. Menü aşağıda; hemen altında da evde aynı fincanı demleyebilmeniz için bir hesaplayıcı var.",
     "calc": {
       "eyebrow": "Demleme Hesaplayıcı",
-      "title": "Oranı bulun, fincanı kurun.",
+      "title": "Oranı hesaplayın.",
       "method": "Yöntem",
       "methods": {
         "pourover": "Pour-Over",
@@ -292,30 +292,30 @@
       "time": "Hedef süre",
       "grind": "Öğütme",
       "grinds": {
-        "pourover": "Orta-ince · deniz tuzu",
-        "espresso": "İnce · pudra şekerine yakın",
-        "coldbrew": "Kalın · iri çakıl"
+        "pourover": "Orta-ince · sofra tuzu gibi",
+        "espresso": "İnce · pudra şekeri gibi",
+        "coldbrew": "Kalın · iri çakıl gibi"
       },
       "cold": "Soğuk · 4–8 °C",
       "hours": "sa",
       "seconds": "sn",
       "minutes": "dk",
-      "tip": "Usta notu",
+      "tip": "Küçük not",
       "tips": {
-        "pourover": "İlk 50 g suyla 40 saniye çiçeklendirin; sonra merkezden dışa doğru yavaş, dairesel dökün.",
-        "espresso": "Akış 6–8. saniyede başlamalı. Erken geliyorsa bir tık incelterek öğütün.",
-        "coldbrew": "Buzdolabında demleyin, kâğıt filtreden süzün; 1:1 suyla seyreltip buz üzerine servis edin."
+        "pourover": "İlk 50 g suyla 40 saniye çiçeklendirin, sonra ortadan dışa doğru yavaşça, daireler çizerek dökün.",
+        "espresso": "Akış 6–8. saniyede başlamalı. Daha erken başlıyorsa öğütmeyi bir tık inceltin.",
+        "coldbrew": "Buzdolabında demleyin, kâğıt filtreden geçirin. Servis için yarı yarıya suyla açıp buzun üstüne dökün."
       }
     },
     "sections": {
       "signature": "İmza İçecekler",
       "classics": "Klasikler",
       "cold": "Soğuk Demlemeler",
-      "pastry": "Atölye Pastaneleri"
+      "pastry": "Pastane"
     },
     "spotlight": {
-      "eyebrow": "Atölye İmzaları",
-      "note": "Lefkoşa'ya özgü üç tarif"
+      "eyebrow": "Atölyeden",
+      "note": "Adaya özgü üç tarif"
     },
     "filters": {
       "categories": "Menü kategorileri",
@@ -328,64 +328,64 @@
       "iced": "Soğuk",
       "baked": "Fırından"
     },
-    "empty": "Bu seçime uyan ürün bulunamadı.",
-    "resetFilters": "Filtreleri sıfırla",
+    "empty": "Bu seçimde ürün yok.",
+    "resetFilters": "Filtreleri temizle",
     "currency": "₺",
     "seasonal": "Mevsimlik",
     "house": "Atölyeden"
   },
   "team": {
     "eyebrow": "Ekibimiz",
-    "title": "Fincanın arkasındaki eller",
-    "lede": "Dört kişi, bir kavurma makinesi, bir taş tezgâh. Lefkoşa'nın en dar sokağında her gün aynı soruyu soruyoruz: Bu fincan daha iyi olabilir mi?",
+    "title": "Fincanın arkasındakiler",
+    "lede": "Dört kişiyiz; bir kavurma makinesi, bir taş tezgâh var. Her sabah aynı soruyu soruyoruz: Bu fincan biraz daha iyi olabilir mi?",
     "favorite": "Favori yöntem",
-    "philosophy": "Felsefe",
+    "philosophy": "Sözü",
     "since": "Atölyede",
     "hint": "Tanışmak için üzerine gelin ya da dokunun"
   },
   "about": {
     "eyebrow": "Hakkımızda",
-    "title": "Bir taş atölyenin ikinci hayatı",
-    "lede": "Arasta'nın arka sokağında, kapısı yıllarca kilitli kalmış bir demirci atölyesi vardı. Kemerleri sağlam, duvarları sarı taş, tavanı kırlangıç yuvasıydı.",
+    "title": "Bir demirci atölyesi, şimdi kavurmahane",
+    "lede": "Arasta'nın arka sokağında yıllarca kapısı kilitli duran bir demirci atölyesi vardı. Kemerleri sağlamdı, duvarları sarı taştı, tavanında kırlangıçlar yuva yapmıştı.",
     "story": {
-      "p1": "2019 kışında anahtarı aldığımızda içeride örs, körük ve elli yıllık bir sessizlik bulduk. Duvarları sıvadan kurtarıp taşın kendi rengini ortaya çıkarmamız on bir ay sürdü.",
-      "p2": "Demircinin ocağı bugün kavurma makinemizin bacasına ev sahipliği yapıyor. Ateş aynı ateş; yalnızca demir yerine kahve dövüyoruz.",
-      "quote": "Surlar şehri korumak için yapıldı. Biz de içindeki küçük şeyleri korumak için buradayız: sabahın ilk kokusunu, komşunun selamını, iyi bir fincanın sessizliğini.",
-      "quoteBy": "Kurucu not defterinden"
+      "p1": "2019 kışında anahtarı aldığımızda içeride bir örs, bir körük ve elli yıllık sessizlik bulduk. Duvarlardaki sıvayı söküp taşı çıplak hâline getirmek on bir ay sürdü.",
+      "p2": "Demircinin ocağının olduğu yerde şimdi kavurma makinesinin bacası var. Ateş aynı; biz demir yerine kahve işliyoruz.",
+      "quote": "Surlar şehri korusun diye yapılmış. Biz de içindeki küçük şeylere bakıyoruz: sabah kokusuna, komşunun selamına, iyi bir fincana.",
+      "quoteBy": "Kurucuların defterinden"
     },
     "timeline": {
-      "eyebrow": "Kilometre Taşları",
+      "eyebrow": "Yıllar içinde",
       "title": "Zaman çizelgesi",
-      "expand": "Ayrıntıyı aç",
-      "collapse": "Ayrıntıyı kapat"
+      "expand": "Devamını göster",
+      "collapse": "Kapat"
     },
     "philosophy": {
-      "eyebrow": "Kavurma Felsefesi",
-      "title": "Küçük parti, büyük dikkat.",
-      "p1": "12 kilogramlık Loring benzeri, konveksiyon ağırlıklı kavurucumuzda her parti ayrı bir profil. Probat tambur makinemiz ise espresso harmanlarımızın yuvarlak, şuruplu gövdesini taşıyor.",
-      "p2": "Her partiyi kayıt altına alır, renk ölçümüyle doğrular ve ertesi sabah kör tadımla onaylarız. Beğenmediğimiz parti satışa çıkmaz.",
+      "eyebrow": "Kavurma",
+      "title": "Küçük parti, yakın takip.",
+      "p1": "12 kiloluk, Loring tarzı sıcak havalı kavurucumuzda her parti kendi profiliyle kavruluyor. Espresso harmanlarının dolgun, şurupsu gövdesini ise Probat tamburlu makine veriyor.",
+      "p2": "Her partiyi kaydediyor, renk ölçümüyle kontrol ediyor, ertesi sabah kör tadımla onaylıyoruz. Beğenmediğimiz parti satışa çıkmıyor.",
       "points": {
-        "a": "Parti başına en fazla 12 kg",
-        "b": "Her parti için Agtron renk ölçümü",
-        "c": "Kavurmadan sonraki 72 saat içinde satış"
+        "a": "Bir partide en fazla 12 kg",
+        "b": "Her partide Agtron ölçümü",
+        "c": "Kavurmadan sonra bir hafta içinde satış"
       }
     },
     "sustain": {
-      "eyebrow": "Doğrudan Ticaret",
-      "title": "Kahveyi yetiştirenle aynı masada.",
-      "p1": "Çekirdeklerimizin %80'ini aracısız, doğrudan üreticilerden alıyoruz; borsanın değil, kalitenin fiyatını ödüyoruz. Her çuvalın izini çiftliğe kadar sürebilirsiniz.",
-      "p2": "Kahve posası Lefkoşa'daki iki topluluk bahçesine kompost olarak gidiyor; çuval bezleri ise yerel bir atölyede çantaya dönüşüyor.",
+      "eyebrow": "Doğrudan alım",
+      "title": "Üreticiyle aynı masada.",
+      "p1": "Çekirdeklerin çoğunu aracısız, doğrudan üreticilerden alıyoruz. Borsa fiyatına değil, kalitenin karşılığına ödüyoruz. Her çuvalın hangi çiftlikten geldiği belli.",
+      "p2": "Posa, Lefkoşa'daki iki topluluk bahçesine kompost olarak gidiyor. Çuvallardan ise yerel bir atölye çanta dikiyor.",
       "stats": {
-        "direct": "doğrudan ticaret",
-        "premium": "Fair Trade tabanının üzerinde",
-        "waste": "kompostlanan posa"
+        "direct": "doğrudan alım",
+        "premium": "adil fiyat",
+        "waste": "kompost olan posa"
       }
     }
   },
   "contact": {
     "eyebrow": "İletişim",
-    "title": "Surların içinde, bir taş kapı.",
-    "lede": "Selimiye'nin gölgesinden Arasta'ya doğru yürüyün; kavurma kokusu sizi gerisine götürecektir.",
+    "title": "Surların içinde, taş kapılı bir atölye.",
+    "lede": "Selimiye'nin gölgesinden Arasta'ya doğru yürüyün. Kavurma kokusunu zaten duyarsınız.",
     "address": {
       "label": "Adres",
       "line1": "Zahra Sokak No. 11",
@@ -407,7 +407,7 @@
       "phone": "+90 392 000 00 00",
       "email": "atolye@cyprusroasters.coffee"
     },
-    "socialLabel": "Sosyal & Hızlı İletişim",
+    "socialLabel": "Sosyal medya ve mesaj",
     "map": {
       "title": "Lefkoşa atölye haritası",
       "walls": "Venedik Surları · 1567",
@@ -426,8 +426,8 @@
         "general": "Genel",
         "wholesale": "Toptan Çekirdek"
       },
-      "wholesaleToggle": "Kafe veya restoranım için toptan çekirdek talep ediyorum",
-      "wholesaleHint": "Kıbrıs genelindeki partner işletmelere haftalık taze kavrum gönderiyoruz.",
+      "wholesaleToggle": "Kafe veya restoranım için toptan çekirdek istiyorum",
+      "wholesaleHint": "Kıbrıs'taki iş ortaklarımıza her hafta taze kavrulmuş kahve gönderiyoruz.",
       "name": "Ad Soyad",
       "email": "E-posta",
       "phone": "Telefon (isteğe bağlı)",
@@ -439,13 +439,13 @@
       "message": "Mesajınız",
       "submit": "Gönder",
       "submitting": "Gönderiliyor…",
-      "successTitle": "Mesajınız ulaştı.",
-      "successBody": "Teşekkürler. Bir iş günü içinde, büyük ihtimalle elimizde bir fincanla size döneceğiz.",
+      "successTitle": "Mesajınız bize ulaştı.",
+      "successBody": "Teşekkürler. Bir iş günü içinde size döneriz; büyük ihtimalle elimizde bir fincanla.",
       "again": "Yeni mesaj yaz",
-      "errorTitle": "Bir şeyler ters gitti.",
-      "errorBody": "Lütfen işaretli alanları kontrol edin ve tekrar deneyin.",
-      "rateLimited": "Çok sık deneme yaptınız. Lütfen bir dakika sonra tekrar deneyin.",
-      "privacy": "Bilgileriniz yalnızca bu talebe yanıt vermek için kullanılır.",
+      "errorTitle": "Bir sorun çıktı.",
+      "errorBody": "İşaretli alanlara bir bakın, sonra yeniden deneyin.",
+      "rateLimited": "Çok fazla deneme yapıldı. Bir dakika sonra yeniden deneyin.",
+      "privacy": "Bilgileriniz yalnızca bu mesaja cevap vermek için kullanılır.",
       "errors": {
         "nameShort": "Lütfen adınızı yazın (en az 2 karakter).",
         "nameLong": "Ad çok uzun.",
@@ -461,13 +461,13 @@
     }
   },
   "footer": {
-    "tagline": "Lefkoşa'nın kalbinde, sarı taşın arasında kavrulur.",
+    "tagline": "Lefkoşa'da, sarı taş duvarların arasında kavruluyor.",
     "visit": "Ziyaret",
     "explore": "Keşfet",
     "follow": "Takip",
     "rights": "Tüm hakları saklıdır.",
     "coords": "35°10′34″K · 33°21′49″D",
-    "credits": "Lefkoşa'da tasarlandı ve kavruldu."
+    "credits": "Lefkoşa'da tasarlandı."
   },
   "ui": {
     "calendar": {
@@ -481,12 +481,12 @@
     "whatsapp": {
       "label": "WhatsApp",
       "aria": "WhatsApp ile bize yazın",
-      "prefill": "Merhaba Cyprus Roasters, atölyeniz hakkında bilgi almak istiyorum."
+      "prefill": "Merhaba, atölyeniz hakkında bilgi almak istiyorum."
     }
   },
   "notFound": {
     "title": "Bu sokak çıkmaz.",
-    "body": "Lefkoşa'nın dar sokakları bazen insanı şaşırtır. Aradığınız sayfa burada değil.",
-    "back": "Ana sayfaya dönün"
+    "body": "Surların içindeki sokaklar insanı bazen şaşırtır. Aradığınız sayfa burada yok.",
+    "back": "Ana sayfaya dön"
   }
 }

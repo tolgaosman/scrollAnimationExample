@@ -59,8 +59,8 @@ export const beans: Bean[] = [
     sweetness: 7,
     brew: { tr: "V60 · 1:16 · 93 °C", en: "V60 · 1:16 · 93 °C" },
     story: {
-      tr: "Kochere'nin sisli yamaçlarında, 800'den fazla küçük üreticinin kiraz teslim ettiği bir istasyon. Fincanda bir çay bahçesi kadar berrak.",
-      en: "A washing station on Kochere's misty slopes, fed by more than 800 smallholders. In the cup, clear as a tea garden.",
+      tr: "Kochere'nin sisli yamaçlarında, 800'den fazla küçük üreticinin kiraz getirdiği bir istasyon. Fincanda çay gibi berrak.",
+      en: "A washing station on Kochere's misty slopes, supplied by more than 800 smallholders. Clear as tea in the cup.",
     },
     profile: {
       charge: 205,
@@ -92,8 +92,8 @@ export const beans: Bean[] = [
     sweetness: 9,
     brew: { tr: "Kalita Wave · 1:15 · 94 °C", en: "Kalita Wave · 1:15 · 94 °C" },
     story: {
-      tr: "Rodrigo Sánchez'in ailesinden üçüncü kuşak; kirazlar 72 saat oksijensiz tanklarda bekletilip balıyla kurutuluyor.",
-      en: "Third generation of the Sánchez family; cherries rest 72 hours in sealed tanks, then dry with their honey intact.",
+      tr: "Sánchez ailesinin üçüncü kuşağı işletiyor. Kirazlar kapalı tanklarda 72 saat bekliyor, sonra balıyla birlikte kuruyor.",
+      en: "Run by the third generation of the Sánchez family. The cherries sit in sealed tanks for 72 hours, then dry with their honey on.",
     },
     profile: {
       charge: 200,
@@ -125,8 +125,8 @@ export const beans: Bean[] = [
     sweetness: 8,
     brew: { tr: "Chemex · 1:16 · 92 °C", en: "Chemex · 1:16 · 92 °C" },
     story: {
-      tr: "Üç volkanın gölgesinde, mineral açısından zengin kül toprağında yetişen klasik, yuvarlak ve sıcak bir fincan.",
-      en: "Grown in mineral-rich ash soil in the shadow of three volcanoes — a classic, round and warming cup.",
+      tr: "Üç yanardağın gölgesinde, mineralce zengin kül toprağında yetişiyor. Yuvarlak, sıcak, bildiğiniz iyi bir kahve.",
+      en: "Grown in mineral-rich volcanic ash soil under three volcanoes. Round and warm, a coffee that does what you expect.",
     },
     profile: {
       charge: 210,
@@ -157,8 +157,8 @@ export const beans: Bean[] = [
     sweetness: 8,
     brew: { tr: "Espresso · 18 g → 38 g · 28 sn", en: "Espresso · 18 g → 38 g · 28 s" },
     story: {
-      tr: "Atölyenin ilk harmanı. Sütle buluştuğunda keçiboynuzu pekmezi gibi; tek başına içildiğinde kadife bir gövde.",
-      en: "The atelier's first blend. With milk it tastes of carob molasses; on its own, a velvet body.",
+      tr: "Atölyenin ilk harmanı. Sütle keçiboynuzu pekmezi gibi, tek başına içince kadife gibi.",
+      en: "The first blend we made. With milk it tastes like carob molasses; on its own it's smooth and velvety.",
     },
     profile: {
       charge: 215,
@@ -190,8 +190,8 @@ export const beans: Bean[] = [
     sweetness: 7,
     brew: { tr: "V60 · 1:16 · 94 °C", en: "V60 · 1:16 · 94 °C" },
     story: {
-      tr: "Kenya Dağı'nın eteklerinde, çift fermantasyonlu yıkama ile işlenen, canlı ve sulu bir klasik.",
-      en: "A vivid, juicy classic from the foothills of Mount Kenya, processed with a double-fermentation wash.",
+      tr: "Kenya Dağı'nın eteklerinden; çift fermantasyonlu yıkamayla işleniyor. Canlı, sulu, tam bir Kenya klasiği.",
+      en: "From the foothills of Mount Kenya, processed with a double-fermentation wash. Bright, juicy, a classic Kenya.",
     },
     profile: {
       charge: 205,
@@ -222,8 +222,8 @@ export const beans: Bean[] = [
     sweetness: 9,
     brew: { tr: "Origami · 1:15 · 92 °C", en: "Origami · 1:15 · 92 °C" },
     story: {
-      tr: "Chacón ailesinin efsanevi değirmeni; kirazlar gölgede, 30 gün boyunca, müsilajı korunarak kurutuluyor.",
-      en: "The Chacón family's legendary mill; cherries dry in shade for 30 days with their mucilage kept intact.",
+      tr: "Chacón ailesinin tanınmış değirmeni. Kirazlar 30 gün gölgede, müsilajıyla birlikte kuruyor.",
+      en: "The Chacón family's well-known mill. The cherries dry in the shade for 30 days with the mucilage left on.",
     },
     profile: {
       charge: 200,
@@ -254,8 +254,8 @@ export const beans: Bean[] = [
     sweetness: 8,
     brew: { tr: "Espresso · 18 g → 40 g · 27 sn", en: "Espresso · 18 g → 40 g · 27 s" },
     story: {
-      tr: "Tek başına içilmek için tasarlanmış, parlak ama yumuşak bir espresso. Arasta'nın sabah kalabalığına adandı.",
-      en: "A bright yet gentle espresso designed to be drunk straight. Dedicated to the Arasta's morning crowd.",
+      tr: "Tek başına içmek için tasarladığımız, canlı ama yumuşak bir espresso. Arasta'nın sabah kalabalığı için.",
+      en: "A bright but soft espresso we made to drink straight. Built for the Arasta's morning rush.",
     },
     profile: {
       charge: 210,
