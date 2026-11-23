@@ -33,8 +33,8 @@ export const team: TeamMember[] = [
   },
   {
     id: "lead-barista",
-    name: "Ayşe Menteşoğlu",
-    initials: "AM",
+    name: "Selin Menteşoğlu",
+    initials: "SM",
     role: { tr: "Baş Barista", en: "Lead Barista" },
     since: "2020",
     favorite: { tr: "Espresso, 1:2,1 · 28 sn", en: "Espresso, 1:2.1 · 28 s" },
