@@ -411,12 +411,16 @@
     "map": {
       "title": "Lefkoşa atölye haritası",
       "walls": "Venedik Surları · 1567",
+      "coords": "35°10′34″K · 33°21′49″D",
       "us": "Cyprus Roasters Atölye",
       "selimiye": "Selimiye Camii",
       "buyukhan": "Büyük Han",
       "kyrenia": "Girne Kapısı",
       "arasta": "Arasta",
-      "buffer": "Ara bölge"
+      "buffer": "Ara bölge",
+      "ourLocation": "Zahra Sk. No. 11 · Arasta",
+      "walkMin": "Atölyeye {min} dk yürüyüş",
+      "directions": "Yol Tarifi"
     },
     "form": {
       "title": "Bize yazın",

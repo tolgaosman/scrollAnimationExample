@@ -411,12 +411,16 @@
     "map": {
       "title": "Map of Nicosia atelier",
       "walls": "Venetian Walls · 1567",
+      "coords": "35°10′34″N · 33°21′49″E",
       "us": "Cyprus Roasters Atelier",
       "selimiye": "Selimiye Mosque",
       "buyukhan": "Büyük Han",
       "kyrenia": "Kyrenia Gate",
       "arasta": "Arasta",
-      "buffer": "Buffer zone"
+      "buffer": "Buffer zone",
+      "ourLocation": "Zahra St. No. 11 · Arasta",
+      "walkMin": "{min} min walk to atelier",
+      "directions": "Directions"
     },
     "form": {
       "title": "Write to us",
