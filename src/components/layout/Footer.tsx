@@ -61,7 +61,7 @@ export async function Footer() {
       </div>
 
       <div className="shell" aria-hidden="true">
-        <div className="flex items-center justify-center py-1">
+        <div className="flex items-center justify-center pb-6 pt-2">
           <div className="h-px w-full bg-paper/15" />
           <span className="mx-4 block size-1.5 shrink-0 rotate-45 bg-copper-light" />
           <div className="h-px w-full bg-paper/15" />
@@ -69,7 +69,7 @@ export async function Footer() {
       </div>
 
       <div className="shell" aria-hidden="true">
-        <p className="display select-none whitespace-nowrap text-[10.4vw] leading-[0.86] text-paper/[0.06]">
+        <p className="display select-none whitespace-nowrap pt-[2vw] text-[10.4vw] leading-[0.86] text-paper/[0.06]">
           CYPRUS ROASTERS
         </p>
       </div>
