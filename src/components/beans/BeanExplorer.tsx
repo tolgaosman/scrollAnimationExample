@@ -4,12 +4,14 @@
  * BeanExplorer — filterable bean index + detail sheet.
  * - Filter tabs share one sliding underline (`layoutId`).
  * - Rows enter/leave with AnimatePresence and re-flow with `layout`.
- * - Opening a row morphs its roast-colour swatch and name into the detail
- *   sheet (shared `layoutId`s), so the eye follows the same object.
+ * - Opening a row flies its roast-colour swatch from the row into the detail
+ *   sheet, and closing flies it back, so the eye follows the same object. The
+ *   swatch travels in its own fixed layer (not inside the sliding, clipped
+ *   sheet), so its path is always row <-> sheet slot, in both directions.
  */
-import { AnimatePresence, LayoutGroup, motion } from "motion/react";
+import { animate, AnimatePresence, LayoutGroup, motion } from "motion/react";
 import { useLocale, useTranslations } from "next-intl";
-import { useEffect, useId, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useId, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { beans, type Bean, type BeanCategory } from "@/content/beans";
 import { CoffeeBeanSwatch } from "@/components/ui/CoffeeBeanSwatch";
 import { CustomSelect } from "@/components/ui/CustomSelect";
@@ -21,6 +23,26 @@ type Filter = "all" | BeanCategory;
 type SortKey = "featured" | "altitudeDesc" | "roastAsc";
 const FILTERS: Filter[] = ["all", "espresso", "filter", "micro"];
 const ROAST_ORDER = { light: 0, medium: 1, mediumDark: 2 } as const;
+
+interface Box {
+  left: number;
+  top: number;
+  width: number;
+  height: number;
+}
+interface Fly {
+  id: string;
+  tone: string;
+  from: Box;
+  /** Closing only: the row swatch to fly back to. Opening measures the sheet slot itself. */
+  to?: Box;
+  dir: "in" | "out";
+}
+
+const toBox = (r: DOMRect): Box => ({ left: r.left, top: r.top, width: r.width, height: r.height });
+const rowSwatchEl = (id: string) => document.querySelector<HTMLElement>(`[data-swatch="${id}"]`);
+const sheetSwatchInner = () => document.querySelector<HTMLElement>("[data-sheet-swatch-inner]");
+const FLY_SPRING = { type: "spring", stiffness: 300, damping: 34, mass: 0.8 } as const;
 
 export function BeanExplorer() {
   const t = useTranslations("beans");
@@ -38,6 +60,61 @@ export function BeanExplorer() {
   }, [filter, sort]);
 
   const open = beans.find((b) => b.id === openId) ?? null;
+
+  const [fly, setFly] = useState<Fly | null>(null);
+  /** Row whose swatch is currently "in the air" / inside the sheet. */
+  const [hiddenId, setHiddenId] = useState<string | null>(null);
+
+  const openBean = (bean: Bean) => {
+    const el = rowSwatchEl(bean.id);
+    setOpenId(bean.id);
+    if (!el) {
+      requestAnimationFrame(() => {
+        const inner = sheetSwatchInner();
+        if (inner) inner.style.opacity = "1";
+      });
+      return;
+    }
+    setHiddenId(bean.id);
+    setFly({ id: bean.id, tone: bean.tone, from: toBox(el.getBoundingClientRect()), dir: "in" });
+  };
+
+  const closeSheet = () => {
+    if (!openId) return;
+    const slot = document.querySelector<HTMLElement>("[data-sheet-swatch]");
+    const row = rowSwatchEl(openId);
+    const bean = beans.find((b) => b.id === openId);
+    const inner = sheetSwatchInner();
+    if (inner) inner.style.opacity = "0";
+    if (slot && row && bean) {
+      setFly({
+        id: openId,
+        tone: bean.tone,
+        from: toBox(slot.getBoundingClientRect()),
+        to: toBox(row.getBoundingClientRect()),
+        dir: "out",
+      });
+    } else {
+      setHiddenId(null);
+    }
+    setOpenId(null);
+  };
+  // Stable identity so the sheet's focus/scroll-lock effect doesn't re-run on every render.
+  const closeRef = useRef(closeSheet);
+  useEffect(() => {
+    closeRef.current = closeSheet;
+  });
+  const onClose = useCallback(() => closeRef.current(), []);
+
+  const onFlyDone = useCallback((done: Fly) => {
+    if (done.dir === "in") {
+      const inner = sheetSwatchInner();
+      if (inner) inner.style.opacity = "1";
+    } else {
+      setHiddenId(null);
+    }
+    setFly((cur) => (cur === done ? null : cur));
+  }, []);
 
   return (
     <LayoutGroup>
@@ -117,7 +194,7 @@ export function BeanExplorer() {
               >
                 <button
                   type="button"
-                  onClick={() => setOpenId(bean.id)}
+                  onClick={() => openBean(bean)}
                   aria-haspopup="dialog"
                   className="group grid w-full grid-cols-12 items-center gap-x-4 gap-y-2 py-6 text-left md:py-8"
                 >
@@ -125,17 +202,13 @@ export function BeanExplorer() {
                     {String(beans.indexOf(bean) + 1).padStart(2, "0")}
                   </span>
                   <span className="col-span-10 flex items-center gap-4 md:col-span-5">
-                    {openId === bean.id ? (
-                      <span className="block size-9 shrink-0 md:size-11" aria-hidden="true" />
-                    ) : (
-                      <motion.span
-                        layoutId={`swatch-${bean.id}`}
-                        transition={{ type: "spring", stiffness: 340, damping: 32, mass: 0.75 }}
-                        className="block size-9 shrink-0 md:size-11"
-                      >
-                        <CoffeeBeanSwatch tone={bean.tone} className="size-full" />
-                      </motion.span>
-                    )}
+                    <span
+                      data-swatch={bean.id}
+                      className={`block size-9 shrink-0 md:size-11 ${hiddenId === bean.id ? "invisible" : ""}`}
+                      aria-hidden="true"
+                    >
+                      <CoffeeBeanSwatch tone={bean.tone} className="size-full" />
+                    </span>
                     <span className="font-display text-2xl leading-tight tracking-tight transition-transform duration-500 ease-[var(--ease-out-quint)] group-hover:translate-x-2 md:text-[2.1rem]">
                       {bean.name}
                     </span>
@@ -161,12 +234,67 @@ export function BeanExplorer() {
         </motion.ul>
       </section>
 
-      <BeanSheet bean={open} activeId={openId} onClose={() => setOpenId(null)} />
+      <BeanSheet bean={open} onClose={onClose} />
+
+      {fly && <FlyingSwatch key={`${fly.id}-${fly.dir}`} fly={fly} onDone={onFlyDone} />}
     </LayoutGroup>
   );
 }
 
-function BeanSheet({ bean, activeId, onClose }: { bean: Bean | null; activeId: string | null; onClose: () => void }) {
+/**
+ * The swatch in flight, in its own fixed layer above the sheet. On mount it
+ * measures its destination (opening: the sheet's swatch slot at rest; closing:
+ * the row swatch) and springs there.
+ */
+function FlyingSwatch({ fly, onDone }: { fly: Fly; onDone: (fly: Fly) => void }) {
+  const ref = useRef<HTMLSpanElement>(null);
+  const doneRef = useRef(onDone);
+  useEffect(() => {
+    doneRef.current = onDone;
+  });
+
+  useLayoutEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    let to = fly.to;
+    if (fly.dir === "in") {
+      const slot = document.querySelector<HTMLElement>("[data-sheet-swatch]");
+      const aside = slot?.closest<HTMLElement>("[role=dialog]");
+      if (slot && aside) {
+        // The sheet is still sliding in from the right: undo its current offset.
+        const shift = aside.getBoundingClientRect().left - aside.offsetLeft;
+        const r = slot.getBoundingClientRect();
+        to = { left: r.left - shift, top: r.top, width: r.width, height: r.height };
+      }
+    }
+    if (!to) {
+      doneRef.current(fly);
+      return;
+    }
+    let cancelled = false;
+    const controls = animate(el, { ...to }, FLY_SPRING);
+    controls.then(() => {
+      if (!cancelled) doneRef.current(fly);
+    });
+    return () => {
+      cancelled = true;
+      controls.stop();
+    };
+  }, [fly]);
+
+  return (
+    <span
+      ref={ref}
+      aria-hidden="true"
+      className="pointer-events-none fixed z-[70] block"
+      style={{ left: fly.from.left, top: fly.from.top, width: fly.from.width, height: fly.from.height }}
+    >
+      <CoffeeBeanSwatch tone={fly.tone} className="size-full" />
+    </span>
+  );
+}
+
+function BeanSheet({ bean, onClose }: { bean: Bean | null; onClose: () => void }) {
   const t = useTranslations("beans");
   const locale = useLocale();
   const closeRef = useRef<HTMLButtonElement>(null);
@@ -201,7 +329,7 @@ function BeanSheet({ bean, activeId, onClose }: { bean: Bean | null; activeId: s
             role="dialog"
             aria-modal="true"
             aria-labelledby={`sheet-title-${bean.id}`}
-            className="absolute inset-y-0 right-0 flex w-full max-w-[44rem] flex-col overflow-y-auto overscroll-contain bg-paper"
+            className="absolute inset-y-0 right-0 flex w-full max-w-[44rem] flex-col lg:max-w-[66rem] overflow-y-auto overscroll-contain bg-paper"
             variants={{ open: { x: "0%" }, closed: { x: "100%" } }}
             transition={{ duration: 0.48, ease: ease.drawer }}
           >
@@ -219,19 +347,16 @@ function BeanSheet({ bean, activeId, onClose }: { bean: Bean | null; activeId: s
               </button>
             </div>
 
-            <div className="space-y-10 px-6 pb-16 pt-8 md:px-10">
+            <div className="grid gap-y-9 px-6 pb-16 pt-8 md:px-10 lg:grid-cols-2 lg:gap-x-12 lg:gap-y-0 lg:pb-8 lg:pt-6">
+              {/* Left column: who it is */}
+              <div className="space-y-8 lg:space-y-6">
               <div className="flex items-center gap-5">
-                {activeId === bean.id ? (
-                  <motion.span
-                    layoutId={`swatch-${bean.id}`}
-                    transition={{ type: "spring", stiffness: 340, damping: 32, mass: 0.75 }}
-                    className="block size-16 shrink-0 md:size-20"
-                  >
+                {/* Slot the flying swatch lands in; it is revealed imperatively once it arrives. */}
+                <span data-sheet-swatch className="block size-16 shrink-0 md:size-20" aria-hidden="true">
+                  <span data-sheet-swatch-inner className="block size-full" style={{ opacity: 0 }}>
                     <CoffeeBeanSwatch tone={bean.tone} className="size-full" />
-                  </motion.span>
-                ) : (
-                  <span className="block size-16 shrink-0 md:size-20" aria-hidden="true" />
-                )}
+                  </span>
+                </span>
                 <h2
                   id={`sheet-title-${bean.id}`}
                   className="font-display text-[clamp(2rem,4.5vw,3.25rem)] leading-[1.02] tracking-tight"
@@ -265,6 +390,10 @@ function BeanSheet({ bean, activeId, onClose }: { bean: Bean | null; activeId: s
                 </ul>
               </div>
 
+              </div>
+
+              {/* Right column: how it tastes and how it was roasted */}
+              <div className="space-y-8 lg:space-y-6">
               <div className="space-y-2.5">
                 <Meter label={t("labels.acidity")} value={bean.acidity} />
                 <Meter label={t("labels.body")} value={bean.body} />
@@ -276,6 +405,7 @@ function BeanSheet({ bean, activeId, onClose }: { bean: Bean | null; activeId: s
               <div className="brushed-steel flex items-center justify-between gap-4 p-5">
                 <span className="eyebrow">{t("labels.brewWith")}</span>
                 <span className="num text-sm">{bean.brew[locale]}</span>
+              </div>
               </div>
             </div>
           </motion.aside>
