@@ -31,6 +31,18 @@ export function Nav() {
     const prev = scrollY.getPrevious() ?? 0;
     setScrolled(y > 24);
     if (open) return;
+
+    // Mobile: the nav stays put for the whole pinned hero animation and only
+    // starts auto-hiding once the animation has finished playing.
+    const runway = document.querySelector<HTMLElement>("[data-hero-runway]");
+    if (runway && window.matchMedia("(max-width: 1023px)").matches) {
+      const animationEnd = runway.getBoundingClientRect().bottom + y - window.innerHeight;
+      if (y < animationEnd) {
+        setHidden(false);
+        return;
+      }
+    }
+
     if (y > prev + 4 && y > 160) setHidden(true);
     else if (y < prev - 4) setHidden(false);
   });
