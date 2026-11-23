@@ -1,35 +1,36 @@
 "use client";
 
 /**
- * ScrollMachine — composition root of the scroll-scrubbed hero.
+ * ScrollMachine — "The Living Extraction Ritual" (Frameless Natural Stage)
  * ------------------------------------------------------------------
- *   <section 500vh>                ← provides scroll distance
- *     <div sticky 100svh>          ← pinned stage
- *       <FrameCanvas/>             ← paints frames
- *       <PhaseOverlays/>           ← typography + callouts
- *       <Hud/>                     ← frame counter / progress rail
- *
- * Data flow (one direction, no React state per tick):
- *   window scroll → useScroll() → scrollYProgress (0–1, raw)
- *                 → useSpring()  → progress (weighted, mechanical feel)
- *                 → canvas + overlays + HUD all read `progress`
- *
- * With prefers-reduced-motion we skip the spring entirely and scrub 1:1
- * (and the canvas shows whole frames, no cross-fade). The same spring is used
- * on touch: phones report scroll in uneven bursts, and the spring is what
- * irons that out — a stiffer one made the machine visibly jitter.
+ * Zero-barrier, frameless showcase woven seamlessly into the homepage:
+ *  - No dark box, no border, no corner brackets: the section adopts the exact
+ *    sampled studio tone from Frame 0 (`onBackground={setStudio}`), and the
+ *    canvas edges feather smoothly into it so the walnut espresso machine and
+ *    crystal ice glass sit directly on the open page.
+ *  - Instant 0ms opening via frame-0 poster + zero-wait FrameCanvas.
+ *  - Minimal editorial hairline telemetry & 4-act interactive scrubber sit
+ *    quietly beneath the machine in the site's native typography.
  */
-import { useReducedMotion, useScroll, useSpring } from "motion/react";
-import { useTranslations } from "next-intl";
-import { useCallback, useMemo, useRef, useState } from "react";
-import type { Fit } from "./geometry";
-import { FrameCanvas } from "./FrameCanvas";
-import { Hud } from "./Hud";
-import { PhaseOverlays } from "./PhaseOverlays";
-import { Preloader } from "./Preloader";
-import { useFramePreloader } from "./useFramePreloader";
+import { motion, useMotionValueEvent, useReducedMotion, useScroll, useSpring, useTransform } from "motion/react";
+import { useLocale, useTranslations } from "next-intl";
+import { useMemo, useRef, useState } from "react";
+import { signatureBeans } from "@/content/beans";
+import { ArrowLink } from "@/components/ui/ArrowLink";
+import { LimestoneTexture } from "@/components/ui/LimestoneTexture";
+import { Meter } from "@/components/ui/Meter";
 import { scrubSpring, scrubTouchSpring } from "@/lib/motion";
 import { useMediaQuery } from "@/lib/useMediaQuery";
+import { FrameCanvas } from "./FrameCanvas";
+import {
+  cupTempAt,
+  pressureAt,
+  RITUAL_ACTS,
+  timerAt,
+  yieldAt,
+  type RitualActId,
+} from "./timeline";
+import { useFramePreloader } from "./useFramePreloader";
 
 export interface FrameSequenceProps {
   urls: string[];
@@ -38,52 +39,353 @@ export interface FrameSequenceProps {
 }
 
 export function ScrollMachine({ sequence }: { sequence: FrameSequenceProps }) {
-  const t = useTranslations("hero");
-  const sectionRef = useRef<HTMLElement>(null);
-  const { store, progress: loadProgress, ready } = useFramePreloader(sequence.urls);
+  const t = useTranslations("ritual");
+  const th = useTranslations("hero");
+  const tm = useTranslations("home.manifesto");
+  const tr = useTranslations("home.roasts");
+  const tl = useTranslations("beans.roastLevels");
+  const tc = useTranslations("contact");
+  const locale = useLocale() as "tr" | "en";
+
+  const rootRef = useRef<HTMLElement>(null);
+  const { store } = useFramePreloader(sequence.urls);
+  const [studio, setStudio] = useState<string | null>(null);
 
   const reduceMotion = useReducedMotion();
   const coarse = useMediaQuery("(pointer: coarse)");
-  const { scrollYProgress } = useScroll({ target: sectionRef, offset: ["start start", "end end"] });
+  const { scrollYProgress } = useScroll({ target: rootRef, offset: ["start start", "end end"] });
   const smoothed = useSpring(scrollYProgress, coarse ? scrubTouchSpring : scrubSpring);
   const progress = reduceMotion ? scrollYProgress : smoothed;
 
-  const [layout, setLayout] = useState<Fit | null>(null);
-  const [studio, setStudio] = useState<string | null>(null);
-  const onLayout = useCallback((fit: Fit) => setLayout(fit), []);
+  const [activeAct, setActiveAct] = useState<RitualActId>("ready");
+  useMotionValueEvent(progress, "change", (p) => {
+    const found = RITUAL_ACTS.find((a) => p >= a.range[0] && p <= a.range[1]) ?? RITUAL_ACTS[RITUAL_ACTS.length - 1];
+    if (found.id !== activeAct) setActiveAct(found.id);
+  });
 
-  // Stable identity matters: FrameCanvas re-initialises when this changes.
+  // Live MotionValue telemetry — zero React state updates per scroll tick.
+  const secUnit = t("secUnit");
+  const barText = useTransform(progress, (p) => `${pressureAt(p).toFixed(1)}`);
+  const tempText = useTransform(progress, (p) => `${cupTempAt(p).toFixed(1)}°C`);
+  const timeText = useTransform(progress, (p) => `${timerAt(p).toFixed(1)}${secUnit}`);
+  const yieldText = useTransform(progress, (p) => `${Math.round(yieldAt(p))}g`);
+
   const imageSize = useMemo(
     () => ({ width: sequence.width, height: sequence.height }),
     [sequence.width, sequence.height],
   );
 
+  const jumpToAct = (target: number) => {
+    const el = rootRef.current;
+    if (!el) return;
+    const top = el.getBoundingClientRect().top + window.scrollY;
+    const travel = Math.max(0, el.offsetHeight - window.innerHeight);
+    window.scrollTo({ top: top + travel * target, behavior: "smooth" });
+  };
+
+  const manifestoStats = [
+    [tm("stat1"), tm("stat1Label")],
+    [tm("stat2"), tm("stat2Label")],
+    [tm("stat3"), tm("stat3Label")],
+  ] as const;
+
+  const bgStyle = studio ? { backgroundColor: studio } : undefined;
+
   return (
-    <>
-      <Preloader progress={loadProgress} ready={ready} total={sequence.urls.length} />
-      <section
-        ref={sectionRef}
-        className="relative h-[250svh] touch-pan-y bg-studio md:h-[390vh]"
-        style={studio ? { backgroundColor: studio } : undefined}
-        aria-label={t("subtitle")}
-      >
-        <div className="sticky top-0 h-svh w-full overflow-hidden">
-          {store && (
-            <FrameCanvas
-              store={store}
-              imageSize={imageSize}
-              progress={progress}
-              label={t("canvasLabel")}
-              // Single crisp frames eliminate double-image ghosting on moving parts.
-              blend={false}
-              onLayout={onLayout}
-              onBackground={setStudio}
+    <section
+      ref={rootRef}
+      aria-label={th("subtitle")}
+      className="relative bg-studio pt-16 md:pt-[4.5rem]"
+      style={bgStyle}
+    >
+      <div className="shell relative grid grid-cols-1 gap-6 pb-16 pt-2 lg:grid-cols-12 lg:items-start lg:gap-10 lg:pb-24 lg:pt-8">
+        {/* ============================================================
+            FRAMELESS STICKY ESPRESSO STAGE
+            Sits directly on the open studio background with zero box/border.
+            Soft edge-feathering ensures no visible rectangle seam.
+           ============================================================ */}
+        <div
+          className="sticky top-16 z-30 order-first -mx-[clamp(1.25rem,4vw,4rem)] bg-studio px-[clamp(1.25rem,4vw,4rem)] pb-3 pt-1 lg:top-20 lg:order-last lg:col-span-7 lg:mx-0 lg:bg-transparent lg:px-0 lg:pb-0 lg:pt-0"
+          style={bgStyle}
+        >
+          {/* Razor-sharp, completely unframed 16:9 canvas with soft seamless edges */}
+          <div className="relative mx-auto aspect-video max-h-[34svh] w-full overflow-hidden lg:max-h-none [mask-image:radial-gradient(ellipse_96%_94%_at_50%_50%,#000_80%,transparent_100%)]">
+            {/* Instant frame-0 poster: visible at 0ms before JS hydrates */}
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={sequence.urls[0]}
+              alt={th("canvasLabel")}
+              fetchPriority="high"
+              decoding="async"
+              className="absolute inset-0 z-0 h-full w-full object-cover"
             />
-          )}
-          <PhaseOverlays progress={progress} layout={layout} revealed={ready} />
-          <Hud progress={progress} frameCount={sequence.urls.length} />
+            {store && (
+              <FrameCanvas
+                store={store}
+                imageSize={imageSize}
+                progress={progress}
+                label={th("canvasLabel")}
+                blend={false}
+                onBackground={setStudio}
+              />
+            )}
+          </div>
+
+          {/* Quiet Editorial Telemetry & 4-Act Scrubber (frameless, native ink palette) */}
+          <div className="mt-2 border-t border-ink/15 pt-2.5 lg:mt-4 lg:pt-3">
+            <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-1">
+              <span className="eyebrow flex items-center gap-2 text-[0.6rem] text-ink">
+                <span className="block size-1.5 rounded-full bg-copper" aria-hidden="true" />
+                {t(`acts.${activeAct}.short`)}
+              </span>
+
+              <div className="flex items-center gap-3 font-mono text-[0.68rem] tabular-nums text-ink-soft sm:gap-4">
+                <span className="whitespace-nowrap">
+                  <span className="mr-1 text-[0.58rem] uppercase tracking-wider opacity-60">BAR</span>
+                  <motion.span className="font-medium text-copper">{barText}</motion.span>
+                </span>
+                <span className="whitespace-nowrap">
+                  <motion.span className="text-ink">{tempText}</motion.span>
+                </span>
+                <span className="hidden whitespace-nowrap sm:inline">
+                  <motion.span>{timeText}</motion.span>
+                </span>
+                <span className="hidden whitespace-nowrap sm:inline">
+                  <motion.span>{yieldText}</motion.span>
+                </span>
+              </div>
+            </div>
+
+            {/* Thin copper progress hairline */}
+            <div className="relative my-2 h-px w-full bg-ink/15">
+              <motion.div
+                className="absolute inset-0 origin-left bg-copper"
+                style={{ scaleX: progress }}
+              />
+            </div>
+
+            {/* Minimalist clickable 4-phase tabs */}
+            <div className="grid grid-cols-4 gap-1 sm:gap-2">
+              {RITUAL_ACTS.map((act) => {
+                const isActive = activeAct === act.id;
+                return (
+                  <button
+                    key={act.id}
+                    type="button"
+                    onClick={() => jumpToAct(act.target)}
+                    aria-pressed={isActive}
+                    className={`flex items-center justify-center gap-1 py-1 text-center transition-colors duration-300 sm:justify-start sm:gap-1.5 ${
+                      isActive ? "text-ink" : "text-ink/45 hover:text-ink/80"
+                    }`}
+                  >
+                    <span className={`font-mono text-[0.58rem] ${isActive ? "text-copper" : "opacity-60"}`}>
+                      {act.index}
+                    </span>
+                    <span className="truncate font-mono text-[0.58rem] uppercase tracking-[0.08em] sm:text-[0.64rem]">
+                      {t(`acts.${act.id}.tab`)}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
         </div>
-      </section>
-    </>
+
+        {/* ============================================================
+            SCROLLING EDITORIAL SPINE (4 CHOREOGRAPHED ACTS)
+           ============================================================ */}
+        <div className="space-y-14 lg:col-span-5 lg:space-y-26">
+          {/* ACT 00: OPENING ATELIER HERO */}
+          <div className="flex flex-col justify-center pt-2 lg:min-h-[76svh] lg:pt-0">
+            <p className="eyebrow flex items-center gap-2.5 text-copper">
+              <span className="block size-1.5 rounded-full bg-copper" aria-hidden="true" />
+              {th("eyebrow")}
+            </p>
+
+            <h1 className="mt-3.5">
+              <span className="display -mt-[0.28em] block pb-[0.1em] pt-[0.28em] text-[clamp(2.85rem,11.5vw,5.2rem)] tracking-[-0.015em] text-ink lg:text-[clamp(3.6rem,5.2vw,5.5rem)]">
+                {th("titleA")}
+              </span>
+              <span className="eyebrow mt-1.5 block text-xs tracking-[0.34em] text-ink-soft">
+                {th("titleB")} · {tc("address.line2")}
+              </span>
+            </h1>
+
+            <p className="mt-4 font-display text-xl italic leading-snug text-ink md:text-2xl">
+              {th("subtitle")}
+            </p>
+            <p className="mt-3 max-w-[44ch] text-sm leading-relaxed text-ink-soft md:text-[0.95rem]">
+              {t("heroLede")}
+            </p>
+
+            <div className="mt-6 flex flex-wrap items-center gap-2.5 sm:gap-3">
+              <ArrowLink href="/menu">{t("ctaMenu")}</ArrowLink>
+              <ArrowLink href="/cekirdekler" variant="ghost">
+                {t("ctaBeans")}
+              </ArrowLink>
+            </div>
+
+            <div className="mt-7 flex flex-wrap items-center justify-between gap-3 border-t border-ink/15 pt-4">
+              <span className="eyebrow text-[0.6rem] text-copper">{tc("hours.roastDay")}</span>
+              <span className="eyebrow flex items-center gap-2 text-[0.6rem] text-ink-soft">
+                {t("scrollCue")}
+                <span aria-hidden="true" className="text-copper">↓</span>
+              </span>
+            </div>
+          </div>
+
+          {/* ACT 01: 9-BAR EXTRACTION & STONE/WALNUT/STEEL MANIFESTO */}
+          <article className="border-t border-ink/15 pt-8 lg:min-h-[74svh] lg:pt-12" aria-labelledby="manifesto-title">
+            <div className="flex items-baseline justify-between gap-2">
+              <p className="eyebrow text-copper">01 · {tm("eyebrow")}</p>
+              <span className="eyebrow whitespace-nowrap text-[0.6rem] text-ink-soft">{t("specBar")}</span>
+            </div>
+
+            <h2 id="manifesto-title" className="display mt-3 text-[clamp(1.9rem,4vw,3.15rem)] text-ink">
+              {tm("titleA")} <span className="italic text-walnut">{tm("titleB")}</span>
+            </h2>
+
+            {/* Material Swatch Pair: Nicosia Limestone + American Walnut */}
+            <div className="mt-5 grid grid-cols-2 gap-3">
+              <div className="relative aspect-[16/11] overflow-hidden border border-ink/15 p-2.5 sm:p-3">
+                <LimestoneTexture className="absolute inset-0 h-full w-full" />
+                <div className="absolute inset-0 bg-gradient-to-t from-ink/55 via-transparent to-transparent" />
+                <span className="eyebrow relative z-10 inline-block bg-paper/80 px-1.5 py-0.5 text-[0.52rem] text-ink">
+                  {tm("stoneLabel")}
+                </span>
+                <p className="font-display relative z-10 mt-5 text-lg italic leading-tight text-paper">1567</p>
+              </div>
+              <div className="walnut-grain relative aspect-[16/11] overflow-hidden border border-walnut/40 p-2.5 text-paper sm:p-3">
+                <span className="eyebrow inline-block border border-paper/20 px-1.5 py-0.5 text-[0.52rem] text-paper/85">
+                  {t("walnutLabel")}
+                </span>
+                <p className="font-mono mt-5 text-xs text-crema">PID ±0.1 °C</p>
+              </div>
+            </div>
+
+            <p className="mt-5 font-display text-lg leading-relaxed text-ink">{tm("p1")}</p>
+            <p className="mt-3 text-sm leading-relaxed text-ink-soft">{tm("p2")}</p>
+
+            <dl className="mt-6 grid grid-cols-3 divide-x divide-ink/15 border border-ink/15 bg-paper/55">
+              {manifestoStats.map(([value, label]) => (
+                <div key={label} className="px-2.5 py-3 sm:px-3.5 sm:py-3.5">
+                  <dd className="display whitespace-nowrap text-xl text-ink sm:text-3xl">{value}</dd>
+                  <dt className="eyebrow mt-1 text-[0.52rem] text-ink-soft sm:text-[0.56rem]">{label}</dt>
+                </div>
+              ))}
+            </dl>
+          </article>
+
+          {/* ACT 02: THE BARISTA'S HAND & SIGNATURE ORIGINS */}
+          <article className="border-t border-ink/15 pt-8 lg:min-h-[82svh] lg:pt-12" aria-labelledby="roasts-title">
+            <div className="flex items-baseline justify-between gap-2">
+              <p className="eyebrow text-copper">02 · {tr("eyebrow")}</p>
+              <span className="eyebrow whitespace-nowrap text-[0.6rem] text-ink-soft">18 G → 36 G</span>
+            </div>
+
+            <h2 id="roasts-title" className="display mt-3 text-[clamp(1.9rem,4vw,3.15rem)] text-ink">
+              {tr("title")}
+            </h2>
+            <p className="mt-2.5 text-sm leading-relaxed text-ink-soft">{t("originsLede")}</p>
+
+            <ul className="mt-5 space-y-3.5">
+              {signatureBeans.map((bean, i) => (
+                <li
+                  key={bean.id}
+                  className="rounded-[1.75rem] bg-paper/55 p-5 transition-colors duration-300 hover:bg-paper/80"
+                >
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="flex min-w-0 items-center gap-3">
+                      <span
+                        className="block size-8 shrink-0 rounded-full shadow-inner"
+                        style={{
+                          background: `radial-gradient(circle at 32% 28%, color-mix(in oklab, ${bean.tone} 55%, white) 0%, ${bean.tone} 55%, color-mix(in oklab, ${bean.tone} 65%, black) 100%)`,
+                        }}
+                        aria-hidden="true"
+                      />
+                      <div className="min-w-0">
+                        <p className="eyebrow truncate text-[0.56rem] text-copper">
+                          0{i + 1} · {bean.origin[locale]} · {tl(bean.roast)}
+                        </p>
+                        <h3 className="font-display text-lg leading-tight text-ink sm:text-xl">{bean.name}</h3>
+                      </div>
+                    </div>
+                    <span className="shrink-0 whitespace-nowrap font-mono text-[0.68rem] tabular-nums text-ink-soft">
+                      {bean.altitude.toLocaleString(locale)} m
+                    </span>
+                  </div>
+
+                  <ul className="mt-3 flex flex-wrap gap-1.5">
+                    {bean.notes[locale].map((note) => (
+                      <li key={note} className="whitespace-nowrap rounded-full bg-ink/[0.06] px-2.5 py-0.5 text-[0.66rem] text-ink-soft">
+                        {note}
+                      </li>
+                    ))}
+                  </ul>
+
+                  <div className="mt-4 space-y-2.5">
+                    <Meter label={tr("acidity")} value={bean.acidity} />
+                    <Meter label={tr("body")} value={bean.body} />
+                    <Meter label={tr("sweetness")} value={bean.sweetness} />
+                  </div>
+                </li>
+              ))}
+            </ul>
+
+            <div className="mt-6">
+              <ArrowLink href="/cekirdekler" variant="ghost">
+                {tr("explore")}
+              </ArrowLink>
+            </div>
+          </article>
+
+          {/* ACT 03: CRYSTAL ICE POUR & SIGNATURE GLASS BLUEPRINT */}
+          <article className="border-t border-ink/15 pt-8 lg:min-h-[68svh] lg:pt-12" aria-labelledby="pour-title">
+            <div className="flex items-baseline justify-between gap-2">
+              <p className="eyebrow text-copper">03 · {t("pour.eyebrow")}</p>
+              <span className="eyebrow whitespace-nowrap text-[0.6rem] text-ink-soft">93 °C → 4 °C</span>
+            </div>
+
+            <h2 id="pour-title" className="display mt-3 text-[clamp(1.9rem,4vw,3.15rem)] text-ink">
+              {t("pour.title")}
+            </h2>
+            <p className="mt-3 text-sm leading-relaxed text-ink-soft md:text-[0.95rem]">{t("pour.body")}</p>
+
+            {/* Architectural Glass Spec Card */}
+            <div className="mt-6 border border-ink/15 bg-ink p-4 text-paper sm:p-5">
+              <div className="flex items-baseline justify-between gap-2 border-b border-paper/15 pb-3">
+                <span className="eyebrow text-[0.58rem] text-crema">{t("pour.recipeLabel")}</span>
+                <span className="shrink-0 whitespace-nowrap font-mono text-xs text-paper/75">240 ML · 1:2</span>
+              </div>
+              <dl className="mt-4 grid grid-cols-3 gap-2 sm:gap-3">
+                <div>
+                  <dt className="eyebrow text-[0.52rem] text-paper/50">{t("pour.spec1Label")}</dt>
+                  <dd className="mt-1 whitespace-nowrap font-mono text-xs text-paper sm:text-sm">{t("pour.spec1Value")}</dd>
+                </div>
+                <div>
+                  <dt className="eyebrow text-[0.52rem] text-paper/50">{t("pour.spec2Label")}</dt>
+                  <dd className="mt-1 whitespace-nowrap font-mono text-xs text-crema sm:text-sm">{t("pour.spec2Value")}</dd>
+                </div>
+                <div>
+                  <dt className="eyebrow text-[0.52rem] text-paper/50">{t("pour.spec3Label")}</dt>
+                  <dd className="mt-1 whitespace-nowrap font-mono text-xs text-paper sm:text-sm">{t("pour.spec3Value")}</dd>
+                </div>
+              </dl>
+              <div className="mt-5 flex flex-wrap gap-2.5 border-t border-paper/12 pt-4">
+                <ArrowLink href={{ pathname: "/menu", hash: "calculator" }} variant="light">
+                  {t("pour.ctaCalc")}
+                </ArrowLink>
+                <ArrowLink href="/iletisim" variant="ghost" className="!border-paper/25 !text-paper hover:!bg-paper hover:!text-ink">
+                  {t("pour.ctaVisit")}
+                </ArrowLink>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+
+      {/* Seamless transition strip from studio background into warm paper BrewBar */}
+      <div aria-hidden="true" className="h-12 w-full bg-gradient-to-b from-transparent to-paper" />
+    </section>
   );
 }
