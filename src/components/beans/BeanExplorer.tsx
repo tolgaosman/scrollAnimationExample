@@ -347,9 +347,9 @@ function BeanSheet({ bean, onClose }: { bean: Bean | null; onClose: () => void }
               </button>
             </div>
 
-            <div className="grid gap-y-9 px-6 pb-16 pt-8 md:px-10 lg:grid-cols-2 lg:gap-x-12 lg:gap-y-0 lg:pb-8 lg:pt-6">
+            <div className="grid gap-y-9 px-6 pb-16 pt-8 md:px-10 lg:flex-1 lg:grid-cols-2 lg:content-center lg:gap-x-14 lg:gap-y-0 lg:pb-10 lg:pt-8">
               {/* Left column: who it is */}
-              <div className="space-y-8 lg:space-y-6">
+              <div className="space-y-8 lg:space-y-8">
               <div className="flex items-center gap-5">
                 {/* Slot the flying swatch lands in; it is revealed imperatively once it arrives. */}
                 <span data-sheet-swatch className="block size-16 shrink-0 md:size-20" aria-hidden="true">
@@ -365,7 +365,7 @@ function BeanSheet({ bean, onClose }: { bean: Bean | null; onClose: () => void }
                 </h2>
               </div>
 
-              <p className="font-display text-xl italic leading-snug text-ink-soft">{bean.story[locale]}</p>
+              <p className="font-display text-xl italic leading-snug text-ink-soft lg:text-2xl">{bean.story[locale]}</p>
 
               <dl className="grid grid-cols-2 gap-x-6 gap-y-5 border-y border-ink/12 py-6 sm:grid-cols-3">
                 <Spec
@@ -393,7 +393,7 @@ function BeanSheet({ bean, onClose }: { bean: Bean | null; onClose: () => void }
               </div>
 
               {/* Right column: how it tastes and how it was roasted */}
-              <div className="space-y-8 lg:space-y-6">
+              <div className="space-y-8 lg:space-y-8 lg:self-center">
               <div className="space-y-2.5">
                 <Meter label={t("labels.acidity")} value={bean.acidity} />
                 <Meter label={t("labels.body")} value={bean.body} />
